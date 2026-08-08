@@ -1,6 +1,15 @@
-import React, {useMemo, useState} from 'react';
-import {createRoot} from 'react-dom/client';
-import {Search, Play, Plus, Check, ChevronRight, Film, User} from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import {
+  Search,
+  Play,
+  Plus,
+  Check,
+  ChevronRight,
+  Film,
+  User,
+  X
+} from 'lucide-react';
 import './styles.css';
 
 const films = [
@@ -12,9 +21,12 @@ const films = [
     genre: 'Historical Thriller',
     country: 'Pakistan',
     creator: 'Kainat Ali',
-    description: 'A historical thriller exploring a pivotal night through AI-assisted cinema.',
-    poster: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
-    featured: true
+    description:
+      'A historical thriller exploring a pivotal night through AI-assisted cinema.',
+    poster:
+      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
+    featured: true,
+    youtubeId: 'oh3EBozQ19M'
   },
   {
     id: 2,
@@ -24,8 +36,10 @@ const films = [
     genre: 'Sci-Fi',
     country: 'International',
     creator: 'AI Flix Showcase',
-    description: 'A short journey through a city where memories can be replayed.',
-    poster: 'https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80'
+    description:
+      'A short journey through a city where memories can be replayed.',
+    poster:
+      'https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80'
   },
   {
     id: 3,
@@ -35,8 +49,10 @@ const films = [
     genre: 'Drama',
     country: 'International',
     creator: 'AI Flix Showcase',
-    description: 'A quiet story about a final garden in a changing world.',
-    poster: 'https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=900&q=80'
+    description:
+      'A quiet story about a final garden in a changing world.',
+    poster:
+      'https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=900&q=80'
   },
   {
     id: 4,
@@ -46,118 +62,371 @@ const films = [
     genre: 'Adventure',
     country: 'Pakistan',
     creator: 'AI Flix Showcase',
-    description: 'An expedition into landscapes shaped by imagination and generative cinema.',
-    poster: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80'
+    description:
+      'An expedition into landscapes shaped by imagination and generative cinema.',
+    poster:
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80'
   }
 ];
 
 function App() {
   const [selected, setSelected] = useState(null);
+  const [playing, setPlaying] = useState(false);
   const [query, setQuery] = useState('');
   const [watchlist, setWatchlist] = useState([]);
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
+
     if (!q) return films;
-    return films.filter(f =>
-      [f.title, f.genre, f.country, f.creator].some(v => v.toLowerCase().includes(q))
+
+    return films.filter((film) =>
+      [film.title, film.genre, film.country, film.creator].some((value) =>
+        value.toLowerCase().includes(q)
+      )
     );
   }, [query]);
 
   const toggleWatchlist = (id) => {
-    setWatchlist(w => w.includes(id) ? w.filter(x => x !== id) : [...w, id]);
+    setWatchlist((current) =>
+      current.includes(id)
+        ? current.filter((item) => item !== id)
+        : [...current, id]
+    );
+  };
+
+  const openFilm = (film) => {
+    setSelected(film);
+    setPlaying(false);
+  };
+
+  const closeFilm = () => {
+    setSelected(null);
+    setPlaying(false);
   };
 
   return (
     <div className="app">
+
+      {/* NAVIGATION */}
       <header className="nav">
-        <div className="brand">AI<span>FLIX</span></div>
+        <div className="brand">
+          AI<span>FLIX</span>
+        </div>
+
         <nav>
-          <button>Home</button><button>Browse</button><button>Categories</button>
+          <button>Home</button>
+          <button>Browse</button>
+          <button>Categories</button>
         </nav>
+
         <div className="navRight">
           <div className="search">
-            <Search size={18}/>
-            <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search films..." />
+            <Search size={18} />
+
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search films..."
+            />
           </div>
-          <button className="iconBtn"><User size={19}/></button>
+
+          <button className="iconBtn">
+            <User size={19} />
+          </button>
         </div>
       </header>
 
       <main>
-        <section className="hero" style={{backgroundImage:`linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.58) 48%, rgba(0,0,0,.15) 100%), url(${films[0].poster})`}}>
+
+        {/* HERO */}
+        <section
+          className="hero"
+          style={{
+            backgroundImage: `linear-gradient(
+              90deg,
+              rgba(0,0,0,.92) 0%,
+              rgba(0,0,0,.58) 48%,
+              rgba(0,0,0,.15) 100%
+            ), url(${films[0].poster})`
+          }}
+        >
           <div className="heroCopy">
-            <div className="eyebrow">AI FLIX ORIGINAL • 2026</div>
+
+            <div className="eyebrow">
+              AI FLIX ORIGINAL • 2026
+            </div>
+
             <h1>{films[0].title}</h1>
-            <p className="meta">{films[0].year} &nbsp;•&nbsp; {films[0].runtime} &nbsp;•&nbsp; {films[0].genre}</p>
-            <p className="description">{films[0].description}</p>
+
+            <p className="meta">
+              {films[0].year} • {films[0].runtime} • {films[0].genre}
+            </p>
+
+            <p className="description">
+              {films[0].description}
+            </p>
+
             <div className="actions">
-              <button className="primary" onClick={()=>setSelected(films[0])}><Play size={18} fill="currentColor"/> Watch</button>
-              <button className="secondary" onClick={()=>toggleWatchlist(films[0].id)}>
-                {watchlist.includes(films[0].id) ? <Check size={18}/> : <Plus size={18}/>}
-                {watchlist.includes(films[0].id) ? 'In My List' : 'My List'}
+
+              <button
+                className="primary"
+                onClick={() => openFilm(films[0])}
+              >
+                <Play size={18} fill="currentColor" />
+                Watch
               </button>
+
+              <button
+                className="secondary"
+                onClick={() => toggleWatchlist(films[0].id)}
+              >
+                {watchlist.includes(films[0].id) ? (
+                  <Check size={18} />
+                ) : (
+                  <Plus size={18} />
+                )}
+
+                {watchlist.includes(films[0].id)
+                  ? 'In My List'
+                  : 'My List'}
+              </button>
+
             </div>
           </div>
         </section>
 
+        {/* FILMS */}
         <section className="section">
-          <div className="sectionHead"><h2>{query ? 'Search Results' : 'Featured AI Cinema'}</h2><ChevronRight size={20}/></div>
+
+          <div className="sectionHead">
+            <h2>
+              {query ? 'Search Results' : 'Featured AI Cinema'}
+            </h2>
+
+            <ChevronRight size={20} />
+          </div>
+
           <div className="grid">
-            {filtered.map(f => (
-              <article className="card" key={f.id} onClick={()=>setSelected(f)}>
-                <img src={f.poster} alt={f.title}/>
-                <div className="cardOverlay"><span>{f.runtime}</span><span>{f.genre}</span></div>
-                <div className="cardBody"><h3>{f.title}</h3><p>{f.country} • {f.year}</p></div>
+
+            {filtered.map((film) => (
+              <article
+                className="card"
+                key={film.id}
+                onClick={() => openFilm(film)}
+              >
+                <img
+                  src={film.poster}
+                  alt={film.title}
+                />
+
+                <div className="cardOverlay">
+                  <span>{film.runtime}</span>
+                  <span>{film.genre}</span>
+                </div>
+
+                <div className="cardBody">
+                  <h3>{film.title}</h3>
+                  <p>
+                    {film.country} • {film.year}
+                  </p>
+                </div>
               </article>
             ))}
+
           </div>
         </section>
 
+        {/* CATEGORIES */}
         <section className="section">
-          <div className="sectionHead"><h2>Explore AI Cinema</h2></div>
+
+          <div className="sectionHead">
+            <h2>Explore AI Cinema</h2>
+          </div>
+
           <div className="chips">
-            {['Drama','Sci-Fi','Historical','Animation','Documentary','Experimental','Pakistan','International'].map(x=><button key={x}>{x}</button>)}
+
+            {[
+              'Drama',
+              'Sci-Fi',
+              'Historical',
+              'Animation',
+              'Documentary',
+              'Experimental',
+              'Pakistan',
+              'International'
+            ].map((category) => (
+              <button key={category}>
+                {category}
+              </button>
+            ))}
+
           </div>
         </section>
 
+        {/* FILMMAKER SECTION */}
         <section className="creatorBanner">
+
           <div>
-            <div className="eyebrow">FOR FILMMAKERS</div>
-            <h2>Have an AI film?</h2>
-            <p>AI Flix is being built as a home for AI-generated and AI-assisted cinema.</p>
+
+            <div className="eyebrow">
+              FOR FILMMAKERS
+            </div>
+
+            <h2>
+              Have an AI film?
+            </h2>
+
+            <p>
+              AI Flix is being built as a home for
+              AI-generated and AI-assisted cinema.
+            </p>
+
           </div>
-          <button className="primary">Submit a Film <ChevronRight size={18}/></button>
+
+          <button className="primary">
+            Submit a Film
+            <ChevronRight size={18} />
+          </button>
+
         </section>
+
       </main>
 
-      <footer><div className="brand">AI<span>FLIX</span></div><p>© 2026 AI Flix. A home for AI cinema.</p></footer>
+      {/* FOOTER */}
+      <footer>
 
-      {selected && (
-        <div className="modal" onClick={()=>setSelected(null)}>
-          <div className="modalCard" onClick={e=>e.stopPropagation()}>
-            <img src={selected.poster} alt="" />
-            <div className="modalContent">
-              <button className="close" onClick={()=>setSelected(null)}>×</button>
-              <div className="eyebrow">{selected.country} • {selected.year}</div>
-              <h2>{selected.title}</h2>
-              <p className="meta">{selected.runtime} • {selected.genre}</p>
-              <p>{selected.description}</p>
-              <p className="creator"><Film size={16}/> Created by {selected.creator}</p>
-              <div className="actions">
-                <button className="primary"><Play size={18} fill="currentColor"/> Watch</button>
-                <button className="secondary" onClick={()=>toggleWatchlist(selected.id)}>
-                  {watchlist.includes(selected.id) ? <Check size={18}/> : <Plus size={18}/>}
-                  {watchlist.includes(selected.id) ? 'In My List' : 'My List'}
-                </button>
-              </div>
-              <p className="notice">Demo player: real film streaming will be connected in the next build stage.</p>
-            </div>
-          </div>
+        <div className="brand">
+          AI<span>FLIX</span>
         </div>
+
+        <p>
+          © 2026 AI Flix. A home for AI cinema.
+        </p>
+
+      </footer>
+
+      {/* FILM MODAL */}
+      {selected && (
+
+        <div
+          className="modal"
+          onClick={closeFilm}
+        >
+
+          <div
+            className="modalCard"
+            onClick={(event) => event.stopPropagation()}
+          >
+
+            {/* VIDEO PLAYER */}
+            {playing && selected.youtubeId ? (
+
+              <div className="videoWrapper">
+
+                <iframe
+                  src={`https://www.youtube.com/embed/${selected.youtubeId}?autoplay=1&rel=0`}
+                  title={selected.title}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+
+              </div>
+
+            ) : (
+
+              <img
+                src={selected.poster}
+                alt={selected.title}
+              />
+
+            )}
+
+            <div className="modalContent">
+
+              <button
+                className="close"
+                onClick={closeFilm}
+              >
+                <X size={20} />
+              </button>
+
+              <div className="eyebrow">
+                {selected.country} • {selected.year}
+              </div>
+
+              <h2>
+                {selected.title}
+              </h2>
+
+              <p className="meta">
+                {selected.runtime} • {selected.genre}
+              </p>
+
+              <p>
+                {selected.description}
+              </p>
+
+              <p className="creator">
+                <Film size={16} />
+                Created by {selected.creator}
+              </p>
+
+              <div className="actions">
+
+                {selected.youtubeId && (
+
+                  <button
+                    className="primary"
+                    onClick={() => setPlaying(true)}
+                  >
+                    <Play
+                      size={18}
+                      fill="currentColor"
+                    />
+                    Watch Film
+                  </button>
+
+                )}
+
+                <button
+                  className="secondary"
+                  onClick={() =>
+                    toggleWatchlist(selected.id)
+                  }
+                >
+                  {watchlist.includes(selected.id) ? (
+                    <Check size={18} />
+                  ) : (
+                    <Plus size={18} />
+                  )}
+
+                  {watchlist.includes(selected.id)
+                    ? 'In My List'
+                    : 'My List'}
+                </button>
+
+              </div>
+
+              {playing && (
+                <p className="notice">
+                  You are watching on AI Flix.
+                </p>
+              )}
+
+            </div>
+
+          </div>
+
+        </div>
+
       )}
+
     </div>
   );
 }
 
-createRoot(document.getElementById('root')).render(<App />);
+createRoot(
+  document.getElementById('root')
+).render(<App />);
