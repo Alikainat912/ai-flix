@@ -313,11 +313,10 @@ function App() {
           className="modal"
           onClick={closeFilm}
         >
-
           <div
-            className="modalCard"
-            onClick={(event) => event.stopPropagation()}
-          >
+  className={`modalCard ${playing ? 'playingCard' : ''}`}
+  onClick={(event) => event.stopPropagation()}
+>
 
             {/* VIDEO PLAYER */}
             {playing && selected.youtubeId ? (
