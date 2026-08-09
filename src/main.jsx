@@ -1,4 +1,4 @@
-          import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   Search,
@@ -13,8 +13,7 @@ import {
 import './styles.css';
 import { supabase } from './supabase';
 
-
-const films = [
+const fallbackFilms = [
   {
     id: 1,
     title: 'The Night The Flag Changed',
@@ -72,10 +71,58 @@ const films = [
 ];
 
 function App() {
+  const [films, setFilms] = useState(fallbackFilms);
   const [selected, setSelected] = useState(null);
   const [playing, setPlaying] = useState(false);
   const [query, setQuery] = useState('');
   const [watchlist, setWatchlist] = useState([]);
+
+  useEffect(() => {
+    const loadMovies = async () => {
+      const { data, error } = await supabase
+        .from('movies')
+        .select('*')
+        .order('year', { ascending: false });
+
+      if (error) {
+        console.error('Could not load movies from Supabase:', error);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        return;
+      }
+
+      const databaseFilms = data.map((movie) => {
+        const existingFilm = fallbackFilms.find(
+          (film) => film.title === movie.title
+        );
+
+        return {
+          id: movie.id,
+          title: movie.title,
+          year: movie.year || existingFilm?.year || 2026,
+          runtime: movie.duration || existingFilm?.runtime || '',
+          genre: movie.genre || existingFilm?.genre || 'AI Cinema',
+          country: existingFilm?.country || 'International',
+          creator: movie.director || existingFilm?.creator || 'Unknown',
+          description:
+            movie.description ||
+            existingFilm?.description ||
+            'An AI-generated or AI-assisted film.',
+          poster:
+            movie.poster_url ||
+            existingFilm?.poster ||
+            'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
+          youtubeId: existingFilm?.youtubeId
+        };
+      });
+
+      setFilms(databaseFilms);
+    };
+
+    loadMovies();
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -83,11 +130,11 @@ function App() {
     if (!q) return films;
 
     return films.filter((film) =>
-      [film.title, film.genre, film.country, film.creator].some((value) =>
-        value.toLowerCase().includes(q)
+      [film.title, film.genre, film.country, film.creator].some(
+        (value) => value && value.toLowerCase().includes(q)
       )
     );
-  }, [query]);
+  }, [query, films]);
 
   const toggleWatchlist = (id) => {
     setWatchlist((current) =>
@@ -106,6 +153,8 @@ function App() {
     setSelected(null);
     setPlaying(false);
   };
+
+  const heroFilm = films[0];
 
   return (
     <div className="app">
@@ -142,61 +191,63 @@ function App() {
       <main>
 
         {/* HERO */}
-        <section
-          className="hero"
-          style={{
-            backgroundImage: `linear-gradient(
-              90deg,
-              rgba(0,0,0,.92) 0%,
-              rgba(0,0,0,.58) 48%,
-              rgba(0,0,0,.15) 100%
-            ), url(${films[0].poster})`
-          }}
-        >
-          <div className="heroCopy">
+        {heroFilm && (
+          <section
+            className="hero"
+            style={{
+              backgroundImage: `linear-gradient(
+                90deg,
+                rgba(0,0,0,.92) 0%,
+                rgba(0,0,0,.58) 48%,
+                rgba(0,0,0,.15) 100%
+              ), url(${heroFilm.poster})`
+            }}
+          >
+            <div className="heroCopy">
 
-            <div className="eyebrow">
-              AI FLIX ORIGINAL • 2026
+              <div className="eyebrow">
+                AI FLIX ORIGINAL • {heroFilm.year}
+              </div>
+
+              <h1>{heroFilm.title}</h1>
+
+              <p className="meta">
+                {heroFilm.year} • {heroFilm.runtime} • {heroFilm.genre}
+              </p>
+
+              <p className="description">
+                {heroFilm.description}
+              </p>
+
+              <div className="actions">
+
+                <button
+                  className="primary"
+                  onClick={() => openFilm(heroFilm)}
+                >
+                  <Play size={18} fill="currentColor" />
+                  Watch
+                </button>
+
+                <button
+                  className="secondary"
+                  onClick={() => toggleWatchlist(heroFilm.id)}
+                >
+                  {watchlist.includes(heroFilm.id) ? (
+                    <Check size={18} />
+                  ) : (
+                    <Plus size={18} />
+                  )}
+
+                  {watchlist.includes(heroFilm.id)
+                    ? 'In My List'
+                    : 'My List'}
+                </button>
+
+              </div>
             </div>
-
-            <h1>{films[0].title}</h1>
-
-            <p className="meta">
-              {films[0].year} • {films[0].runtime} • {films[0].genre}
-            </p>
-
-            <p className="description">
-              {films[0].description}
-            </p>
-
-            <div className="actions">
-
-              <button
-                className="primary"
-                onClick={() => openFilm(films[0])}
-              >
-                <Play size={18} fill="currentColor" />
-                Watch
-              </button>
-
-              <button
-                className="secondary"
-                onClick={() => toggleWatchlist(films[0].id)}
-              >
-                {watchlist.includes(films[0].id) ? (
-                  <Check size={18} />
-                ) : (
-                  <Plus size={18} />
-                )}
-
-                {watchlist.includes(films[0].id)
-                  ? 'In My List'
-                  : 'My List'}
-              </button>
-
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* FILMS */}
         <section className="section">
@@ -316,9 +367,9 @@ function App() {
           onClick={closeFilm}
         >
           <div
-  className={`modalCard ${playing ? 'playingCard' : ''}`}
-  onClick={(event) => event.stopPropagation()}
->
+            className={`modalCard ${playing ? 'playingCard' : ''}`}
+            onClick={(event) => event.stopPropagation()}
+          >
 
             {/* VIDEO PLAYER */}
             {playing && selected.youtubeId ? (
@@ -419,7 +470,6 @@ function App() {
             </div>
 
           </div>
-
         </div>
 
       )}
@@ -431,5 +481,3 @@ function App() {
 createRoot(
   document.getElementById('root')
 ).render(<App />);
-
-              
