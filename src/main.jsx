@@ -11,7 +11,7 @@ import {
   X
 } from 'lucide-react';
 import './styles.css';
-import { supabase } from './supabase';
+
 
 const films = [
   {
