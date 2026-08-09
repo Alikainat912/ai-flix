@@ -21,26 +21,51 @@ function App() {
   const [films, setFilms] = useState([]);
   const [loadingFilms, setLoadingFilms] = useState(true);
 
-  useEffect(() => {
+    useEffect(() => {
     async function loadFilms() {
-      const { data, error } = await supabase
-        .from('films')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const fallbackFilms = [
+        {
+          id: 1,
+          title: 'The Night The Flag Changed',
+          year: 2026,
+          runtime: '22 min',
+          genre: 'Historical Thriller',
+          country: 'Pakistan',
+          creator: 'Kainat Ali',
+          description:
+            'A historical thriller exploring a pivotal night through AI-assisted cinema.',
+          poster:
+            'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
+          featured: true,
+          youtubeId: 'oh3EBozQ19M'
+        }
+      ];
 
-      if (error) {
-        console.error('Error loading films:', error);
-        setFilms([]);
-      } else {
-        setFilms(
-          data.map((film) => ({
-            ...film,
-            youtubeId: film.youtube_id
-          }))
-        );
+      try {
+        const { data, error } = await supabase
+          .from('films')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Supabase error:', error);
+          setFilms(fallbackFilms);
+        } else if (data && data.length > 0) {
+          setFilms(
+            data.map((film) => ({
+              ...film,
+              youtubeId: film.youtube_id
+            }))
+          );
+        } else {
+          setFilms(fallbackFilms);
+        }
+      } catch (error) {
+        console.error('Connection error:', error);
+        setFilms(fallbackFilms);
+      } finally {
+        setLoadingFilms(false);
       }
-
-      setLoadingFilms(false);
     }
 
     loadFilms();
