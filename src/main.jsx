@@ -115,8 +115,9 @@ const databaseFilms = data.map((movie) => {
       existingFilm?.poster ||
       'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
     youtubeId: existingFilm?.youtubeId,
-    videoUrl: 
-      'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
+    videoUrl:
+  movie.video_url ||
+  'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
   };
 });
 
@@ -147,6 +148,9 @@ setFilms(databaseFilms);
   };
 
   const openFilm = (film) => {
+  console.log('SELECTED FILM:', film);
+  console.log('VIDEO URL:', film.videoUrl);
+
   setSelected(film);
   setPlaying(false);
 };
