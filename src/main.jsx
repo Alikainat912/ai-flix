@@ -79,6 +79,7 @@ function App() {
   const [watchlist, setWatchlist] = useState([]);
 
   useEffect(() => {
+    useEffect(() => {
     const loadMovies = async () => {
       const { data, error } = await supabase
         .from('movies')
@@ -93,46 +94,40 @@ function App() {
       if (!data || data.length === 0) {
         return;
       }
-const databaseFilms = data.map((movie) => {
-  const existingFilm = fallbackFilms.find(
-    (film) => film.title === movie.title
-  );
 
-  return {
-    id: movie.id,
-    title: movie.title,
-    year: movie.year || existingFilm?.year || 2026,
-    runtime: movie.duration || existingFilm?.runtime || '',
-    genre: movie.genre || existingFilm?.genre || 'AI Cinema',
+      const databaseFilms = data.map((movie) => {
+        const existingFilm = fallbackFilms.find(
+          (film) => film.title === movie.title
+        );
 
-    country:
-      existingFilm?.country ||
-      movie.country ||
-      'International',
+        return {
+          id: movie.id,
+          title: movie.title,
+          year: movie.year || existingFilm?.year || 2026,
+          runtime: movie.duration || existingFilm?.runtime || '',
+          genre: movie.genre || existingFilm?.genre || 'AI Cinema',
+          country: existingFilm?.country || 'International',
+          creator:
+            existingFilm?.creator ||
+            movie.director ||
+            'Unknown',
+          description:
+            existingFilm?.description ||
+            movie.description ||
+            'An AI-generated or AI-assisted film.',
+          poster:
+            existingFilm?.poster ||
+            movie.poster_url ||
+            'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
+          youtubeId: null,
+          videoUrl:
+            'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
+        };
+      });
 
-    creator:
-      existingFilm?.creator ||
-      movie.director ||
-      'Unknown',
+      setFilms(databaseFilms);
+    };
 
-    description:
-      existingFilm?.description ||
-      movie.description ||
-      'An AI-generated or AI-assisted film.',
-
-    poster:
-      existingFilm?.poster ||
-      movie.poster_url ||
-      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
-
-    youtubeId: null,
-
-    videoUrl:
-      'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
-  };
-});
-
-setFilms(databaseFilms);
     loadMovies();
   }, []);
 
