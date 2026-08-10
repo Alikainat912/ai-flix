@@ -454,7 +454,7 @@ setFilms(databaseFilms);
                   {watchlist.includes(selected.id)
                     ? 'In My List'
                     : 'My List'}
-                </button>9
+                </button>
 
               </div>
 
