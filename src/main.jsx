@@ -446,20 +446,16 @@ function App() {
 
               <div className="actions">
 
-                {(selected.videoUrl || selected.youtubeId) && (
-
-                  <button
-                    className="primary"
-                    onClick={() => setPlaying(true)}
-                  >
-                    <Play
-                      size={18}
-                      fill="currentColor"
-                    />
-                    Watch Film
-                  </button>
-
-                )}
+                <button
+  className="primary"
+  onClick={() => setPlaying(true)}
+>
+  <Play
+    size={18}
+    fill="currentColor"
+  />
+  Watch Film
+</button>
 
                 <button
                   className="secondary"
