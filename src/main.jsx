@@ -147,9 +147,22 @@ function App() {
     );
   };
 
-  const openFilm = (film) => {
+  const openFilm = async (film) => {
+  const { data, error } = await supabase
+    .from('movies')
+    .select('video_url')
+    .eq('id', film.id)
+    .single();
 
-  setSelected(film);
+  if (error) {
+    console.error('Could not load video:', error);
+  }
+
+  setSelected({
+    ...film,
+    videoUrl: data?.video_url || film.videoUrl,
+  });
+
   setPlaying(false);
 };
   const closeFilm = () => {
