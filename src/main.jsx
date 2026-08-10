@@ -79,7 +79,6 @@ function App() {
   const [watchlist, setWatchlist] = useState([]);
 
   useEffect(() => {
-    useEffect(() => {
     const loadMovies = async () => {
       const { data, error } = await supabase
         .from('movies')
