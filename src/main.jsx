@@ -159,9 +159,9 @@ function App() {
   }
 console.log('VIDEO FROM SUPABASE:', data?.video_url);
   setSelected({
-    ...film,
-    videoUrl: data?.video_url || film.videoUrl,
-  });
+  ...film,
+  videoUrl: 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
+});
 
   setPlaying(false);
 };
