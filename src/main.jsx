@@ -154,8 +154,12 @@ setFilms(databaseFilms);
   setPlaying(false);
 };
 
-  const heroFilm = films[0];
+const closeFilm = () => {
+  setSelected(null);
+  setPlaying(false);
+};
 
+const heroFilm = films[0];
   return (
     <div className="app">
 
