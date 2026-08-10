@@ -375,23 +375,15 @@ videoUrl: String(movie.video_url || ''),
 
             {/* VIDEO PLAYER */}
 {playing && selected.videoUrl ? (
-
   <div className="videoWrapper">
     <video
       src={selected.videoUrl}
       controls
       autoPlay
       playsInline
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'block'
-      }}
     />
   </div>
-
 ) : playing && selected.youtubeId ? (
-
   <div className="videoWrapper">
     <iframe
       src={`https://www.youtube.com/embed/${selected.youtubeId}?autoplay=1&rel=0`}
@@ -401,24 +393,14 @@ videoUrl: String(movie.video_url || ''),
       allowFullScreen
     />
   </div>
-
 ) : (
-
   <img
     src={selected.poster}
     alt={selected.title}
   />
-
 )}
 
-            ) : (
 
-              <img
-                src={selected.poster}
-                alt={selected.title}
-              />
-
-            )}
 
             <div className="modalContent">
 
