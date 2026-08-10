@@ -157,7 +157,7 @@ function App() {
   if (error) {
     console.error('Could not load video:', error);
   }
-
+console.log('VIDEO FROM SUPABASE:', data?.video_url);
   setSelected({
     ...film,
     videoUrl: data?.video_url || film.videoUrl,
