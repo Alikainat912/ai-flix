@@ -122,7 +122,11 @@ const databaseFilms = data.map((movie) => {
 });
 
 setFilms(databaseFilms);
-      
+    };
+
+    loadMovies();
+  }, []);
+
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
 
