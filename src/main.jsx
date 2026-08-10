@@ -104,26 +104,35 @@ const databaseFilms = data.map((movie) => {
     year: movie.year || existingFilm?.year || 2026,
     runtime: movie.duration || existingFilm?.runtime || '',
     genre: movie.genre || existingFilm?.genre || 'AI Cinema',
-    country: existingFilm?.country || 'International',
-    creator: movie.director || existingFilm?.creator || 'Unknown',
+
+    country:
+      existingFilm?.country ||
+      movie.country ||
+      'International',
+
+    creator:
+      existingFilm?.creator ||
+      movie.director ||
+      'Unknown',
+
     description:
-      movie.description ||
       existingFilm?.description ||
+      movie.description ||
       'An AI-generated or AI-assisted film.',
+
     poster:
-      movie.poster_url ||
       existingFilm?.poster ||
+      movie.poster_url ||
       'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
-    youtubeId: existingFilm?.youtubeId,
+
+    youtubeId: null,
+
     videoUrl:
-  movie.video_url ||
-  'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
+      'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
   };
 });
 
 setFilms(databaseFilms);
-    };
-
     loadMovies();
   }, []);
 
