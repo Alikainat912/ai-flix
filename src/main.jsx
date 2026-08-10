@@ -151,18 +151,20 @@ function App() {
   const { data, error } = await supabase
     .from('movies')
     .select('video_url')
-    .eq('title', film.title)
+    .eq('id', '550e8400-e29b-41d4-a716-446655440000')
     .single();
 
   if (error) {
     console.error('Could not load video:', error);
   }
-console.log('VIDEO FROM SUPABASE:', data?.video_url);
-  setSelected({
-  ...film,
-  videoUrl: data?.video_url || film.videoUrl,
-});
 
+  setSelected({
+    ...film,
+    videoUrl: data?.video_url || null,
+  });
+
+  setPlaying(false);
+};
   setPlaying(false);
 };
   const closeFilm = () => {
