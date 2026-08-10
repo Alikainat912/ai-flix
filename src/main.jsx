@@ -440,7 +440,7 @@ videoUrl: movie.video_url || existingFilm?.videoUrl
 
               <div className="actions">
 
-                {selected.youtubeId && (
+                {(selected.videoUrl || selected.youtubeId) && (
 
                   <button
                     className="primary"
