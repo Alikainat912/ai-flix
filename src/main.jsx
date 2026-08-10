@@ -115,9 +115,10 @@ function App() {
             existingFilm?.poster ||
             'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
           youtubeId: existingFilm?.youtubeId,
-videoUrl: movie.video_url,
+videoUrl: String(movie.video_url || ''),
         };
       });
+      console.log('DATABASE FILMS:', databaseFilms);
 
       setFilms(databaseFilms);
     };
