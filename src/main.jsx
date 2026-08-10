@@ -388,16 +388,7 @@ videoUrl: movie.video_url || existingFilm?.videoUrl
     }}
   />
 </div>
-
-                <iframe
-                  src={`https://www.youtube.com/embed/${selected.youtubeId}?autoplay=1&rel=0`}
-                  title={selected.title}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-
-              </div>
+            
 
             ) : (
 
@@ -470,7 +461,7 @@ videoUrl: movie.video_url || existingFilm?.videoUrl
                   {watchlist.includes(selected.id)
                     ? 'In My List'
                     : 'My List'}
-                </button>
+                </button>9
 
               </div>
 
