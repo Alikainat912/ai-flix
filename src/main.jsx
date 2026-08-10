@@ -221,7 +221,9 @@ function App() {
               <p className="description">
                 {heroFilm.description}
               </p>
-
+<p style={{ color: 'white', wordBreak: 'break-all' }}>
+  VIDEO: {selected.videoUrl || 'NO VIDEO URL'}
+</p>
               <div className="actions">
 
                 <button
