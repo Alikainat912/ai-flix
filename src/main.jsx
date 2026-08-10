@@ -165,8 +165,6 @@ function App() {
 
   setPlaying(false);
 };
-  setPlaying(false);
-};
   const closeFilm = () => {
     setSelected(null);
     setPlaying(false);
