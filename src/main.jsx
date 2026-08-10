@@ -147,22 +147,8 @@ function App() {
     );
   };
 
-  const openFilm = async (film) => {
-  const { data, error } = await supabase
-    .from('movies')
-    .select('video_url')
-    .eq('id', '550e8400-e29b-41d4-a716-446655440000')
-    .single();
-
-  if (error) {
-    console.error('Could not load video:', error);
-  }
-
-  setSelected({
-    ...film,
-    videoUrl: data?.video_url || null,
-  });
-
+  const openFilm = (film) => {
+  setSelected(film);
   setPlaying(false);
 };
   const closeFilm = () => {
