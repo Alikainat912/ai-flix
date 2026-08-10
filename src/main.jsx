@@ -27,7 +27,7 @@ const fallbackFilms = [
     poster:
       'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
     featured: true,
-  youtubeId: youtubeId: null,
+  youtubeId: null,
 
   },
   {
