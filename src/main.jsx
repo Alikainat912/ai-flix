@@ -374,23 +374,42 @@ videoUrl: String(movie.video_url || ''),
           >
 
             {/* VIDEO PLAYER */}
-            {playing && selected.videoUrl ? (
+{playing && selected.videoUrl ? (
 
-              <div className="videoWrapper">
-                <p style={{ color: 'white', wordBreak: 'break-all' }}>{selected.videoUrl}</p>
-  <video
-    src={selected.videoUrl}
-    controls
-    autoPlay
-    playsInline
-    style={{
-      width: '100%',
-      height: '100%',
-      display: 'block'
-    }}
+  <div className="videoWrapper">
+    <video
+      src={selected.videoUrl}
+      controls
+      autoPlay
+      playsInline
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'block'
+      }}
+    />
+  </div>
+
+) : playing && selected.youtubeId ? (
+
+  <div className="videoWrapper">
+    <iframe
+      src={`https://www.youtube.com/embed/${selected.youtubeId}?autoplay=1&rel=0`}
+      title={selected.title}
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowFullScreen
+    />
+  </div>
+
+) : (
+
+  <img
+    src={selected.poster}
+    alt={selected.title}
   />
-</div>
-            
+
+)}
 
             ) : (
 
