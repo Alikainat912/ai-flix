@@ -28,6 +28,9 @@ const fallbackFilms = [
       'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
     featured: true,
   youtubeId: null,
+    videoUrl:
+  movie.video_url ||
+  'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
 
   },
   {
