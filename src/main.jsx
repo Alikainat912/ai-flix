@@ -387,6 +387,7 @@ function App() {
           >
 
             {/* VIDEO PLAYER */}
+
 {playing && selected.videoUrl ? (
   <div className="videoWrapper">
     <video
@@ -412,8 +413,6 @@ function App() {
     alt={selected.title}
   />
 )}
-
-
 
             <div className="modalContent">
 
