@@ -376,6 +376,7 @@ videoUrl: movie.video_url,
             {playing && selected.videoUrl ? (
 
               <div className="videoWrapper">
+                <p style={{ color: 'white', wordBreak: 'break-all' }}>{selected.videoUrl}</p>
   <video
     src={selected.videoUrl}
     controls
