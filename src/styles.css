@@ -10,7 +10,8 @@
   overflow: hidden;
 }
 
-.videoWrapper video {
+.videoWrapper video,
+.videoWrapper iframe {
   width: 100%;
   height: 100%;
   display: block;
