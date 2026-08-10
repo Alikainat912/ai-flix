@@ -151,10 +151,10 @@ setFilms(databaseFilms);
   setSelected(film);
   setPlaying(false);
 };
-  const closeFilm = () => {
-    setSelected(null);
-    setPlaying(false);
-  };
+  const openFilm = (film) => {
+  setSelected(film);
+  setPlaying(true);
+};
 
   const heroFilm = films[0];
 
