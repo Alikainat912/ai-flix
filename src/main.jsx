@@ -114,7 +114,8 @@ function App() {
             movie.poster_url ||
             existingFilm?.poster ||
             'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
-          youtubeId: existingFilm?.youtubeId
+          youtubeId: existingFilm?.youtubeId,
+videoUrl: movie.video_url || existingFilm?.videoUrl
         };
       });
 
@@ -372,9 +373,21 @@ function App() {
           >
 
             {/* VIDEO PLAYER */}
-            {playing && selected.youtubeId ? (
+            {playing && selected.videoUrl ? (
 
               <div className="videoWrapper">
+  <video
+    src={selected.videoUrl}
+    controls
+    autoPlay
+    playsInline
+    style={{
+      width: '100%',
+      height: '100%',
+      display: 'block'
+    }}
+  />
+</div>
 
                 <iframe
                   src={`https://www.youtube.com/embed/${selected.youtubeId}?autoplay=1&rel=0`}
