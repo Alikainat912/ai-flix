@@ -93,42 +93,36 @@ function App() {
       if (!data || data.length === 0) {
         return;
       }
+const databaseFilms = data.map((movie) => {
+  const existingFilm = fallbackFilms.find(
+    (film) => film.title === movie.title
+  );
 
-      const databaseFilms = data.map((movie) => {
-        const existingFilm = fallbackFilms.find(
-          (film) => film.title === movie.title
-        );
+  return {
+    id: movie.id,
+    title: movie.title,
+    year: movie.year || existingFilm?.year || 2026,
+    runtime: movie.duration || existingFilm?.runtime || '',
+    genre: movie.genre || existingFilm?.genre || 'AI Cinema',
+    country: existingFilm?.country || 'International',
+    creator: movie.director || existingFilm?.creator || 'Unknown',
+    description:
+      movie.description ||
+      existingFilm?.description ||
+      'An AI-generated or AI-assisted film.',
+    poster:
+      movie.poster_url ||
+      existingFilm?.poster ||
+      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
+    youtubeId: existingFilm?.youtubeId,
+    videoUrl:
+      movie.video_url ||
+      'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
+  };
+});
 
-        return {
-          id: movie.id,
-          title: movie.title,
-          year: movie.year || existingFilm?.year || 2026,
-          runtime: movie.duration || existingFilm?.runtime || '',
-          genre: movie.genre || existingFilm?.genre || 'AI Cinema',
-          country: existingFilm?.country || 'International',
-          creator: movie.director || existingFilm?.creator || 'Unknown',
-          description:
-            movie.description ||
-            existingFilm?.description ||
-            'An AI-generated or AI-assisted film.',
-          poster:
-            movie.poster_url ||
-            existingFilm?.poster ||
-            'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
-          youtubeId: existingFilm?.youtubeId,
-          videoUrl:
-  movie.video_url ||
-  'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
-        };
-    
-    
-
-      setFilms(databaseFilms);
-    };
-
-    loadMovies();
-  }, []);
-
+setFilms(databaseFilms);
+      
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
 
