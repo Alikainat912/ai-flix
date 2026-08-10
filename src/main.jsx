@@ -377,26 +377,21 @@ const heroFilm = films[0];
             className={`modalCard ${playing ? 'playingCard' : ''}`}
             onClick={(event) => event.stopPropagation()}
           >
+{/* VIDEO PLAYER */}
 
-            {/* VIDEO PLAYER */}
-
-{playing && selected.videoUrl ? (
+{playing ? (
   <div className="videoWrapper">
     <video
-      src={selected.videoUrl}
       controls
       autoPlay
       playsInline
-    />
-  </div>
-) : playing && selected.youtubeId ? (
-  <div className="videoWrapper">
-    <iframe
-      src={`https://www.youtube.com/embed/${selected.youtubeId}?autoplay=1&rel=0`}
-      title={selected.title}
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowFullScreen
+      src="https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4"
+      style={{
+        width: '100%',
+        height: 'auto',
+        display: 'block',
+        background: '#000'
+      }}
     />
   </div>
 ) : (
@@ -405,7 +400,8 @@ const heroFilm = films[0];
     alt={selected.title}
   />
 )}
-
+             
+    
             <div className="modalContent">
 
               <button
