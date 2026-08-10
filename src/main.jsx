@@ -481,11 +481,8 @@ const heroFilm = films[0];
         </div>
 
       )}
-
     </div>
   );
 }
 
-createRoot(
-  document.getElementById('root')
-).render(<App />);
+createRoot(document.getElementById('root')).render(<App />);
