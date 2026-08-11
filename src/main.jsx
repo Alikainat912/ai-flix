@@ -422,7 +422,8 @@ const heroFilm = films[0];
 
   </section>
 ) : (
-        {heroFilm && (
+  <>
+    {heroFilm && (
           <section
             className="hero"
             style={{
@@ -575,9 +576,11 @@ const heroFilm = films[0];
             <ChevronRight size={18} />
           </button>
 
-        </section>
+                </section>
 
+  </>
 )}
+
 </main>
 
       {/* FOOTER */}
