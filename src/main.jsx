@@ -109,6 +109,33 @@ useEffect(() => {
     subscription.unsubscribe();
   };
 }, []);
+  useEffect(() => {
+  const loadWatchlist = async () => {
+    if (!user) {
+      setWatchlist([]);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('watchlist')
+      .select('movie_id')
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error(
+        'Could not load My List:',
+        error
+      );
+      return;
+    }
+
+    setWatchlist(
+  (data || []).map((item) => Number(item.movie_id))
+);
+  };
+
+  loadWatchlist();
+}, [user]);
 
 useEffect(() => {
   const loadMovies = async () => {
@@ -207,14 +234,50 @@ useEffect(() => {
     );
   }, [query, films]);
 
-  const toggleWatchlist = (id) => {
-    setWatchlist((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id]
-    );
-  };
+  const toggleWatchlist = async (id) => {
+  if (!user) {
+    setAuthError('Please sign in to use My List.');
+    setAuthMode('login');
+    return;
+  }
 
+  const alreadySaved = watchlist.includes(id);
+
+  if (alreadySaved) {
+    const { error } = await supabase
+      .from('watchlist')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('movie_id', String(id));
+
+    if (error) {
+      console.error('Could not remove from My List:', error);
+      return;
+    }
+
+    setWatchlist((current) =>
+      current.filter((item) => item !== id)
+    );
+
+  } else {
+    const { error } = await supabase
+      .from('watchlist')
+      .insert({
+        user_id: user.id,
+        movie_id: String(id)
+      });
+
+    if (error) {
+      console.error('Could not add to My List:', error);
+      return;
+    }
+
+    setWatchlist((current) => [
+      ...current,
+      id
+    ]);
+  }
+};
   const openFilm = (film) => {
   console.log('SELECTED FILM:', film);
   console.log('VIDEO URL:', film.videoUrl);
