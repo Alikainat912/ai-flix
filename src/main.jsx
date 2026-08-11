@@ -104,53 +104,24 @@ console.log('POSTER URL:', movie.poster_url);
   );
 
   return {
-    id: movie.id,
-
-    title:
-      movie.title ||
-      existingFilm?.title ||
-      'Untitled Film',
-
-    year:
-      movie.year ||
-      existingFilm?.year ||
-      2026,
-
-    runtime:
-      movie.duration ||
-      existingFilm?.runtime ||
-      '',
-
-    genre:
-      movie.genre ||
-      existingFilm?.genre ||
-      'AI Cinema',
-
-    country:
-      existingFilm?.country ||
-      'International',
-
-    creator:
-      movie.director ||
-      existingFilm?.creator ||
-      'Unknown',
-
-    description:
-      movie.description ||
-      existingFilm?.description ||
-      'An AI-generated or AI-assisted film.',
-
-    poster:
-  movie.poster_url?.trim() ||
-  (movie.title === 'The Night The Flag Changed'
-    ? 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/104914533_1781362209762270.jpg'
-    : ''),
-    videoUrl:
-      movie.video_url ||
-      existingFilm?.videoUrl ||
-      'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
-  };
-});
+  id: movie.id,
+  title: movie.title || 'Untitled Film',
+  year: movie.year || 2026,
+  runtime: movie.duration || '',
+  genre: movie.genre || 'AI Cinema',
+  country: existingFilm?.country || 'International',
+  creator: movie.director || existingFilm?.creator || 'Unknown',
+  description:
+    movie.description ||
+    existingFilm?.description ||
+    'An AI-generated or AI-assisted film.',
+  poster: movie.poster_url?.trim() || '',
+  youtubeId: existingFilm?.youtubeId || null,
+  videoUrl:
+    movie.video_url ||
+    existingFilm?.videoUrl ||
+    'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
+};
     
 
     setFilms(databaseFilms);
