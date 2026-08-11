@@ -77,8 +77,7 @@ function App() {
   const [query, setQuery] = useState('');
   const [watchlist, setWatchlist] = useState([]);
 
-
-  useEffect(() => {
+useEffect(() => {
   const loadMovies = async () => {
     const { data, error } = await supabase
       .from('movies')
@@ -96,40 +95,76 @@ function App() {
     if (!data || data.length === 0) {
       return;
     }
-const databaseFilms = data.map((movie) => {
-  console.log('MOVIE:', movie.title);
-console.log('POSTER URL:', movie.poster_url);
-  const existingFilm = fallbackFilms.find(
-    (film) => film.title === movie.title
-  );
 
-  return {
-  id: movie.id,
-  title: movie.title || 'Untitled Film',
-  year: movie.year || 2026,
-  runtime: movie.duration || '',
-  genre: movie.genre || 'AI Cinema',
-  country: existingFilm?.country || 'International',
-  creator: movie.director || existingFilm?.creator || 'Unknown',
-  description:
-    movie.description ||
-    existingFilm?.description ||
-    'An AI-generated or AI-assisted film.',
-  poster: movie.poster_url?.trim() || '',
-  youtubeId: existingFilm?.youtubeId || null,
-  videoUrl:
-    movie.video_url ||
-    existingFilm?.videoUrl ||
-    'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
-};
-    
+    const databaseFilms = data.map((movie) => {
+      console.log('MOVIE:', movie.title);
+      console.log(
+        'POSTER URL FROM SUPABASE:',
+        movie.poster_url
+      );
+
+      const existingFilm = fallbackFilms.find(
+        (film) => film.title === movie.title
+      );
+
+      return {
+        id: movie.id,
+
+        title:
+          movie.title ||
+          existingFilm?.title ||
+          'Untitled Film',
+
+        year:
+          movie.year ||
+          existingFilm?.year ||
+          2026,
+
+        runtime:
+          movie.duration ||
+          existingFilm?.runtime ||
+          '',
+
+        genre:
+          movie.genre ||
+          existingFilm?.genre ||
+          'AI Cinema',
+
+        country:
+          existingFilm?.country ||
+          'International',
+
+        creator:
+          movie.director ||
+          existingFilm?.creator ||
+          'Unknown',
+
+        description:
+          movie.description ||
+          existingFilm?.description ||
+          'An AI-generated or AI-assisted film.',
+
+        poster:
+          movie.poster_url?.trim() ||
+          '',
+
+        youtubeId:
+          existingFilm?.youtubeId ||
+          null,
+
+        videoUrl:
+          movie.video_url ||
+          existingFilm?.videoUrl ||
+          'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
+      };
+    });
 
     setFilms(databaseFilms);
   };
 
   loadMovies();
 }, []);
-
+  
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
 
