@@ -24,7 +24,8 @@ const fallbackFilms = [
     creator: 'Kainat Ali',
     description:
       'A historical thriller exploring a pivotal night through AI-assisted cinema.',
-    poster: '',
+    poster:
+  'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/104914533_1781362209762270.jpg',
     featured: true,
   youtubeId: null,
 
