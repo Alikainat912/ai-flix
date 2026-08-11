@@ -95,37 +95,38 @@ function App() {
       }
 
       const databaseFilms = data.map((movie) => {
-        const existingFilm = fallbackFilms.find(
-          (film) => film.title === movie.title
-        );
+  const existingFilm = fallbackFilms.find(
+    (film) => film.title === movie.title
+  );
 
-        return {
-          id: movie.id,
-          title: movie.title,
-          year: movie.year || existingFilm?.year || 2026,
-          runtime: movie.duration || existingFilm?.runtime || '',
-          genre: movie.genre || existingFilm?.genre || 'AI Cinema',
-          country: existingFilm?.country || 'International',
-          creator:
-            existingFilm?.creator ||
-            movie.director ||
-            'Unknown',
-          description:
-            existingFilm?.description ||
-            movie.description ||
-            'An AI-generated or AI-assisted film.',
-          poster:
-            existingFilm?.poster ||
-            movie.poster_url ||
-            'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
-          youtubeId: null,
-          videoUrl:
-            'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
-        };
-      });
+  return {
+    id: movie.id,
+    title: movie.title,
+    year: movie.year || existingFilm?.year || 2026,
+    runtime: movie.duration || existingFilm?.runtime || '',
+    genre: movie.genre || existingFilm?.genre || 'AI Cinema',
+    country: existingFilm?.country || 'International',
+    creator:
+      existingFilm?.creator ||
+      movie.director ||
+      'Unknown',
+    description:
+      existingFilm?.description ||
+      movie.description ||
+      'An AI-generated or AI-assisted film.',
+    poster:
+      existingFilm?.poster ||
+      movie.poster_url ||
+      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
+    youtubeId: null,
+    videoUrl:
+      movie.video_url ||
+      existingFilm?.videoUrl ||
+      'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
+  };
+});
 
-      setFilms(databaseFilms);
-    };
+setFilms(databaseFilms);
 
     loadMovies();
   }, []);
@@ -385,7 +386,7 @@ const heroFilm = films[0];
       controls
       autoPlay
       playsInline
-      src="https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4"
+      src={selected.videoUrl}
       style={{
         width: '100%',
         height: 'auto',
