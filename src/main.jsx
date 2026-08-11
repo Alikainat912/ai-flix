@@ -98,6 +98,8 @@ function App() {
       return;
     }
 const databaseFilms = data.map((movie) => {
+  console.log('MOVIE:', movie.title);
+console.log('POSTER URL:', movie.poster_url);
   const existingFilm = fallbackFilms.find(
     (film) => film.title === movie.title
   );
