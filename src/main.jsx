@@ -78,6 +78,15 @@ function App() {
   const [query, setQuery] = useState('');
   const [watchlist, setWatchlist] = useState([]);
   const [activePage, setActivePage] = useState('home');
+  const [submissionTitle, setSubmissionTitle] = useState('');
+const [submissionDescription, setSubmissionDescription] = useState('');
+const [submissionGenre, setSubmissionGenre] = useState('');
+const [submissionCountry, setSubmissionCountry] = useState('');
+const [submissionDirector, setSubmissionDirector] = useState('');
+const [submissionYear, setSubmissionYear] = useState('');
+const [submissionDuration, setSubmissionDuration] = useState('');
+const [submissionMessage, setSubmissionMessage] = useState('');
+const [submissionError, setSubmissionError] = useState('');
   // AUTH STATES
 const [user, setUser] = useState(null);
 const [authMode, setAuthMode] = useState(null);
