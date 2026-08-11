@@ -357,9 +357,7 @@ const heroFilm = films[0];
         </div>
       </header>
 
-      <main>
-
-        {/* HERO */}
+  
         <main>
           {activePage === 'mylist' ? (
   <section className="section myListPage">
