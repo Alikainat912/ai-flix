@@ -62,3 +62,164 @@
     font-size: 24px;
   }
 }
+@media (max-width: 768px) {
+
+  /* MOBILE NAVIGATION */
+  .nav {
+    padding: 14px 16px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    font-size: 22px;
+  }
+
+  .nav nav {
+    order: 3;
+    width: 100%;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .nav nav button {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .navRight {
+    margin-left: auto;
+  }
+
+  .search {
+    width: 140px;
+  }
+
+  .search input {
+    width: 100%;
+  }
+
+
+  /* MOBILE HERO */
+  .hero {
+    min-height: 520px;
+    background-position: center;
+  }
+
+  .heroCopy {
+    padding: 28px 20px;
+    justify-content: flex-end;
+  }
+
+  .heroCopy h1 {
+    font-size: 32px;
+    line-height: 1.05;
+  }
+
+  .description {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+
+
+  /* MOBILE FILM GRID */
+  .section {
+    padding: 28px 16px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .card img {
+    height: 230px;
+    object-fit: cover;
+  }
+
+  .cardBody {
+    padding: 10px;
+  }
+
+  .cardBody h3 {
+    font-size: 14px;
+  }
+
+  .cardBody p {
+    font-size: 12px;
+  }
+
+  .cardOverlay {
+    font-size: 10px;
+  }
+
+
+  /* MY LIST */
+  .myListPage {
+    min-height: 60vh;
+  }
+
+  .emptyState {
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+
+  /* CATEGORY CHIPS */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chips button {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+
+  /* FILMMAKER SECTION */
+  .creatorBanner {
+    margin: 20px 16px;
+    padding: 24px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+
+  /* MODALS */
+  .modal {
+    padding: 12px;
+  }
+
+  .modalCard {
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+
+  .modalContent {
+    padding: 20px;
+  }
+
+  .modalContent h2 {
+    font-size: 24px;
+  }
+
+
+  /* VIDEO */
+  .videoWrapper video {
+    width: 100%;
+    height: auto;
+  }
+
+}
