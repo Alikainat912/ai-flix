@@ -143,10 +143,10 @@ console.log('POSTER URL:', movie.poster_url);
 
     poster:
   movie.poster_url?.trim() ||
-  existingFilm?.poster ||
-  'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
-    youtubeId:
-      existingFilm?.youtubeId || null,
+  (movie.title === 'The Night The Flag Changed'
+    ? 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/104914533_1781362209762270.jpg'
+    : existingFilm?.poster ||
+      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80'),
 
     videoUrl:
       movie.video_url ||
