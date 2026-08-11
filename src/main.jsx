@@ -399,17 +399,17 @@ const heroFilm = films[0];
 {playing ? (
   <div className="videoWrapper">
     <video
-      controls
-      autoPlay
-      playsInline
-      src={selected.videoUrl}
-      style={{
-        width: '100%',
-        height: 'auto',
-        display: 'block',
-        background: '#000'
-      }}
-    />
+  controls
+  autoPlay
+  playsInline
+  src="https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4"
+  style={{
+    width: '100%',
+    height: 'auto',
+    display: 'block',
+    background: '#000'
+  }}
+/>
   </div>
 ) : (
   <img
