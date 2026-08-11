@@ -552,7 +552,6 @@ const heroFilm = films[0];
 
   </section>
 ) : activePage === 'mylist' ? (
-          {activePage === 'mylist' ? (
   <section className="section myListPage">
 
     <div className="sectionHead">
