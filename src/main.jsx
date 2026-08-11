@@ -77,6 +77,38 @@ function App() {
   const [playing, setPlaying] = useState(false);
   const [query, setQuery] = useState('');
   const [watchlist, setWatchlist] = useState([]);
+  // AUTH STATES
+const [user, setUser] = useState(null);
+const [authMode, setAuthMode] = useState(null);
+const [email, setEmail] = useState('');
+const [password, setPassword] = useState('');
+const [fullName, setFullName] = useState('');
+const [authError, setAuthError] = useState('');
+const [authMessage, setAuthMessage] = useState('');
+  // LOGIN CHECK
+useEffect(() => {
+  const getUser = async () => {
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
+
+    setUser(user);
+  };
+
+  getUser();
+
+  const {
+    data: { subscription }
+  } = supabase.auth.onAuthStateChange(
+    (_event, session) => {
+      setUser(session?.user || null);
+    }
+  );
+
+  return () => {
+    subscription.unsubscribe();
+  };
+}, []);
 
 useEffect(() => {
   const loadMovies = async () => {
