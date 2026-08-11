@@ -324,9 +324,14 @@ const heroFilm = films[0];
     Browse
   </button>
 
-  <button onClick={() => setActivePage('mylist')}>
-    My List
-  </button>
+  <button
+  onClick={() => {
+    console.log('MY LIST BUTTON CLICKED');
+    setActivePage('mylist');
+  }}
+>
+  My List
+</button>
 
   <button onClick={() => setActivePage('categories')}>
     Categories
