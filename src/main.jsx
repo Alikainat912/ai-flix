@@ -235,7 +235,7 @@ useEffect(() => {
   }, [query, films]);
 
   const toggleWatchlist = async (id) => {
-    console.log('MY LIST CLICKED:', id);
+    alert('MY LIST CLICKED: ' + id);
   if (!user) {
     setAuthError('Please sign in to use My List.');
     setAuthMode('login');
