@@ -145,9 +145,8 @@ useEffect(() => {
           'An AI-generated or AI-assisted film.',
 
         poster:
-          movie.poster_url?.trim() ||
-          '',
-
+  movie.poster_url?.trim() ||
+  'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/104914533_1781362209762270.jpg',
         youtubeId:
           existingFilm?.youtubeId ||
           null,
