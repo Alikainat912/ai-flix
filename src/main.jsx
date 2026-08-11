@@ -77,6 +77,7 @@ function App() {
   const [playing, setPlaying] = useState(false);
   const [query, setQuery] = useState('');
   const [watchlist, setWatchlist] = useState([]);
+  const [activePage, setActivePage] = useState('home');
   // AUTH STATES
 const [user, setUser] = useState(null);
 const [authMode, setAuthMode] = useState(null);
@@ -289,8 +290,6 @@ useEffect(() => {
       ...current,
       id
     ]);
-
-    alert('Added to My List!');
   }
 };
   const openFilm = (film) => {
@@ -317,10 +316,22 @@ const heroFilm = films[0];
         </div>
 
         <nav>
-          <button>Home</button>
-          <button>Browse</button>
-          <button>Categories</button>
-        </nav>
+  <button onClick={() => setActivePage('home')}>
+    Home
+  </button>
+
+  <button onClick={() => setActivePage('browse')}>
+    Browse
+  </button>
+
+  <button onClick={() => setActivePage('mylist')}>
+    My List
+  </button>
+
+  <button onClick={() => setActivePage('categories')}>
+    Categories
+  </button>
+</nav>
 
         <div className="navRight">
           <div className="search">
@@ -349,6 +360,68 @@ const heroFilm = films[0];
       <main>
 
         {/* HERO */}
+        <main>
+          {activePage === 'mylist' ? (
+  <section className="section myListPage">
+
+    <div className="sectionHead">
+      <h2>My List</h2>
+    </div>
+
+    {watchlist.length === 0 ? (
+      <div className="emptyState">
+        <h2>Your list is empty</h2>
+        <p>
+          Films you add to My List will appear here.
+        </p>
+
+        <button
+          className="primary"
+          onClick={() => setActivePage('browse')}
+        >
+          Browse Films
+        </button>
+      </div>
+    ) : (
+      <div className="grid">
+
+        {films
+          .filter((film) =>
+            watchlist.includes(film.id)
+          )
+          .map((film) => (
+            <article
+              className="card"
+              key={film.id}
+              onClick={() => openFilm(film)}
+            >
+
+              <img
+                src={film.poster}
+                alt={film.title}
+              />
+
+              <div className="cardOverlay">
+                <span>{film.runtime}</span>
+                <span>{film.genre}</span>
+              </div>
+
+              <div className="cardBody">
+                <h3>{film.title}</h3>
+
+                <p>
+                  {film.country} • {film.year}
+                </p>
+              </div>
+
+            </article>
+          ))}
+
+      </div>
+    )}
+
+  </section>
+) : (
         {heroFilm && (
           <section
             className="hero"
@@ -504,7 +577,8 @@ const heroFilm = films[0];
 
         </section>
 
-      </main>
+)}
+</main>
 
       {/* FOOTER */}
       <footer>
