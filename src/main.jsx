@@ -761,10 +761,13 @@ const heroFilm = films[0];
 
           </div>
 
-          <button className="primary">
-            Submit a Film
-            <ChevronRight size={18} />
-          </button>
+          <button
+  className="primary"
+  onClick={() => setActivePage('submit')}
+>
+  Submit a Film
+  <ChevronRight size={18} />
+</button>
 
                 </section>
 
