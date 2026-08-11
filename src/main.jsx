@@ -301,6 +301,58 @@ useEffect(() => {
     ]);
   }
 };
+ const submitFilm = async () => {
+  setSubmissionError('');
+  setSubmissionMessage('');
+
+  if (!user) {
+    setSubmissionError(
+      'Please sign in before submitting a film.'
+    );
+    setAuthMode('login');
+    return;
+  }
+
+  if (!submissionTitle.trim()) {
+    setSubmissionError('Please enter a film title.');
+    return;
+  }
+
+  const { error } = await supabase
+    .from('film_submissions')
+    .insert({
+      user_id: user.id,
+      title: submissionTitle.trim(),
+      description: submissionDescription.trim(),
+      genre: submissionGenre.trim(),
+      country: submissionCountry.trim(),
+      director: submissionDirector.trim(),
+      year: submissionYear.trim(),
+      duration: submissionDuration.trim(),
+      filmmaker_email: user.email,
+      status: 'pending'
+    });
+
+  if (error) {
+    console.error('SUBMISSION ERROR:', error);
+    setSubmissionError(
+      'Could not submit your film: ' + error.message
+    );
+    return;
+  }
+
+  setSubmissionMessage(
+    'Your film has been submitted successfully and is now pending review.'
+  );
+
+  setSubmissionTitle('');
+  setSubmissionDescription('');
+  setSubmissionGenre('');
+  setSubmissionCountry('');
+  setSubmissionDirector('');
+  setSubmissionYear('');
+  setSubmissionDuration('');
+};
   const openFilm = (film) => {
   console.log('SELECTED FILM:', film);
   console.log('VIDEO URL:', film.videoUrl);
