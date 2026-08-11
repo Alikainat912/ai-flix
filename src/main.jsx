@@ -402,7 +402,7 @@ const heroFilm = films[0];
       controls
       autoPlay
       playsInline
-      src={selected.videoUrl}
+      src="https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4"
       style={{
         width: '100%',
         height: 'auto',
