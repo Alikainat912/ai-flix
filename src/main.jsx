@@ -235,7 +235,9 @@ useEffect(() => {
   }, [query, films]);
 
   const toggleWatchlist = async (id) => {
-    alert('MY LIST CLICKED: ' + id);
+  console.log('MY LIST CLICKED:', id);
+  console.log('CURRENT USER:', user);
+
   if (!user) {
     setAuthError('Please sign in to use My List.');
     setAuthMode('login');
@@ -244,15 +246,21 @@ useEffect(() => {
 
   const alreadySaved = watchlist.includes(id);
 
+  console.log('ALREADY SAVED:', alreadySaved);
+
   if (alreadySaved) {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('watchlist')
       .delete()
       .eq('user_id', user.id)
-      .eq('movie_id', String(id));
+      .eq('movie_id', String(id))
+      .select();
+
+    console.log('DELETE RESULT:', data);
+    console.log('DELETE ERROR:', error);
 
     if (error) {
-      console.error('Could not remove from My List:', error);
+      alert('DELETE ERROR: ' + error.message);
       return;
     }
 
@@ -261,15 +269,19 @@ useEffect(() => {
     );
 
   } else {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('watchlist')
       .insert({
         user_id: user.id,
         movie_id: String(id)
-      });
+      })
+      .select();
+
+    console.log('INSERT RESULT:', data);
+    console.log('INSERT ERROR:', error);
 
     if (error) {
-      console.error('Could not add to My List:', error);
+      alert('INSERT ERROR: ' + error.message);
       return;
     }
 
@@ -277,6 +289,8 @@ useEffect(() => {
       ...current,
       id
     ]);
+
+    alert('Added to My List!');
   }
 };
   const openFilm = (film) => {
