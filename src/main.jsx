@@ -425,6 +425,133 @@ const heroFilm = films[0];
 
   
         <main>
+          {activePage === 'submit' ? (
+  <section className="section submitPage">
+
+    <div className="sectionHead">
+      <h2>Submit a Film</h2>
+    </div>
+
+    {!user ? (
+      <div className="emptyState">
+        <h2>Sign in to submit a film</h2>
+
+        <p>
+          You need an AI Flix account before submitting a film.
+        </p>
+
+        <button
+          className="primary"
+          onClick={() => {
+            setAuthError('');
+            setAuthMessage('');
+            setAuthMode('login');
+          }}
+        >
+          Sign In
+        </button>
+      </div>
+    ) : (
+      <div className="submissionForm">
+
+        <div className="eyebrow">
+          FILMMAKER SUBMISSION
+        </div>
+
+        <h2>Tell us about your film</h2>
+
+        <p>
+          Submit your AI-generated or AI-assisted film
+          for review by AI Flix.
+        </p>
+
+        {submissionError && (
+          <p className="authError">
+            {submissionError}
+          </p>
+        )}
+
+        {submissionMessage && (
+          <p className="authMessage">
+            {submissionMessage}
+          </p>
+        )}
+
+        <input
+          type="text"
+          placeholder="Film title"
+          value={submissionTitle}
+          onChange={(e) =>
+            setSubmissionTitle(e.target.value)
+          }
+        />
+
+        <textarea
+          placeholder="Film description / synopsis"
+          value={submissionDescription}
+          onChange={(e) =>
+            setSubmissionDescription(e.target.value)
+          }
+        />
+
+        <input
+          type="text"
+          placeholder="Genre"
+          value={submissionGenre}
+          onChange={(e) =>
+            setSubmissionGenre(e.target.value)
+          }
+        />
+
+        <input
+          type="text"
+          placeholder="Country"
+          value={submissionCountry}
+          onChange={(e) =>
+            setSubmissionCountry(e.target.value)
+          }
+        />
+
+        <input
+          type="text"
+          placeholder="Director / Creator"
+          value={submissionDirector}
+          onChange={(e) =>
+            setSubmissionDirector(e.target.value)
+          }
+        />
+
+        <input
+          type="text"
+          placeholder="Year"
+          value={submissionYear}
+          onChange={(e) =>
+            setSubmissionYear(e.target.value)
+          }
+        />
+
+        <input
+          type="text"
+          placeholder="Duration (e.g. 22 min)"
+          value={submissionDuration}
+          onChange={(e) =>
+            setSubmissionDuration(e.target.value)
+          }
+        />
+
+        <button
+          className="primary"
+          onClick={submitFilm}
+        >
+          Submit Film
+          <ChevronRight size={18} />
+        </button>
+
+      </div>
+    )}
+
+  </section>
+) : activePage === 'mylist' ? (
           {activePage === 'mylist' ? (
   <section className="section myListPage">
 
