@@ -308,19 +308,22 @@ const heroFilm = films[0];
           <div className="chips">
 
             {[
-              'Drama',
-              'Sci-Fi',
-              'Historical',
-              'Animation',
-              'Documentary',
-              'Experimental',
-              'Pakistan',
-              'International'
-            ].map((category) => (
-              <button key={category}>
-                {category}
-              </button>
-            ))}
+  'Drama',
+  'Sci-Fi',
+  'Historical',
+  'Animation',
+  'Documentary',
+  'Experimental',
+  'Pakistan',
+  'International'
+].map((category) => (
+  <button
+    key={category}
+    onClick={() => setQuery(category)}
+  >
+    {category}
+  </button>
+))}
 
           </div>
         </section>
