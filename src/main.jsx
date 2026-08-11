@@ -140,10 +140,9 @@ const databaseFilms = data.map((movie) => {
       'An AI-generated or AI-assisted film.',
 
     poster:
-      movie.poster_url ||
-      existingFilm?.poster ||
-      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
-
+  movie.poster_url?.trim() ||
+  existingFilm?.poster ||
+  'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
     youtubeId:
       existingFilm?.youtubeId || null,
 
