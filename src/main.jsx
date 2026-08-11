@@ -24,8 +24,7 @@ const fallbackFilms = [
     creator: 'Kainat Ali',
     description:
       'A historical thriller exploring a pivotal night through AI-assisted cinema.',
-    poster:
-      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
+    poster: '',
     featured: true,
   youtubeId: null,
 
@@ -145,9 +144,7 @@ console.log('POSTER URL:', movie.poster_url);
   movie.poster_url?.trim() ||
   (movie.title === 'The Night The Flag Changed'
     ? 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/104914533_1781362209762270.jpg'
-    : existingFilm?.poster ||
-      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80'),
-
+    : ''),
     videoUrl:
       movie.video_url ||
       existingFilm?.videoUrl ||
