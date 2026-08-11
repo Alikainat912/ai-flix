@@ -255,9 +255,16 @@ const heroFilm = films[0];
             />
           </div>
 
-          <button className="iconBtn">
-            <User size={19} />
-          </button>
+          <button
+  className="iconBtn"
+  onClick={() => {
+    setAuthError('');
+    setAuthMessage('');
+    setAuthMode(user ? 'account' : 'login');
+  }}
+>
+  <User size={19} />
+</button>
         </div>
       </header>
 
@@ -433,6 +440,229 @@ const heroFilm = films[0];
         </p>
 
       </footer>
+      {/* AUTH MODAL */}
+{authMode && (
+  <div
+    className="modal"
+    onClick={() => setAuthMode(null)}
+  >
+    <div
+      className="modalCard authCard"
+      onClick={(event) => event.stopPropagation()}
+    >
+
+      <button
+        className="close"
+        onClick={() => setAuthMode(null)}
+      >
+        <X size={20} />
+      </button>
+
+      {authMode === 'login' && (
+        <div className="modalContent">
+
+          <div className="eyebrow">
+            WELCOME BACK
+          </div>
+
+          <h2>Sign in to AI Flix</h2>
+
+          <p>
+            Continue watching AI-generated and
+            AI-assisted cinema.
+          </p>
+
+          {authError && (
+            <p className="authError">
+              {authError}
+            </p>
+          )}
+
+          {authMessage && (
+            <p className="authMessage">
+              {authMessage}
+            </p>
+          )}
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <button
+            className="primary"
+            onClick={async () => {
+
+              setAuthError('');
+              setAuthMessage('');
+
+              const { error } =
+                await supabase.auth.signInWithPassword({
+                  email,
+                  password
+                });
+
+              if (error) {
+                setAuthError(error.message);
+                return;
+              }
+
+              setAuthMode(null);
+              setEmail('');
+              setPassword('');
+            }}
+          >
+            Sign In
+          </button>
+
+          <button
+            className="secondary"
+            onClick={() => {
+              setAuthMode('signup');
+              setAuthError('');
+              setAuthMessage('');
+            }}
+          >
+            Create an account
+          </button>
+
+        </div>
+      )}
+
+      {authMode === 'signup' && (
+        <div className="modalContent">
+
+          <div className="eyebrow">
+            JOIN AI FLIX
+          </div>
+
+          <h2>Create your account</h2>
+
+          <p>
+            Join the home for AI cinema.
+          </p>
+
+          {authError && (
+            <p className="authError">
+              {authError}
+            </p>
+          )}
+
+          {authMessage && (
+            <p className="authMessage">
+              {authMessage}
+            </p>
+          )}
+
+          <input
+            type="text"
+            placeholder="Full name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+          />
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <button
+            className="primary"
+            onClick={async () => {
+
+              setAuthError('');
+              setAuthMessage('');
+
+              const { data, error } =
+                await supabase.auth.signUp({
+                  email,
+                  password,
+                  options: {
+                    data: {
+                      full_name: fullName
+                    }
+                  }
+                });
+
+              if (error) {
+                setAuthError(error.message);
+                return;
+              }
+
+              if (data.user) {
+                setAuthMessage(
+                  'Account created successfully.'
+                );
+              }
+            }}
+          >
+            Create Account
+          </button>
+
+          <button
+            className="secondary"
+            onClick={() => {
+              setAuthMode('login');
+              setAuthError('');
+              setAuthMessage('');
+            }}
+          >
+            Already have an account? Sign in
+          </button>
+
+        </div>
+      )}
+
+      {authMode === 'account' && user && (
+        <div className="modalContent">
+
+          <div className="eyebrow">
+            YOUR ACCOUNT
+          </div>
+
+          <h2>
+            {user.user_metadata?.full_name ||
+              'AI Flix Member'}
+          </h2>
+
+          <p>
+            {user.email}
+          </p>
+
+          <button
+            className="primary"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              setAuthMode(null);
+            }}
+          >
+            Sign Out
+          </button>
+
+        </div>
+      )}
+
+    </div>
+  </div>
+)}
 
       {/* FILM MODAL */}
       {selected && (
