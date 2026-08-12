@@ -553,6 +553,13 @@ const heroFilm = films[0];
 
     <div className="sectionHead">
       <h2>Admin Review</h2>
+      <p>
+  Admin status: {String(isAdmin)}
+</p>
+
+<p>
+  Pending submissions found: {pendingSubmissions.length}
+</p>
     </div>
 
     {pendingSubmissions.length === 0 ? (
