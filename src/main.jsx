@@ -145,7 +145,7 @@ useEffect(() => {
       .select('*')
       const { data, error } = await supabase
   .from('film_submissions')
-  .select('*');
+  .select('*')
       .order('created_at', { ascending: false });
 
     if (error) {
