@@ -143,17 +143,15 @@ useEffect(() => {
     const { data, error } = await supabase
       .from('film_submissions')
       .select('*')
-      const { data, error } = await supabase
-  .from('film_submissions')
-  .select('*')
       .order('created_at', { ascending: false });
 
+    console.log('ALL SUBMISSIONS:', data);
+    console.log('SUBMISSION ERROR:', error);
+
     if (error) {
-      console.error('PENDING SUBMISSIONS ERROR:', error);
+      console.error('SUBMISSIONS ERROR:', error);
       return;
     }
-
-    console.log('PENDING SUBMISSIONS:', data);
 
     setPendingSubmissions(data || []);
   };
