@@ -143,7 +143,9 @@ useEffect(() => {
     const { data, error } = await supabase
       .from('film_submissions')
       .select('*')
-      .eq('status', 'pending')
+      const { data, error } = await supabase
+  .from('film_submissions')
+  .select('*');
       .order('created_at', { ascending: false });
 
     if (error) {
