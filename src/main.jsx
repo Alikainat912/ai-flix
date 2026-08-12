@@ -125,7 +125,15 @@ useEffect(() => {
 }, []);
   useEffect(() => {
   const checkAdmin = async () => {
-    if (!user) {
+    const {
+      data: { session },
+      error: sessionError
+    } = await supabase.auth.getSession();
+
+    console.log('SESSION:', session);
+    console.log('SESSION ERROR:', sessionError);
+
+    if (!session?.user) {
       setIsAdmin(false);
       return;
     }
@@ -134,21 +142,15 @@ useEffect(() => {
       .from('admins')
       .select('user_id');
 
-    console.log('LOGGED IN USER:', user.id);
-    console.log('ALL ADMIN RECORDS:', data);
-    console.log('ADMIN QUERY ERROR:', error);
-
-    if (error) {
-      console.error('ADMIN CHECK ERROR:', error);
-      setIsAdmin(false);
-      return;
-    }
+    console.log('ADMIN DATA:', data);
+    console.log('ADMIN ERROR:', error);
+    console.log('SESSION USER ID:', session.user.id);
 
     const adminExists = (data || []).some(
-      (admin) => admin.user_id === user.id
+      (admin) => admin.user_id === session.user.id
     );
 
-    console.log('IS ADMIN:', adminExists);
+    console.log('ADMIN EXISTS:', adminExists);
 
     setIsAdmin(adminExists);
   };
