@@ -95,6 +95,8 @@ const [password, setPassword] = useState('');
 const [fullName, setFullName] = useState('');
 const [authError, setAuthError] = useState('');
 const [authMessage, setAuthMessage] = useState('');
+  const [submissionPoster, setSubmissionPoster] = useState(null);
+const [submissionVideo, setSubmissionVideo] = useState(null);
   // LOGIN CHECK
 useEffect(() => {
   const getUser = async () => {
@@ -318,40 +320,106 @@ useEffect(() => {
     return;
   }
 
-  const { error } = await supabase
-    .from('film_submissions')
-    .insert({
-      user_id: user.id,
-      title: submissionTitle.trim(),
-      description: submissionDescription.trim(),
-      genre: submissionGenre.trim(),
-      country: submissionCountry.trim(),
-      director: submissionDirector.trim(),
-      year: submissionYear.trim(),
-      duration: submissionDuration.trim(),
-      filmmaker_email: user.email,
-      status: 'pending'
-    });
-
-  if (error) {
-    console.error('SUBMISSION ERROR:', error);
-    setSubmissionError(
-      'Could not submit your film: ' + error.message
-    );
+  if (!submissionPoster) {
+    setSubmissionError('Please upload a film poster.');
     return;
   }
 
-  setSubmissionMessage(
-    'Your film has been submitted successfully and is now pending review.'
-  );
+  if (!submissionVideo) {
+    setSubmissionError('Please upload your film/video.');
+    return;
+  }
 
-  setSubmissionTitle('');
-  setSubmissionDescription('');
-  setSubmissionGenre('');
-  setSubmissionCountry('');
-  setSubmissionDirector('');
-  setSubmissionYear('');
-  setSubmissionDuration('');
+  try {
+    // Create unique file names
+    const posterPath =
+      `${user.id}/${Date.now()}-${submissionPoster.name}`;
+
+    const videoPath =
+      `${user.id}/${Date.now()}-${submissionVideo.name}`;
+
+    // Upload poster
+    const { error: posterError } = await supabase.storage
+      .from('posters')
+      .upload(posterPath, submissionPoster);
+
+    if (posterError) {
+      console.error('POSTER UPLOAD ERROR:', posterError);
+      setSubmissionError(
+        'Could not upload poster: ' + posterError.message
+      );
+      return;
+    }
+
+    // Upload video
+    const { error: videoError } = await supabase.storage
+      .from('videos')
+      .upload(videoPath, submissionVideo);
+
+    if (videoError) {
+      console.error('VIDEO UPLOAD ERROR:', videoError);
+      setSubmissionError(
+        'Could not upload video: ' + videoError.message
+      );
+      return;
+    }
+
+    // Get public poster URL
+    const { data: posterData } = supabase.storage
+      .from('posters')
+      .getPublicUrl(posterPath);
+
+    // Get public video URL
+    const { data: videoData } = supabase.storage
+      .from('videos')
+      .getPublicUrl(videoPath);
+
+    // Save submission information + file URLs
+    const { error } = await supabase
+      .from('film_submissions')
+      .insert({
+        user_id: user.id,
+        title: submissionTitle.trim(),
+        description: submissionDescription.trim(),
+        genre: submissionGenre.trim(),
+        country: submissionCountry.trim(),
+        director: submissionDirector.trim(),
+        year: submissionYear.trim(),
+        duration: submissionDuration.trim(),
+        filmmaker_email: user.email,
+        poster_url: posterData.publicUrl,
+        video_url: videoData.publicUrl,
+        status: 'pending'
+      });
+
+    if (error) {
+      console.error('SUBMISSION ERROR:', error);
+      setSubmissionError(
+        'Could not submit your film: ' + error.message
+      );
+      return;
+    }
+
+    setSubmissionMessage(
+      'Your film has been submitted successfully and is now pending review.'
+    );
+
+    setSubmissionTitle('');
+    setSubmissionDescription('');
+    setSubmissionGenre('');
+    setSubmissionCountry('');
+    setSubmissionDirector('');
+    setSubmissionYear('');
+    setSubmissionDuration('');
+    setSubmissionPoster(null);
+    setSubmissionVideo(null);
+
+  } catch (err) {
+    console.error('UNEXPECTED SUBMISSION ERROR:', err);
+    setSubmissionError(
+      'Something went wrong while submitting your film.'
+    );
+  }
 };
   const openFilm = (film) => {
   console.log('SELECTED FILM:', film);
@@ -538,6 +606,23 @@ const heroFilm = films[0];
             setSubmissionDuration(e.target.value)
           }
         />
+        <label>Film Poster</label>
+<input
+  type="file"
+  accept="image/*"
+  onChange={(e) =>
+    setSubmissionPoster(e.target.files[0])
+  }
+/>
+
+<label>Film / Video</label>
+<input
+  type="file"
+  accept="video/*"
+  onChange={(e) =>
+    setSubmissionVideo(e.target.files[0])
+  }
+/>
 
         <button
           className="primary"
