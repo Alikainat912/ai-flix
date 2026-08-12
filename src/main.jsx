@@ -141,7 +141,7 @@ useEffect(() => {
       return;
     }
 
-    setIsAdmin(!!data);
+    setIsAdmin(data !== null);
   };
 
   checkAdmin();
