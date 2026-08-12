@@ -565,6 +565,9 @@ const heroFilm = films[0];
 <p>
   Pending submissions found: {pendingSubmissions.length}
 </p>
+      <p>
+  Current user ID: {user?.id || 'No user'}
+</p>
     </div>
 
     {pendingSubmissions.length === 0 ? (
