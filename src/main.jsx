@@ -537,7 +537,7 @@ const heroFilm = films[0];
 
   
         <main>
-  {activePage === 'admin' ? (
+{activePage === 'admin' && isAdmin ? (
   <section className="section submitPage">
 
     <div className="sectionHead">
