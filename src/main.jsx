@@ -134,6 +134,8 @@ useEffect(() => {
   );
 }, [user]);
   useEffect(() => {
+  setSubmissionMessage('PENDING EFFECT RAN — ADMIN: ' + isAdmin);
+
   if (!isAdmin) {
     setPendingSubmissions([]);
     return;
