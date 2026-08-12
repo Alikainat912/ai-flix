@@ -223,3 +223,538 @@
   }
 
 }
+/* =========================================================
+   AI FLIX — CINEMATIC VISUAL UPGRADE
+   Visual only — does not change app functionality
+   ========================================================= */
+
+:root {
+  --flix-bg: #070707;
+  --flix-surface: #111111;
+  --flix-surface-2: #171717;
+  --flix-border: #292929;
+  --flix-text: #ffffff;
+  --flix-muted: #a1a1a1;
+  --flix-accent: #e5092f;
+  --flix-accent-hover: #ff1744;
+}
+
+/* ---------- GLOBAL ---------- */
+
+body {
+  background:
+    radial-gradient(circle at 50% -20%, rgba(229, 9, 47, 0.08), transparent 35%),
+    #070707;
+}
+
+.app {
+  background: #070707;
+  color: var(--flix-text);
+}
+
+/* ---------- NAVIGATION ---------- */
+
+.nav {
+  height: 72px;
+  padding: 0 5vw;
+  gap: 38px;
+
+  background: rgba(7, 7, 7, 0.88);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.brand {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+}
+
+.brand::first-letter {
+  color: var(--flix-accent);
+}
+
+.nav nav button {
+  position: relative;
+  color: #999;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.nav nav button:hover {
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.nav nav button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 0;
+  height: 2px;
+  background: var(--flix-accent);
+  transform: translateX(-50%);
+  transition: width 0.2s ease;
+}
+
+.nav nav button:hover::after {
+  width: 18px;
+}
+
+/* ---------- SEARCH ---------- */
+
+.search {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid #292929;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.search:focus-within {
+  border-color: rgba(229, 9, 47, 0.7);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 3px rgba(229, 9, 47, 0.08);
+}
+
+.search input::placeholder {
+  color: #666;
+}
+
+/* ---------- ICON BUTTON ---------- */
+
+.iconBtn {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: #292929 !important;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.iconBtn:hover {
+  background: rgba(229, 9, 47, 0.12) !important;
+  border-color: rgba(229, 9, 47, 0.6) !important;
+  transform: translateY(-1px);
+}
+
+/* ---------- HERO ---------- */
+
+.hero {
+  min-height: 650px;
+
+  position: relative;
+  isolation: isolate;
+
+  background-position: center;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.92) 0%,
+      rgba(0, 0, 0, 0.68) 38%,
+      rgba(0, 0, 0, 0.12) 78%
+    ),
+    linear-gradient(
+      0deg,
+      #070707 0%,
+      rgba(7, 7, 7, 0.75) 8%,
+      transparent 35%
+    );
+
+  z-index: -1;
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 2;
+  padding: 8vw 5vw 8vw;
+}
+
+.eyebrow {
+  color: var(--flix-accent);
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  font-weight: 800;
+}
+
+.hero h1 {
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
+}
+
+.meta {
+  color: #bcbcbc;
+}
+
+.description {
+  color: #d1d1d1;
+}
+
+/* ---------- BUTTONS ---------- */
+
+.primary {
+  background: var(--flix-accent);
+  color: #fff;
+
+  box-shadow:
+    0 8px 25px rgba(229, 9, 47, 0.18);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.primary:hover {
+  background: var(--flix-accent-hover);
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 32px rgba(229, 9, 47, 0.28);
+}
+
+.secondary {
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* ---------- SECTIONS ---------- */
+
+.section {
+  position: relative;
+}
+
+.sectionHead {
+  margin-bottom: 22px;
+}
+
+.sectionHead h2 {
+  font-size: 23px;
+  letter-spacing: -0.5px;
+}
+
+/* ---------- FILM GRID ---------- */
+
+.grid {
+  gap: 20px;
+}
+
+.card {
+  background: var(--flix-surface);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.2);
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-7px) scale(1.012);
+
+  border-color: rgba(229, 9, 47, 0.35);
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.42),
+    0 0 25px rgba(229, 9, 47, 0.05);
+}
+
+.card img {
+  transition:
+    transform 0.35s ease,
+    filter 0.35s ease;
+}
+
+.card:hover img {
+  transform: scale(1.035);
+  filter: brightness(1.06);
+}
+
+.cardBody {
+  background: linear-gradient(
+    180deg,
+    #111111 0%,
+    #0e0e0e 100%
+  );
+}
+
+.cardBody h3 {
+  letter-spacing: -0.2px;
+}
+
+.cardBody p {
+  color: #888;
+}
+
+/* ---------- CARD BADGES ---------- */
+
+.cardOverlay span {
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+}
+
+/* ---------- CATEGORY CHIPS ---------- */
+
+.chips {
+  gap: 9px;
+}
+
+.chips button {
+  background: #101010;
+  border: 1px solid #292929;
+  color: #bdbdbd;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.chips button:hover {
+  background: rgba(229, 9, 47, 0.1);
+  border-color: rgba(229, 9, 47, 0.55);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* If a selected category uses a common class */
+.chips button.active,
+.chips button.selected {
+  background: var(--flix-accent);
+  border-color: var(--flix-accent);
+  color: #fff;
+}
+
+/* ---------- FILMMAKER BANNER ---------- */
+
+.creatorBanner {
+  position: relative;
+  overflow: hidden;
+
+  border: 1px solid #292929;
+
+  background:
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(229, 9, 47, 0.16),
+      transparent 35%
+    ),
+    linear-gradient(
+      120deg,
+      #151515,
+      #0b0b0b
+    );
+
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.3);
+}
+
+.creatorBanner::after {
+  content: "";
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  right: -70px;
+  bottom: -90px;
+
+  border-radius: 50%;
+
+  background: rgba(229, 9, 47, 0.08);
+
+  pointer-events: none;
+}
+
+.creatorBanner h2 {
+  letter-spacing: -0.8px;
+}
+
+.creatorBanner p {
+  color: #aaa;
+}
+
+/* ---------- MODALS ---------- */
+
+.modal {
+  background: rgba(0, 0, 0, 0.84);
+  backdrop-filter: blur(8px);
+}
+
+.modalCard {
+  background: #101010;
+  border: 1px solid #292929;
+
+  box-shadow:
+    0 30px 100px rgba(0, 0, 0, 0.65);
+}
+
+.modalContent {
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(229, 9, 47, 0.06),
+      transparent 35%
+    ),
+    #101010;
+}
+
+.modalContent h2 {
+  letter-spacing: -1px;
+}
+
+.close {
+  background: #1d1d1d;
+  border: 1px solid #303030;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.close:hover {
+  background: var(--flix-accent);
+  transform: rotate(90deg);
+}
+
+/* ---------- VIDEO PLAYER ---------- */
+
+.playingCard {
+  border-color: #303030 !important;
+
+  box-shadow:
+    0 30px 100px rgba(0, 0, 0, 0.8) !important;
+}
+
+.videoWrapper {
+  background: #000;
+}
+
+/* ---------- EMPTY STATES ---------- */
+
+.emptyState {
+  border: 1px solid #242424;
+  border-radius: 14px;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(229, 9, 47, 0.07),
+      transparent 45%
+    ),
+    #101010;
+}
+
+.emptyState h2 {
+  letter-spacing: -0.5px;
+}
+
+/* ---------- FOOTER ---------- */
+
+footer {
+  background: #060606;
+  border-top: 1px solid #1d1d1d;
+}
+
+footer p {
+  color: #666;
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 768px) {
+
+  .nav {
+    background: rgba(7, 7, 7, 0.94);
+  }
+
+  .hero {
+    min-height: 570px;
+  }
+
+  .hero::after {
+    background:
+      linear-gradient(
+        0deg,
+        #070707 0%,
+        rgba(7, 7, 7, 0.78) 18%,
+        rgba(0, 0, 0, 0.25) 65%,
+        rgba(0, 0, 0, 0.1) 100%
+      );
+  }
+
+  .heroCopy {
+    padding-bottom: 55px;
+  }
+
+  .grid {
+    gap: 12px;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+  }
+
+  .creatorBanner {
+    background:
+      radial-gradient(
+        circle at 100% 0%,
+        rgba(229, 9, 47, 0.13),
+        transparent 45%
+      ),
+      #111;
+  }
+}
+
+/* ---------- SMALL PHONES ---------- */
+
+@media (max-width: 500px) {
+
+  .brand {
+    font-size: 22px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .sectionHead h2 {
+    font-size: 20px;
+  }
+
+  .primary,
+  .secondary {
+    padding: 11px 15px;
+  }
+
+  .card {
+    border-radius: 8px;
+  }
+  }
