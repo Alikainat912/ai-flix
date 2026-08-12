@@ -146,6 +146,12 @@ useEffect(() => {
       .from('film_submissions')
       .select('*')
       .order('created_at', { ascending: false });
+    setSubmissionMessage(
+  'QUERY RETURNED — DATA: ' +
+  JSON.stringify(data) +
+  ' — ERROR: ' +
+  JSON.stringify(error)
+);
 
     console.log('ALL SUBMISSIONS:', data);
     console.log('SUBMISSION ERROR:', error);
