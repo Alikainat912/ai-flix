@@ -98,6 +98,7 @@ const [authMessage, setAuthMessage] = useState('');
   const [submissionPoster, setSubmissionPoster] = useState(null);
 const [submissionVideo, setSubmissionVideo] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [pendingSubmissions, setPendingSubmissions] = useState([]);
   // LOGIN CHECK
 useEffect(() => {
   const getUser = async () => {
@@ -146,6 +147,26 @@ useEffect(() => {
 
   checkAdmin();
 }, [user]);
+  useEffect(() => {
+  const loadPendingSubmissions = async () => {
+    if (!isAdmin) return;
+
+    const { data, error } = await supabase
+      .from('film_submissions')
+      .select('*')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('PENDING SUBMISSIONS ERROR:', error);
+      return;
+    }
+
+    setPendingSubmissions(data || []);
+  };
+
+  loadPendingSubmissions();
+}, [isAdmin]);
   useEffect(() => {
   const loadWatchlist = async () => {
     if (!user) {
@@ -526,13 +547,83 @@ const heroFilm = films[0];
   
         <main>
   {activePage === 'admin' ? (
-    <section className="section submitPage">
-      <div className="sectionHead">
-        <h2>Admin Review</h2>
-      </div>
+  <section className="section submitPage">
 
-      <p>Film submissions awaiting review will appear here.</p>
-    </section>
+    <div className="sectionHead">
+      <h2>Admin Review</h2>
+    </div>
+
+    {pendingSubmissions.length === 0 ? (
+      <p>No pending film submissions.</p>
+    ) : (
+      <div>
+        {pendingSubmissions.map((submission) => (
+          <div key={submission.id} className="submissionCard">
+
+            <h3>{submission.title}</h3>
+
+            <p>
+              <strong>Director:</strong> {submission.director}
+            </p>
+
+            <p>
+              <strong>Genre:</strong> {submission.genre}
+            </p>
+
+            <p>
+              <strong>Country:</strong> {submission.country}
+            </p>
+
+            <p>
+              <strong>Year:</strong> {submission.year}
+            </p>
+
+            <p>
+              <strong>Duration:</strong> {submission.duration}
+            </p>
+
+            <p>
+              <strong>Filmmaker:</strong> {submission.filmmaker_email}
+            </p>
+
+            {submission.poster_url && (
+              <img
+                src={submission.poster_url}
+                alt={submission.title}
+                style={{
+                  width: '200px',
+                  borderRadius: '8px',
+                  marginTop: '10px'
+                }}
+              />
+            )}
+
+            {submission.video_url && (
+              <video
+                controls
+                style={{
+                  width: '100%',
+                  maxWidth: '700px',
+                  marginTop: '15px',
+                  borderRadius: '8px'
+                }}
+              >
+                <source
+                  src={submission.video_url}
+                  type="video/mp4"
+                />
+              </video>
+            )}
+
+            <p>
+              <strong>Status:</strong> {submission.status}
+            </p>
+
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
   ) : activePage === 'submit' ? (
   <section className="section submitPage">
 
