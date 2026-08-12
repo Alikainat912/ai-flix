@@ -520,6 +520,9 @@ const heroFilm = films[0];
 </button>
         </div>
       </header>
+      {isAdmin && (
+  <p style={{ color: 'green' }}>ADMIN DETECTED</p>
+)}
 
   
         <main>
