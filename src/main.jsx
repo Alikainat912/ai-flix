@@ -130,11 +130,16 @@ useEffect(() => {
       return;
     }
 
+    console.log('CHECKING ADMIN FOR:', user.id);
+
     const { data, error } = await supabase
       .from('admins')
       .select('user_id')
       .eq('user_id', user.id)
-      .maybeSingle();
+      .limit(1);
+
+    console.log('ADMIN RESULT:', data);
+    console.log('ADMIN ERROR:', error);
 
     if (error) {
       console.error('ADMIN CHECK ERROR:', error);
@@ -142,7 +147,7 @@ useEffect(() => {
       return;
     }
 
-    setIsAdmin(data !== null);
+    setIsAdmin(data && data.length > 0);
   };
 
   checkAdmin();
