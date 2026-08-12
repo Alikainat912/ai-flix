@@ -130,16 +130,13 @@ useEffect(() => {
       return;
     }
 
-    console.log('CHECKING ADMIN FOR:', user.id);
-
     const { data, error } = await supabase
       .from('admins')
-      .select('user_id')
-      .eq('user_id', user.id)
-      .limit(1);
+      .select('user_id');
 
-    console.log('ADMIN RESULT:', data);
-    console.log('ADMIN ERROR:', error);
+    console.log('LOGGED IN USER:', user.id);
+    console.log('ALL ADMIN RECORDS:', data);
+    console.log('ADMIN QUERY ERROR:', error);
 
     if (error) {
       console.error('ADMIN CHECK ERROR:', error);
@@ -147,7 +144,13 @@ useEffect(() => {
       return;
     }
 
-    setIsAdmin(data && data.length > 0);
+    const adminExists = (data || []).some(
+      (admin) => admin.user_id === user.id
+    );
+
+    console.log('IS ADMIN:', adminExists);
+
+    setIsAdmin(adminExists);
   };
 
   checkAdmin();
