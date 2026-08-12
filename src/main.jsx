@@ -149,15 +149,22 @@ useEffect(() => {
     console.log('SUBMISSION ERROR:', error);
 
     if (error) {
-      console.error('SUBMISSIONS ERROR:', error);
+      setSubmissionError(
+        'ADMIN QUERY ERROR: ' + error.message
+      );
       return;
     }
 
     setPendingSubmissions(data || []);
+
+    setSubmissionMessage(
+      'ADMIN QUERY FOUND: ' + (data || []).length
+    );
   };
 
   loadPendingSubmissions();
 }, [isAdmin]);
+  
   useEffect(() => {
   const loadWatchlist = async () => {
     if (!user) {
