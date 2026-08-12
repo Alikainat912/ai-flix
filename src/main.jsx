@@ -525,7 +525,15 @@ const heroFilm = films[0];
 
   
         <main>
-          {activePage === 'submit' ? (
+  {activePage === 'admin' ? (
+    <section className="section submitPage">
+      <div className="sectionHead">
+        <h2>Admin Review</h2>
+      </div>
+
+      <p>Film submissions awaiting review will appear here.</p>
+    </section>
+  ) : activePage === 'submit' ? (
   <section className="section submitPage">
 
     <div className="sectionHead">
