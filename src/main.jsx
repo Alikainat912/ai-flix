@@ -124,38 +124,14 @@ useEffect(() => {
   };
 }, []);
   useEffect(() => {
-  const checkAdmin = async () => {
-    const {
-      data: { session },
-      error: sessionError
-    } = await supabase.auth.getSession();
+  if (!user) {
+    setIsAdmin(false);
+    return;
+  }
 
-    console.log('SESSION:', session);
-    console.log('SESSION ERROR:', sessionError);
-
-    if (!session?.user) {
-      setIsAdmin(false);
-      return;
-    }
-
-    const { data, error } = await supabase
-      .from('admins')
-      .select('user_id');
-
-    console.log('ADMIN DATA:', data);
-    console.log('ADMIN ERROR:', error);
-    console.log('SESSION USER ID:', session.user.id);
-
-    const adminExists = (data || []).some(
-      (admin) => admin.user_id === session.user.id
-    );
-
-    console.log('ADMIN EXISTS:', adminExists);
-
-    setIsAdmin(adminExists);
-  };
-
-  checkAdmin();
+  setIsAdmin(
+    user.id === '888a7732-5e06-4d4d-8d35-373351509343'
+  );
 }, [user]);
   useEffect(() => {
   const loadPendingSubmissions = async () => {
