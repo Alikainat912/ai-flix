@@ -156,6 +156,8 @@ useEffect(() => {
       .select('*')
       .eq('status', 'pending')
       .order('created_at', { ascending: false });
+    console.log('PENDING DATA:', data);
+console.log('PENDING ERROR:', error);
 
     if (error) {
       console.error('PENDING SUBMISSIONS ERROR:', error);
