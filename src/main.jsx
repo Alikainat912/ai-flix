@@ -134,21 +134,24 @@ useEffect(() => {
   );
 }, [user]);
   useEffect(() => {
-  const loadPendingSubmissions = async () => {
-    if (!isAdmin) return;
+  if (!isAdmin) {
+    setPendingSubmissions([]);
+    return;
+  }
 
+  const loadPendingSubmissions = async () => {
     const { data, error } = await supabase
       .from('film_submissions')
       .select('*')
       .eq('status', 'pending')
       .order('created_at', { ascending: false });
-    console.log('PENDING DATA:', data);
-console.log('PENDING ERROR:', error);
 
     if (error) {
       console.error('PENDING SUBMISSIONS ERROR:', error);
       return;
     }
+
+    console.log('PENDING SUBMISSIONS:', data);
 
     setPendingSubmissions(data || []);
   };
