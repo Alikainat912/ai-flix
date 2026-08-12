@@ -557,6 +557,9 @@ const heroFilm = films[0];
   Pending submissions found: {pendingSubmissions.length}
 </p>
       <p>
+  Admin query result: {submissionMessage || 'No query message'}
+</p>
+      <p>
   Current user ID: {user?.id || 'No user'}
 </p>
     </div>
