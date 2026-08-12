@@ -97,6 +97,7 @@ const [authError, setAuthError] = useState('');
 const [authMessage, setAuthMessage] = useState('');
   const [submissionPoster, setSubmissionPoster] = useState(null);
 const [submissionVideo, setSubmissionVideo] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   // LOGIN CHECK
 useEffect(() => {
   const getUser = async () => {
@@ -121,6 +122,30 @@ useEffect(() => {
     subscription.unsubscribe();
   };
 }, []);
+  useEffect(() => {
+  const checkAdmin = async () => {
+    if (!user) {
+      setIsAdmin(false);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('admins')
+      .select('user_id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error('ADMIN CHECK ERROR:', error);
+      setIsAdmin(false);
+      return;
+    }
+
+    setIsAdmin(!!data);
+  };
+
+  checkAdmin();
+}, [user]);
   useEffect(() => {
   const loadWatchlist = async () => {
     if (!user) {
@@ -443,8 +468,7 @@ const heroFilm = films[0];
         <div className="brand">
           AI<span>FLIX</span>
         </div>
-
-        <nav>
+<nav>
   <button onClick={() => setActivePage('home')}>
     Home
   </button>
@@ -454,19 +478,25 @@ const heroFilm = films[0];
   </button>
 
   <button
-  onClick={() => {
-    console.log('MY LIST BUTTON CLICKED');
-    setActivePage('mylist');
-  }}
->
-  My List
-</button>
+    onClick={() => {
+      console.log('MY LIST BUTTON CLICKED');
+      setActivePage('mylist');
+    }}
+  >
+    My List
+  </button>
+
+  {isAdmin && (
+    <button onClick={() => setActivePage('admin')}>
+      Admin Review
+    </button>
+  )}
 
   <button onClick={() => setActivePage('categories')}>
     Categories
   </button>
 </nav>
-
+        
         <div className="navRight">
           <div className="search">
             <Search size={18} />
