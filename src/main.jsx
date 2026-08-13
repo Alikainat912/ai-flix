@@ -197,19 +197,13 @@ useEffect(() => {
 useEffect(() => {
   const loadMovies = async () => {
 
-    alert('LOAD MOVIES STARTED');
+
 
     const { data, error } = await supabase
       .from('movies')
       .select('*')
       .order('year', { ascending: false });
-    alert(
-  'MOVIES RESULT: ' +
-  JSON.stringify({
-    count: data?.length || 0,
-    error: error?.message || null
-  })
-);
+    
 
     if (error) {
       console.error(
@@ -548,9 +542,7 @@ const heroFilm = films[0];
 </button>
         </div>
       </header>
-      {isAdmin && (
-  <p style={{ color: 'green' }}>ADMIN DETECTED</p>
-)}
+    
 
   
         <main>
