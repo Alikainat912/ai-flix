@@ -701,59 +701,6 @@ const heroFilm = films[0];
               <strong>Genre:</strong> {submission.genre}
             </p>
 
-            <p>
-              <strong>Country:</strong> {submission.country}
-            </p>
-
-            <p>
-              <strong>Year:</strong> {submission.year}
-            </p>
-
-            <p>
-              <strong>Duration:</strong> {submission.duration}
-            </p>
-
-            <p>
-              <strong>Filmmaker:</strong> {submission.filmmaker_email}
-            </p>
-
-            {submission.poster_url && (
-              <img
-                src={submission.poster_url}
-                alt={submission.title}
-                style={{
-                  width: '200px',
-                  borderRadius: '8px',
-                  marginTop: '10px'
-                }}
-              />
-            )}
-
-            {submission.video_url && (
-              <video
-                controls
-                style={{
-                  width: '100%',
-                  maxWidth: '700px',
-                  marginTop: '15px',
-                  borderRadius: '8px'
-                }}
-              >
-                <source
-                  src={submission.video_url}
-                  type="video/mp4"
-                />
-              </video>
-            )}
-
-            <p>
-              <strong>Status:</strong> {submission.status}
-            </p>
-
-          </div>
-        ))}
-      </div>
-    )}
   </section>
   ) : activePage === 'submit' ? (
   <section className="section submitPage">
