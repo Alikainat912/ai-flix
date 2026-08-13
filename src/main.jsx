@@ -672,19 +672,81 @@ const heroFilm = films[0];
 
           </div>
         )}
+<div className="submissionActions">
 
-        <div className="submissionActions">
+  <button
+    className="primary"
+    onClick={async () => {
 
-          <button className="primary">
-            Approve Film
-          </button>
+      const { error: movieError } = await supabase
+        .from('movies')
+        .insert({
+          title: submission.title,
+          description: submission.description,
+          genre: submission.genre,
+          director: submission.director,
+          year: Number(submission.year),
+          duration: submission.duration,
+          poster_url: submission.poster_url,
+          video_url: submission.video_url
+        });
 
-          <button className="secondary rejectButton">
-            Reject Film
-          </button>
+      if (movieError) {
+        alert('Could not approve film: ' + movieError.message);
+        return;
+      }
 
-        </div>
+      const { error: updateError } = await supabase
+        .from('film_submissions')
+        .update({
+          status: 'approved'
+        })
+        .eq('id', submission.id);
 
+      if (updateError) {
+        alert('Film added, but status update failed: ' + updateError.message);
+        return;
+      }
+
+      setPendingSubmissions((current) =>
+        current.filter((item) => item.id !== submission.id)
+      );
+
+      alert('Film approved and added to AI Flix!');
+    }}
+  >
+    Approve Film
+  </button>
+
+
+  <button
+    className="secondary rejectButton"
+    onClick={async () => {
+
+      const { error } = await supabase
+        .from('film_submissions')
+        .update({
+          status: 'rejected'
+        })
+        .eq('id', submission.id);
+
+      if (error) {
+        alert('Could not reject film: ' + error.message);
+        return;
+      }
+
+      setPendingSubmissions((current) =>
+        current.filter((item) => item.id !== submission.id)
+      );
+
+      alert('Film rejected.');
+    }}
+  >
+    Reject Film
+  </button>
+
+</div>
+        
       </div>
 
     ))}
