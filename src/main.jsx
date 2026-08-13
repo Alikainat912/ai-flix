@@ -25,7 +25,8 @@ const fallbackFilms = [
     description:
       'A historical thriller exploring a pivotal night through AI-assisted cinema.',
     poster:
-  'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/104914533_1781362209762270.jpg',
+  'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/683501478_1786619703436515.jpg',
+    
     featured: true,
   youtubeId: null,
 
@@ -270,7 +271,7 @@ useEffect(() => {
 
         poster:
   movie.title === 'The Night The Flag Changed'
-    ? 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/104914533_1781362209762270.jpg'
+    ? 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/683501478_1786619703436515.jpg'
     : movie.poster_url?.trim() || existingFilm?.poster || '',
 
         videoUrl:
