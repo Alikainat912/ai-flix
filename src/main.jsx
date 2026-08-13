@@ -673,21 +673,15 @@ const heroFilm = films[0];
 
         <div className="submissionActions">
 
-          <button
-            className="primary"
-            onClick={() => approveSubmission(submission.id)}
-          >
-            Approve Film
-          </button>
+  <button className="primary">
+    Approve Film
+  </button>
 
-          <button
-            className="secondary rejectButton"
-            onClick={() => rejectSubmission(submission.id)}
-          >
-            Reject Film
-          </button>
+  <button className="secondary rejectButton">
+    Reject Film
+  </button>
 
-        </div>
+</div>
 
       </div>
 
