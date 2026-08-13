@@ -1013,10 +1013,14 @@ const { error: movieError } = await supabase
         <section className="section">
 
           <div className="sectionHead">
-            <h2>
-              {query ? 'Search Results' : 'Featured AI Cinema'}
-            </h2>
-
+            
+<h2>
+  {query
+    ? 'Search Results'
+    : films.length === 1
+      ? 'Now Streaming'
+      : 'Featured AI Cinema'}
+</h2>
             <ChevronRight size={20} />
           </div>
 
@@ -1049,6 +1053,23 @@ const { error: movieError } = await supabase
 
           </div>
         </section>
+    {!query && films.length === 1 && (
+  <section className="section">
+    <div className="sectionHead">
+      <h2>More AI Cinema Coming Soon</h2>
+    </div>
+
+    <p style={{
+      color: '#aaa',
+      maxWidth: '650px',
+      fontSize: '16px',
+      lineHeight: '1.7'
+    }}>
+      AI Flix is growing. New AI-generated and AI-assisted films
+      will be added as filmmakers join the platform.
+    </p>
+  </section>
+)}
 
         {/* CATEGORIES */}
         <section className="section">
@@ -1060,14 +1081,10 @@ const { error: movieError } = await supabase
           <div className="chips">
 
             {[
-  'Drama',
-  'Sci-Fi',
-  'Historical',
-  'Animation',
-  'Documentary',
-  'Experimental',
-  'Pakistan',
-  'International'
+  ...new Set([
+    ...films.map((film) => film.genre).filter(Boolean),
+    ...films.map((film) => film.country).filter(Boolean)
+  ])
 ].map((category) => (
   <button
     key={category}
