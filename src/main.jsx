@@ -203,6 +203,13 @@ useEffect(() => {
       .from('movies')
       .select('*')
       .order('year', { ascending: false });
+    alert(
+  'MOVIES RESULT: ' +
+  JSON.stringify({
+    count: data?.length || 0,
+    error: error?.message || null
+  })
+);
 
     if (error) {
       console.error(
