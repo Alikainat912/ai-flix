@@ -208,6 +208,7 @@ useEffect(() => {
       );
       return;
     }
+    console.log('MOVIES FROM SUPABASE:', data);
 
     if (!data || data.length === 0) {
       return;
