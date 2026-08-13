@@ -677,20 +677,20 @@ const heroFilm = films[0];
   <button
     className="primary"
     onClick={async () => {
-
-      const { error: movieError } = await supabase
-        .from('movies')
-        .insert({
-          title: submission.title,
-          description: submission.description,
-          genre: submission.genre,
-          director: submission.director,
-          year: Number(submission.year),
-          duration: submission.duration,
-          poster_url: submission.poster_url,
-          video_url: submission.video_url
-        });
-
+const { error: movieError } = await supabase
+  .from('movies')
+  .insert({
+    id: crypto.randomUUID(),
+    title: submission.title,
+    description: submission.description,
+    genre: submission.genre,
+    director: submission.director,
+    year: Number(submission.year),
+    duration: submission.duration,
+    poster_url: submission.poster_url,
+    video_url: submission.video_url
+  });
+      
       if (movieError) {
         alert('Could not approve film: ' + movieError.message);
         return;
