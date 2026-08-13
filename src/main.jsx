@@ -556,11 +556,12 @@ const heroFilm = films[0];
   <section className="section submitPage">
 
     <div className="sectionHead">
-      <h2>Admin Review</h2>
+  <h2>Admin Review</h2>
 
-<p className="adminIntro">
-  Review filmmaker submissions before they appear on AI Flix.
-</p>
+  <p className="adminIntro">
+    Review filmmaker submissions before they appear on AI Flix.
+  </p>
+</div>
 
 {pendingSubmissions.length === 0 ? (
   <div className="emptyState adminEmpty">
