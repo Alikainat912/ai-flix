@@ -135,7 +135,7 @@ useEffect(() => {
   );
 }, [user]);
   useEffect(() => {
-  setSubmissionMessage('PENDING EFFECT RAN — ADMIN: ' + isAdmin);
+  
 
   if (!isAdmin) {
     setPendingSubmissions([]);
@@ -147,15 +147,9 @@ useEffect(() => {
       .from('film_submissions')
       .select('*')
       .order('created_at', { ascending: false });
-    setSubmissionMessage(
-  'QUERY RETURNED — DATA: ' +
-  JSON.stringify(data) +
-  ' — ERROR: ' +
-  JSON.stringify(error)
-);
+    
 
-    console.log('ALL SUBMISSIONS:', data);
-    console.log('SUBMISSION ERROR:', error);
+    
 
     if (error) {
       setSubmissionError(
@@ -166,9 +160,7 @@ useEffect(() => {
 
     setPendingSubmissions(data || []);
 
-    setSubmissionMessage(
-      'ADMIN QUERY FOUND: ' + (data || []).length
-    );
+    
   };
 
   loadPendingSubmissions();
@@ -222,11 +214,7 @@ useEffect(() => {
     }
 
     const databaseFilms = data.map((movie) => {
-      console.log('MOVIE:', movie.title);
-      console.log(
-        'POSTER URL FROM SUPABASE:',
-        movie.poster_url
-      );
+      
 
       const existingFilm = fallbackFilms.find(
         (film) => film.title === movie.title
