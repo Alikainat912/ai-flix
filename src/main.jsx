@@ -196,6 +196,9 @@ useEffect(() => {
 
 useEffect(() => {
   const loadMovies = async () => {
+
+    alert('LOAD MOVIES STARTED');
+
     const { data, error } = await supabase
       .from('movies')
       .select('*')
