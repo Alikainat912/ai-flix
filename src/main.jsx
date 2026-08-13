@@ -516,7 +516,7 @@ const heroFilm = films[0];
 <button onClick={() => setActivePage('admin')}>
   Admin Review TEST
 </button>
-  )}
+  
 
   <button onClick={() => setActivePage('categories')}>
     Categories
@@ -565,6 +565,7 @@ const heroFilm = films[0];
 {pendingSubmissions.length === 0 ? (
   <div className="emptyState adminEmpty">
     <h3>No pending submissions</h3>
+
     <p>
       New filmmaker submissions will appear here when they are ready
       for review.
@@ -673,15 +674,15 @@ const heroFilm = films[0];
 
         <div className="submissionActions">
 
-  <button className="primary">
-    Approve Film
-  </button>
+          <button className="primary">
+            Approve Film
+          </button>
 
-  <button className="secondary rejectButton">
-    Reject Film
-  </button>
+          <button className="secondary rejectButton">
+            Reject Film
+          </button>
 
-</div>
+        </div>
 
       </div>
 
@@ -689,17 +690,8 @@ const heroFilm = films[0];
 
   </div>
 )}
-          <div key={submission.id} className="submissionCard">
 
-            <h3>{submission.title}</h3>
-
-            <p>
-              <strong>Director:</strong> {submission.director}
-            </p>
-
-            <p>
-              <strong>Genre:</strong> {submission.genre}
-            </p>
+      
 
   </section>
   ) : activePage === 'submit' ? (
