@@ -514,10 +514,11 @@ const heroFilm = films[0];
     My List
   </button>
 
-<button onClick={() => setActivePage('admin')}>
-  Admin Review TEST
-</button>
-  
+  {isAdmin && (
+  <button onClick={() => setActivePage('admin')}>
+    Admin Review
+  </button>
+)}
 
   <button onClick={() => setActivePage('categories')}>
     Categories
