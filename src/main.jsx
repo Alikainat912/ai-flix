@@ -968,11 +968,11 @@ const { error: movieError } = await supabase
             className="hero"
             style={{
               backgroundImage: `linear-gradient(
-                90deg,
-                rgba(0,0,0,.92) 0%,
-                rgba(0,0,0,.58) 48%,
-                rgba(0,0,0,.15) 100%
-              ), url(${heroFilm.poster})`
+  90deg,
+  rgba(5,5,8,.72) 0%,
+  rgba(5,5,8,.42) 45%,
+  rgba(5,5,8,.08) 100%
+), url(${heroFilm.poster})`
             }}
           >
             <div className="heroCopy">
