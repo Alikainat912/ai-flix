@@ -557,26 +557,144 @@ const heroFilm = films[0];
 
     <div className="sectionHead">
       <h2>Admin Review</h2>
-      <p>
-  Admin status: {String(isAdmin)}
+
+<p className="adminIntro">
+  Review filmmaker submissions before they appear on AI Flix.
 </p>
 
-<p>
-  Pending submissions found: {pendingSubmissions.length}
-</p>
-      <p>
-  Admin query result: {submissionMessage || 'No query message'}
-</p>
-      <p>
-  Current user ID: {user?.id || 'No user'}
-</p>
-    </div>
+{pendingSubmissions.length === 0 ? (
+  <div className="emptyState adminEmpty">
+    <h3>No pending submissions</h3>
+    <p>
+      New filmmaker submissions will appear here when they are ready
+      for review.
+    </p>
+  </div>
+) : (
+  <div className="submissionList">
 
-    {pendingSubmissions.length === 0 ? (
-      <p>No pending film submissions.</p>
-    ) : (
-      <div>
-        {pendingSubmissions.map((submission) => (
+    {pendingSubmissions.map((submission) => (
+
+      <div
+        key={submission.id}
+        className="submissionCard"
+      >
+
+        <div className="submissionHeader">
+
+          <div>
+            <span className="submissionLabel">
+              FILM SUBMISSION
+            </span>
+
+            <h3>{submission.title}</h3>
+          </div>
+
+          <span className="submissionStatus">
+            {submission.status}
+          </span>
+
+        </div>
+
+        {submission.poster_url && (
+          <div className="submissionPoster">
+            <img
+              src={submission.poster_url}
+              alt={submission.title}
+            />
+          </div>
+        )}
+
+        <div className="submissionDetails">
+
+          <div>
+            <strong>Director</strong>
+            <span>{submission.director || '—'}</span>
+          </div>
+
+          <div>
+            <strong>Genre</strong>
+            <span>{submission.genre || '—'}</span>
+          </div>
+
+          <div>
+            <strong>Country</strong>
+            <span>{submission.country || '—'}</span>
+          </div>
+
+          <div>
+            <strong>Year</strong>
+            <span>{submission.year || '—'}</span>
+          </div>
+
+          <div>
+            <strong>Duration</strong>
+            <span>{submission.duration || '—'}</span>
+          </div>
+
+          <div>
+            <strong>Filmmaker</strong>
+            <span>{submission.filmmaker_email || '—'}</span>
+          </div>
+
+        </div>
+
+        {submission.description && (
+          <div className="submissionDescription">
+
+            <strong>Description</strong>
+
+            <p>
+              {submission.description}
+            </p>
+
+          </div>
+        )}
+
+        {submission.video_url && (
+          <div className="submissionVideo">
+
+            <strong>Film Preview</strong>
+
+            <video
+              controls
+              preload="metadata"
+            >
+              <source
+                src={submission.video_url}
+                type="video/mp4"
+              />
+
+              Your browser does not support video playback.
+            </video>
+
+          </div>
+        )}
+
+        <div className="submissionActions">
+
+          <button
+            className="primary"
+            onClick={() => approveSubmission(submission.id)}
+          >
+            Approve Film
+          </button>
+
+          <button
+            className="secondary rejectButton"
+            onClick={() => rejectSubmission(submission.id)}
+          >
+            Reject Film
+          </button>
+
+        </div>
+
+      </div>
+
+    ))}
+
+  </div>
+)}
           <div key={submission.id} className="submissionCard">
 
             <h3>{submission.title}</h3>
