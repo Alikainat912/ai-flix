@@ -269,6 +269,7 @@ useEffect(() => {
           'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
       };
     });
+    alert('AI FLIX LOADED ' + databaseFilms.length + ' MOVIES');
 
     setFilms(databaseFilms);
   };
