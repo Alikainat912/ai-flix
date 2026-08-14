@@ -1135,19 +1135,25 @@ const { error: movieError } = await supabase
 )}
 
 </main>
+{/* FOOTER */}
+<footer>
 
-      {/* FOOTER */}
-      <footer>
+  <div className="brand">
+    AI<span>FLIX</span>
+  </div>
 
-        <div className="brand">
-          AI<span>FLIX</span>
-        </div>
+  <p>
+    © 2026 AI Flix. A home for AI cinema.
+  </p>
 
-        <p>
-          © 2026 AI Flix. A home for AI cinema.
-        </p>
+  <p>
+    Support: <a href="mailto:support@aiflixmovies.com">
+      support@aiflixmovies.com
+    </a>
+  </p>
 
-      </footer>
+</footer>
+      
       {/* AUTH MODAL */}
 {authMode && (
   <div
