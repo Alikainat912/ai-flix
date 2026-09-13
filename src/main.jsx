@@ -9,51 +9,23 @@
 
 
 
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+import './index.css';
 
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
  
 
 
 
   
  
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="refresh" content="290"; URL=https://www.myabl.com/">
-	<meta content="no-cache" http-equiv="cache-control">
-	<meta content="no-store" http-equiv="cache-control">
-	<meta content="no-cache" http-equiv="Pragma">
-	<meta content="0" http-equiv="Expires">
-	<meta content="IE=11" http-equiv="X-UA-Compatible">
-	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-	<meta content="yes" name="apple-mobile-web-app-capable">
-	<meta content="default" name="apple-mobile-web-app-status-bar-style">
-	<meta content="true" name="HandheldFriendly">
-	<meta content="width" name="MobileOptimized">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>myABL - Login</title>
-    <link rel="icon" href="/oamcustompages/pages/img/favicon.png">
-    <!-- Bootstrap -->
-    <link href="/oamcustompages/pages/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
-    <link href="/oamcustompages/pages/css/fonts.css" rel="stylesheet">
-    <link href="/oamcustompages/pages/css/owl.carousel.css" rel="stylesheet">
-    <link href="/oamcustompages/pages/css/fonts_new.css" id="font-stylesheet" rel="stylesheet">
-    <link id="size-stylesheet" rel="stylesheet">
-	<link rel="stylesheet" href="//fonts.googleapis.com/earlyaccess/notonastaliqurdudraft.css">
-	<script type="text/javascript" src="/oamcustompages/pages/jsdir/jquery-includes.js" charset="utf-8"></script>
-	<script type="text/javascript" src="/oamcustompages/pages/jsdir/common.js" charset="utf-8" ></script>
-	<script type="text/javascript" src="/oamcustompages/pages/jsdir/jquery.min.js" charset="utf-8" ></script>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   <style>
     html{
       opacity: 0;
