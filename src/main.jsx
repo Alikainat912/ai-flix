@@ -1,3 +1,8 @@
+import { supabase } from "./lib/supabaseClient";
+  const { data, error } = await supabase.auth.signInWithPassword({
+  email,
+  password,
+
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { supabase } from "./lib/supabaseClient";
@@ -203,10 +208,7 @@ function App() {
       </div>
     );
   }
-  import { supabase } from "./lib/supabaseClient";
-  const { data, error } = await supabase.auth.signInWithPassword({
-  email,
-  password,
+  
 });
 
 if (error) {
