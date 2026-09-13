@@ -1,510 +1,324 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { supabase } from "./lib/supabaseClient";
+import "./index.css";
 
-const styles = `
-  * {
-    box-sizing: border-box;
-  }
+const NAVY = "#063b78";
+const ORANGE = "#ff7433";
 
-  body {
-    margin: 0;
-    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    background: #ffffff;
-    color: #123b73;
-  }
+function UserIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="fieldIcon">
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7" />
+    </svg>
+  );
+}
 
-  button, input {
-    font-family: inherit;
-  }
+function LockIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="fieldIcon">
+      <rect x="5" y="10" width="14" height="11" rx="2" />
+      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+      <circle cx="12" cy="15" r="1" />
+    </svg>
+  );
+}
 
-  .app {
-    min-height: 100vh;
-    background: #ffffff;
-    display: flex;
-    flex-direction: column;
-  }
+function EyeIcon({ hidden }) {
+  return (
+    <svg viewBox="0 0 24 24" className="eyeIcon">
+      {hidden ? (
+        <>
+          <path d="M3 3l18 18" />
+          <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+          <path d="M9.9 5.2A11.4 11.4 0 0 1 12 5c5 0 8.7 3.4 10 7-0.5 1.4-1.4 2.7-2.6 3.8" />
+          <path d="M6.2 6.2C4.6 7.2 3.4 8.5 2 12c1.3 3.6 5 7 10 7 1.3 0 2.5-.2 3.6-.7" />
+        </>
+      ) : (
+        <>
+          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+          <circle cx="12" cy="12" r="3" />
+        </>
+      )}
+    </svg>
+  );
+}
 
-  .header {
-    height: 76px;
-    border-bottom: 1px solid #edf0f4;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 7%;
-  }
+function FeatureIcon() {
+  return (
+    <svg viewBox="0 0 48 48" className="bottomIcon">
+      <rect x="8" y="12" width="32" height="23" rx="3" />
+      <path d="M8 18h32" />
+      <path d="M28 29h7" />
+    </svg>
+  );
+}
 
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+function FAQIcon() {
+  return (
+    <svg viewBox="0 0 48 48" className="bottomIcon">
+      <circle cx="21" cy="21" r="12" />
+      <path d="M30 30l9 9" />
+      <path d="M17.5 18a4 4 0 0 1 7.5 1.8c0 3-3.8 3-3.8 5.5" />
+      <circle cx="21.2" cy="29" r="1" fill="currentColor" />
+    </svg>
+  );
+}
 
-  .logo {
-    width: 48px;
-    height: 48px;
-    border-radius: 13px;
-    background: #123b73;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 25px;
-    font-weight: 800;
-    box-shadow: 0 5px 15px rgba(18, 59, 115, 0.15);
-  }
+function SecurityIcon() {
+  return (
+    <svg viewBox="0 0 48 48" className="bottomIcon">
+      <path d="M24 5l15 6v10c0 10-6.3 17.8-15 22-8.7-4.2-15-12-15-22V11l15-6Z" />
+      <path d="m17 24 5 5 10-11" />
+    </svg>
+  );
+}
 
-  .brand-text {
-    line-height: 1.05;
-  }
+function ABLLogo() {
+  return (
+    <div className="logo">
+      <div className="logoMark">
+        <div className="myTop">my</div>
 
-  .brand-name {
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: -1px;
-  }
+        <div className="aShape">
+          A
+          <span className="orangeCurve"></span>
+        </div>
+      </div>
 
-  .brand-name span {
-    color: #ff7935;
-  }
-
-  .brand-subtitle {
-    font-size: 12px;
-    font-weight: 600;
-    color: #123b73;
-    letter-spacing: .5px;
-  }
-
-  .security {
-    font-size: 13px;
-    color: #68717d;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-
-  .security-icon {
-    color: #16834b;
-    font-size: 18px;
-  }
-
-  .main {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 55px 20px;
-  }
-
-  .login-card {
-    width: 100%;
-    max-width: 455px;
-  }
-
-  .welcome {
-    font-size: 38px;
-    font-weight: 750;
-    color: #20252b;
-    margin: 0 0 8px;
-    letter-spacing: -1px;
-  }
-
-  .welcome-text {
-    color: #737a83;
-    font-size: 15px;
-    margin: 0 0 35px;
-  }
-
-  .field {
-    margin-bottom: 21px;
-  }
-
-  .label {
-    display: block;
-    color: #4f5862;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  .input-wrapper {
-    height: 59px;
-    border: 1px solid #dfe4e9;
-    border-radius: 11px;
-    display: flex;
-    align-items: center;
-    background: white;
-    transition: .2s ease;
-  }
-
-  .input-wrapper:focus-within {
-    border-color: #ff7935;
-    box-shadow: 0 0 0 3px rgba(255, 121, 53, .10);
-  }
-
-  .input-icon {
-    width: 54px;
-    text-align: center;
-    color: #ff7935;
-    font-size: 19px;
-  }
-
-  .input-wrapper input {
-    border: none;
-    outline: none;
-    flex: 1;
-    height: 100%;
-    font-size: 16px;
-    color: #20252b;
-    background: transparent;
-  }
-
-  .input-wrapper input::placeholder {
-    color: #a1a7ae;
-  }
-
-  .password-button {
-    border: none;
-    background: transparent;
-    color: #ff7935;
-    cursor: pointer;
-    font-size: 19px;
-    padding: 15px;
-  }
-
-  .forgot {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: -5px;
-    margin-bottom: 24px;
-  }
-
-  .forgot button {
-    border: none;
-    background: none;
-    color: #123b73;
-    font-size: 13px;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-
-  .signin {
-    width: 100%;
-    height: 59px;
-    border: none;
-    border-radius: 11px;
-    background: #ff7935;
-    color: white;
-    font-size: 17px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 7px 18px rgba(255, 121, 53, .20);
-    transition: .2s ease;
-  }
-
-  .signin:hover {
-    background: #f36c28;
-    transform: translateY(-1px);
-  }
-
-  .signin:active {
-    transform: translateY(0);
-  }
-
-  .register {
-    width: 100%;
-    height: 59px;
-    margin-top: 13px;
-    border: 1.5px solid #123b73;
-    border-radius: 11px;
-    background: white;
-    color: #123b73;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: .2s ease;
-  }
-
-  .register:hover {
-    background: #f5f8fc;
-  }
-
-  .message {
-    margin-top: 18px;
-    padding: 13px 15px;
-    border-radius: 9px;
-    background: #fff5ef;
-    color: #c4531c;
-    font-size: 14px;
-    text-align: center;
-  }
-
-  .features {
-    margin-top: 50px;
-    padding-top: 30px;
-    border-top: 1px solid #edf0f4;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-
-  .feature {
-    text-align: center;
-    color: #68717d;
-    font-size: 13px;
-  }
-
-  .feature-icon {
-    width: 48px;
-    height: 48px;
-    margin: 0 auto 10px;
-    border-radius: 50%;
-    background: #fff5ef;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ff7935;
-    font-size: 20px;
-  }
-
-  .feature strong {
-    display: block;
-    color: #123b73;
-    font-size: 13px;
-    margin-bottom: 3px;
-  }
-
-  .footer {
-    text-align: center;
-    padding: 22px;
-    border-top: 1px solid #edf0f4;
-    color: #9299a1;
-    font-size: 12px;
-  }
-
-  @media (max-width: 600px) {
-    .header {
-      height: 68px;
-      padding: 0 22px;
-    }
-
-    .brand-name {
-      font-size: 24px;
-    }
-
-    .brand-subtitle {
-      font-size: 10px;
-    }
-
-    .logo {
-      width: 43px;
-      height: 43px;
-      font-size: 22px;
-    }
-
-    .security {
-      display: none;
-    }
-
-    .main {
-      align-items: flex-start;
-      padding: 48px 22px 35px;
-    }
-
-    .welcome {
-      font-size: 34px;
-    }
-
-    .features {
-      margin-top: 42px;
-    }
-  }
-`;
+      <div className="logoText">
+        <div className="axlName">AXL</div>
+        <div className="digital">Digital Banking</div>
+      </div>
+    </div>
+  );
+}
 
 function App() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [user, setUser] = useState(null);
 
-  const handleLogin = (e) => {
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function signIn(e) {
     e.preventDefault();
 
-    if (!username || !password) {
-      setMessage("Please enter your username and password.");
+    if (!email || !password) {
+      setMessage("Please enter your email and password.");
       return;
     }
 
-    setMessage("Login system is ready to be connected to your backend.");
-  };
+    setLoading(true);
+    setMessage("");
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setMessage(error.message);
+    } else {
+      setMessage("Signed in successfully.");
+    }
+
+    setLoading(false);
+  }
+
+  async function register() {
+    if (!email || !password) {
+      setMessage("Enter your email and password to register.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setMessage("Password must be at least 6 characters.");
+      return;
+    }
+
+    setLoading(true);
+    setMessage("");
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: window.location.origin,
+      },
+    });
+
+    if (error) {
+      setMessage(error.message);
+    } else {
+      setMessage(
+        "Registration successful. Check your email if confirmation is enabled."
+      );
+    }
+
+    setLoading(false);
+  }
+
+  async function logout() {
+    await supabase.auth.signOut();
+    setMessage("");
+  }
+
+  if (user) {
+    return (
+      <div className="app">
+        <main className="dashboard">
+          <ABLLogo />
+
+          <div className="dashboardCard">
+            <h1>Welcome to ABL</h1>
+            <p>You are securely signed in.</p>
+
+            <div className="accountBox">
+              <span>Account</span>
+              <strong>{user.email}</strong>
+            </div>
+
+            <button className="orangeButton" onClick={logout}>
+              Sign Out
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <style>{styles}</style>
+    <div className="app">
+      <main className="loginPage">
+        <div className="content">
+          <AXLLogo />
 
-      <div className="app">
+          <h1 className="welcome">Welcome!</h1>
 
-        {/* HEADER */}
-        <header className="header">
-          <div className="brand">
-            <div className="logo">A</div>
+          <form onSubmit={signIn}>
+            <label>Email Address</label>
 
-            <div className="brand-text">
-              <div className="brand-name">
-                ABL<span>.</span>
-              </div>
+            <div className="inputBox">
+              <UserIcon />
+              <span className="divider"></span>
 
-              <div className="brand-subtitle">
-                DIGITAL BANKING
-              </div>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+              />
             </div>
-          </div>
 
-          <div className="security">
-            <span className="security-icon">✓</span>
-            Secure Banking
-          </div>
-        </header>
+            <label className="passwordLabel">Password</label>
 
-        {/* LOGIN */}
-        <main className="main">
-          <section className="login-card">
+            <div className="inputBox">
+              <LockIcon />
+              <span className="divider"></span>
 
-            <h1 className="welcome">
-              Welcome!
-            </h1>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+              />
 
-            <p className="welcome-text">
-              Sign in to access your ABL Digital Banking account.
-            </p>
-
-            <form onSubmit={handleLogin}>
-
-              {/* USERNAME */}
-              <div className="field">
-                <label className="label">
-                  Username
-                </label>
-
-                <div className="input-wrapper">
-                  <div className="input-icon">
-                    👤
-                  </div>
-
-                  <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    autoComplete="username"
-                  />
-                </div>
-              </div>
-
-              {/* PASSWORD */}
-              <div className="field">
-                <label className="label">
-                  Password
-                </label>
-
-                <div className="input-wrapper">
-                  <div className="input-icon">
-                    🔒
-                  </div>
-
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
-                  />
-
-                  <button
-                    type="button"
-                    className="password-button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label="Toggle password visibility"
-                  >
-                    {showPassword ? "◉" : "◌"}
-                  </button>
-                </div>
-              </div>
-
-              {/* FORGOT PASSWORD */}
-              <div className="forgot">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setMessage("Password recovery will be available here.")
-                  }
-                >
-                  Forgot your password?
-                </button>
-              </div>
-
-              {/* SIGN IN */}
-              <button className="signin" type="submit">
-                Sign In
-              </button>
-
-              {/* REGISTER */}
               <button
-                className="register"
                 type="button"
-                onClick={() =>
-                  setMessage("Registration page will open here.")
-                }
+                className="eyeButton"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label="Show password"
               >
-                Register Now
+                <EyeIcon hidden={showPassword} />
               </button>
-
-              {message && (
-                <div className="message">
-                  {message}
-                </div>
-              )}
-
-            </form>
-
-            {/* FEATURES */}
-            <div className="features">
-
-              <div className="feature">
-                <div className="feature-icon">
-                  💳
-                </div>
-                <strong>Features</strong>
-                Easy banking
-              </div>
-
-              <div className="feature">
-                <div className="feature-icon">
-                  ?
-                </div>
-                <strong>FAQs</strong>
-                Need help?
-              </div>
-
-              <div className="feature">
-                <div className="feature-icon">
-                  🛡
-                </div>
-                <strong>Security</strong>
-                Protected
-              </div>
-
             </div>
 
-          </section>
-        </main>
+            <button
+              type="button"
+              className="trouble"
+              onClick={() =>
+                setMessage("Password recovery will be connected here.")
+              }
+            >
+              Having Trouble Logging In ?
+            </button>
 
-        {/* FOOTER */}
-        <footer className="footer">
-          © 2026 ABL Digital Banking · All rights reserved
-        </footer>
+            <button
+              type="submit"
+              className="orangeButton"
+              disabled={loading}
+            >
+              {loading ? "Please Wait..." : "Sign In"}
+            </button>
+          </form>
 
-      </div>
-    </>
+          <button
+            type="button"
+            className="registerButton"
+            onClick={register}
+            disabled={loading}
+          >
+            Register Now
+          </button>
+
+          {message && <div className="message">{message}</div>}
+
+          <div className="help">
+            <div className="phoneCircle">☎</div>
+
+            <div>
+              <div>Need Any Help ?</div>
+              <div>
+                Contact Us at{" "}
+                <a href="tel:111259225">111-AXL-225</a>
+              </div>
+            </div>
+          </div>
+
+          <div className="bottomLinks">
+            <button>
+              <div className="iconCircle">
+                <FeatureIcon />
+              </div>
+              <span>Features</span>
+            </button>
+
+            <button>
+              <div className="iconCircle">
+                <FAQIcon />
+              </div>
+              <span>FAQ's</span>
+            </button>
+
+            <button>
+              <div className="iconCircle">
+                <SecurityIcon />
+              </div>
+              <span>Security</span>
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }
 
