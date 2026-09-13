@@ -203,6 +203,18 @@ function App() {
       </div>
     );
   }
+  import { supabase } from "./lib/supabaseClient";
+  const { data, error } = await supabase.auth.signInWithPassword({
+  email,
+  password,
+});
+
+if (error) {
+  setMessage(error.message);
+  return;
+}
+
+setUser(data.user);
 
   return (
     <div className="app">
