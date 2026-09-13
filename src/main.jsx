@@ -1,1068 +1,1487 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import {
+Search,
+Play,
+Plus,
+Check,
+ChevronRight,
+Film,
+User,
+X
+} from 'lucide-react';
+import './styles.css';
+import { supabase } from './supabase';
 
- 
-
-
-
- 
-
-
-
-
-
-
- 
-
-
-
-  
- 
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="refresh" content="290"; URL=https://www.myabl.com/">
-	<meta content="no-cache" http-equiv="cache-control">
-	<meta content="no-store" http-equiv="cache-control">
-	<meta content="no-cache" http-equiv="Pragma">
-	<meta content="0" http-equiv="Expires">
-	<meta content="IE=11" http-equiv="X-UA-Compatible">
-	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-	<meta content="yes" name="apple-mobile-web-app-capable">
-	<meta content="default" name="apple-mobile-web-app-status-bar-style">
-	<meta content="true" name="HandheldFriendly">
-	<meta content="width" name="MobileOptimized">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>myABL - Login</title>
-    <link rel="icon" href="/oamcustompages/pages/img/favicon.png">
-    <!-- Bootstrap -->
-    <link href="/oamcustompages/pages/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
-    <link href="/oamcustompages/pages/css/fonts.css" rel="stylesheet">
-    <link href="/oamcustompages/pages/css/owl.carousel.css" rel="stylesheet">
-    <link href="/oamcustompages/pages/css/fonts_new.css" id="font-stylesheet" rel="stylesheet">
-    <link id="size-stylesheet" rel="stylesheet">
-	<link rel="stylesheet" href="//fonts.googleapis.com/earlyaccess/notonastaliqurdudraft.css">
-	<script type="text/javascript" src="/oamcustompages/pages/jsdir/jquery-includes.js" charset="utf-8"></script>
-	<script type="text/javascript" src="/oamcustompages/pages/jsdir/common.js" charset="utf-8" ></script>
-	<script type="text/javascript" src="/oamcustompages/pages/jsdir/jquery.min.js" charset="utf-8" ></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  <style>
-    html{
-      opacity: 0;
-    }
-    .footer-items li a div{
-    /* text-shadow: -0.8px 0.8px 0 white, 0.8px 0.8px 0 white, 0.8px -0.8px 0 white, -0.8px -0.8px 0 white !important;
-    text-shadow: -0.7px 0.7px 0 white, 0.7px 0.7px 0 white, 0.7px -0.7px 0 white, -0.7px -0.7px 0 white !important;
-    text-shadow: -0.6px 0.6px 0 white, 0.6px 0.6px 0 white, 0.6px -0.6px 0 white, -0.6px -0.6px 0 white !important; */
-        /* text-shadow: -0.5px 0.5px 0 white, 0.5px 0.5px 0 white, 0.5px -0.5px 0 white, -0.5px -0.5px 0 white !important; */
-        color: #fd7a37 !important;
-    font-weight: 600 !important;
-        /* text-shadow:     -0.7px 0.7px 0.5px rgba(255,255,255,0.5), 0.7px 0.7px 0.5px rgba(255,255,255,0.5), 0.7px -0.7px 0.5px rgba(255,255,255,0.5), -0.7px -0.7px 0.5px rgba(255,255,255,0.5) */
-
-}
-  </style>
-<script type="text/javascript">
-
-var scr_w, scr_w1,scr_h, scr_h1;
-
-function setScreenSize(){
-			
-			scr_w1 = screen.availWidth-10+"px";
-			scr_h1 = screen.availHeight-60+"px";
-		}
-
-function forgotPassword () {
-	var l_frmname 	= 'frmprocess';
-	var l_requestid = 'RRFPW01';
-	createForm(l_frmname,l_requestid);	
-	formwindow_open ($("form[name="+l_frmname+"]") [0], 'Forgot Password?', l_requestid);
-}
-
-function createForm (p_frmname,p_requestid) {
-	var form = $("form[name="+p_frmname+"]");
-	if (form.length == 0) {
-		$("form[name='frmmain']").after ('<form name='+p_frmname+' action="process.jsp" method="POST" autocomplete="off"/>');
-		var form = $("form[name="+p_frmname+"]");
-		form.append ('<input type="hidden" value='+p_requestid+' name="fldRequestId"/>');
-		form.append ('<input type="hidden" value="01" name="fldDeviceId"/>');
-		form.append ('<input type="hidden" value="eng" name="fldlang"/>');
-		form.append ('<input type="hidden" value="" name="title"/>');
-	}
-}
-
-
-function togglePassword()
-{ 		
-		//alert("Hi");
-		var pwd = document.getElementById("password1");
-        if(pwd.getAttribute("type")=="password"){
-            pwd.setAttribute("type","text");
-      document.getElementById("eye_icon").src="/oamcustompages/pages/images/icons-png/eye_1.png"; 
-      document.getElementById("eye_icon").style.height="10px";        
-        } else {
-    pwd.setAttribute("type", "password");			
-    document.getElementById("eye_icon").src="/oamcustompages/pages/images/icons-png/eye_2.png";
-    document.getElementById("eye_icon").style.height="15px";       
-  }
-}
-
-
-
-</script>
-<!-- Start Disable frame hijacking Script-->
-
-<style id="antiClickjack">body { display: none !important; }</style>
-<script type="text/javascript">
-	 
-    if (self === top) {
-       var antiClickjack = document.getElementById("antiClickjack");
-       antiClickjack.parentNode.removeChild(antiClickjack);
-    } else {
-        top.location = self.location;
-    }
-</script>
-
-<!-- End Disable frame hijacking Script--> 
- 
-<script>   
-var currentPageLang = 'en';
-var userLanguageArray =  new Array();
-var isError;
-
-    function trim(s)  
-    {  
-		return s.replace( /^\s*/, "" ).replace( /\s*$/, "" );  
-    }  
- 
-    function validate()  
-    {  
-		if(trim(document.frmLogin.sUserName.value)=="")  
-		{  
-			alert("Login empty");  
-			document.frmLogin.sUserName.focus();  
-			return false;  
-		}  
-		else if(trim(document.frmLogin.sPwd.value)=="")  
-		{  
-			alert("password empty");  
-			document.frmLogin.sPwd.focus();  
-			return false;  
-		}  
-    }  
-
-        function Testfn(user,pass){
-          var $form = null;
-          if($(window).width() <= 767) { $form = document.frmmain; }else { $form = document.frmmain;}
-          $form.username.value = user;
-          $form.password.value = pass;
-          $form.submit();
-							
-          return false;
-						}
-						
-						function Regfn(){
-							
-							document.frmreg.submit();
-							
-							return true;
-						}
-						
-						
-    </script> 
-	<script language="javascript" type="text/javascript">
-
-
-
-
-function submitform()
+const fallbackFilms = [
 {
-	
-	 document.loginData.action = "/oamcustompages/pages/login.jsp"; 
-	 document.loginData.submit();
-	 document.loginData.action ="/oam/server/auth_cred_submit";
-}
+id: 1,
+title: 'The Night The Flag Changed',
+year: 2026,
+runtime: '22 min',
+genre: 'Historical Thriller',
+country: 'Pakistan',
+creator: 'Kainat Ali',
+description:
+'A historical thriller exploring a pivotal night through AI-assisted cinema.',
+poster:
+'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/683501478_1786619703436515.jpg',
 
-function hideOverlay(overlayDivId)
+featured: true,
+youtubeId: null,
+
+},
 {
-	var overlayDiv = document.getElementById('layer');
-	overlayDiv.style.display = 'none';
-	
-	var overlayDivElement = document.getElementById(overlayDivId);
-	overlayDivElement.style.display = 'none';
+id: 2,
+title: 'Neon Memory',
+year: 2026,
+runtime: '11 min',
+genre: 'Sci-Fi',
+country: 'International',
+creator: 'AI Flix Showcase',
+description:
+'A short journey through a city where memories can be replayed.',
+poster:
+'https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80'
+},
+{
+id: 3,
+title: 'The Last Garden',
+year: 2026,
+runtime: '8 min',
+genre: 'Drama',
+country: 'International',
+creator: 'AI Flix Showcase',
+description:
+'A quiet story about a final garden in a changing world.',
+poster:
+'https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=900&q=80'
+},
+{
+id: 4,
+title: 'Beyond the Mountains',
+year: 2026,
+runtime: '15 min',
+genre: 'Adventure',
+country: 'Pakistan',
+creator: 'AI Flix Showcase',
+description:
+'An expedition into landscapes shaped by imagination and generative cinema.',
+poster:
+'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80'
+}
+];
+
+function App() {
+const [films, setFilms] = useState(fallbackFilms);
+const [selected, setSelected] = useState(null);
+const [playing, setPlaying] = useState(false);
+const [query, setQuery] = useState('');
+const [watchlist, setWatchlist] = useState([]);
+const [activePage, setActivePage] = useState('home');
+const [submissionTitle, setSubmissionTitle] = useState('');
+const [submissionDescription, setSubmissionDescription] = useState('');
+const [submissionGenre, setSubmissionGenre] = useState('');
+const [submissionCountry, setSubmissionCountry] = useState('');
+const [submissionDirector, setSubmissionDirector] = useState('');
+const [submissionYear, setSubmissionYear] = useState('');
+const [submissionDuration, setSubmissionDuration] = useState('');
+const [submissionMessage, setSubmissionMessage] = useState('');
+const [submissionError, setSubmissionError] = useState('');
+// AUTH STATES
+const [user, setUser] = useState(null);
+const [authMode, setAuthMode] = useState(null);
+const [email, setEmail] = useState('');
+const [password, setPassword] = useState('');
+const [fullName, setFullName] = useState('');
+const [authError, setAuthError] = useState('');
+const [authMessage, setAuthMessage] = useState('');
+const [submissionPoster, setSubmissionPoster] = useState(null);
+const [submissionVideo, setSubmissionVideo] = useState(null);
+const [isAdmin, setIsAdmin] = useState(false);
+const [pendingSubmissions, setPendingSubmissions] = useState([]);
+// LOGIN CHECK
+useEffect(() => {
+const getUser = async () => {
+const {
+data: { user }
+} = await supabase.auth.getUser();
+
+setUser(user);
+};
+
+getUser();
+
+const {
+data: { subscription }
+} = supabase.auth.onAuthStateChange(
+(_event, session) => {
+setUser(session?.user || null);
+}
+);
+
+return () => {
+subscription.unsubscribe();
+};
+}, []);
+useEffect(() => {
+if (!user) {
+setIsAdmin(false);
+return;
 }
 
-            var virtKeyb = false;
+setIsAdmin(
+user.id === '888a7732-5e06-4d4d-8d35-373351509343'
+);
+}, [user]);
+useEffect(() => {
 
-            function HandleKeyPress(evt){
-              //console.log(virtKeyb);
-              if (virtKeyb) {
-                var key = evt.which || evt.charCode || evt.keyCode || 0;
 
-                if (key == 13)
-                {
-                  //document.frmmain.submit();
-                  //Testfn();
-                  var l = null;
-                  if($(window).width() <= 767) {
-                    l = document.getElementById('sSubmit1');
-                  }else {
-                    l = document.getElementById('sSubmit');
-                  }
-          l.click();
-        }
-        else {
-          return false;
-        }
-      }
-      else {
-        var key = evt.which || evt.charCode || evt.keyCode || 0;
-        if (key==13){
-          //document.frmmain.submit();
-          //Testfn();
-          var l = null;
-          if($(window).width() <= 767) {
-            l = document.getElementById('sSubmit1');
-          }else {
-            l = document.getElementById('sSubmit');
-          }
-          l.click();
-								}
-								else {
-									return key;
-								}
-								
-								
-							}
-						}
-					
-					</script>
-
-<!-- Added by Junaid Ahmad 10-10-2017 for Security Popup -->
-<script language="javascript" type="text/javascript">
-    function closeSecurityPopup()
-    {
-        var popupContainer = document.getElementsByClassName("securityPopupContainer");
-        popupContainer[0].style.display = "none";
-    }
-	function togglePopupLanguage()
-	{
-		var btn = document.getElementById("btnChangePopupLanguage");
-		var englishHeading = document.getElementById("popupHeadingEnglish");
-		var urduHeading = document.getElementById("popupHeadingUrdu");
-		var englishContent = document.getElementById("popupContentEnglish");
-		var urduContent = document.getElementById("popupContentUrdu");
-		if (btn.innerText == "English")
-		{
-			englishContent.style.display = "block";
-			englishHeading.style.display = "block";
-			urduContent.style.display = "none";
-			urduHeading.style.display = "none";
-			btn.innerHTML = "اردو";
-			btn.style.fontSize = "24px";
-			btn.style.marginTop = "6px";
-		}
-		else
-		{
-			englishContent.style.display = "none";
-			englishHeading.style.display = "none";
-			urduContent.style.display = "block";
-			urduHeading.style.display = "block";
-			btn.innerHTML = "English";
-			btn.style.fontSize = "18px";
-			btn.style.marginTop = "13px";
-		}
-	}
-</script>
-<!-- ******************************** -->
-
-  </head>
-  
-<style>@media only screen and (max-width: 765px) {
-    .loginSide {
-       width: 100%;
-   }
-   }
-  .owl-next,
-  .owl-disabled {
-    background: rgba(225, 75, 16) !important;
-  }
-  .footer-items {
-    padding: 0;
-    width: 100%;
-    display: flex !important;
-    flex-wrap: wrap-reverse;
-    justify-content: space-between;
-    align-items: end;
-    margin: 0 !important;
-  }
-  .footer-items li {
-    flex-grow: 1;
-    flex-basis: 110px;
-    margin-top: 10px;
-  }
-  .display-flex-center {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    background: #F9FAFB !important;
-  }
-  .footer-items li>a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: white;
-    justify-content: center;
-  }
-  .footer-items li div {
-    margin: 12px 0 18px 0px;
-    font-weight: 500;
-    font-size: 12.5px;
-    line-height: 21px;
-    color: #FFFFFF;
-  }
-  .footer-items li img {
-    width: 60px !important;
-    height: 60px !important;
-  }
-  .login-input-field {
-    background: #FFFFFF;
-    border: 1px solid #E8E8E8 !important;
-    ;
-    border-radius: 7px !important;
-    ;
-  }
-  .login-input-field>input {
-    border: 0 !important
-  }
-  button {
-    text-transform: capitalize !important
-  }
-  button.btn-submit {
-    background: #FD7A37;
-    border-radius: 7px;
-    font-size: 14px !important;
-    border: 0;
-    padding: 11px 30px
-  }
-  .footer-items .sub-menu > ul a:hover {
-    color: #FD7A37 !important;
-  }
-  button.btn-register:active{
-        background: transparent;
-        -webkit-box-shadow: inset 0 0px 0px rgb(0 0 0 / 0%);
-        box-shadow: inset 0 0px 0px rgb(0 0 0 / 0%);
-  }
-  .footer-btn-register {
-    background: transparent;
-    border-radius: 7px;
-    border: 1px solid #083880;
-  }
-  button.btn-register {
-    padding: 4px 12px;
-    background: transparent;
-  }
-  button.btn-register>a {
-    font-size: 14px !important;
-    color: #083880;
-  }
-  button.btn-register>a:hover {
-    font-size: 14px !important;
-    color: #083880;
-  }
-  button.btn-register>a:before {
-    background: transparent !important;
-  }
-  body {
-    background: #F9FAFB !important;
-  }
-  a.having-trouble-logIn-text {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    color: #707070;
-    text-decoration: underline;
-	text-align: right;
-	
-  }
-  .margin-bottom-15x {
-    margin-bottom: 15px !important;
-  }
-  .input-field-label {
-    font-weight: 400;
-    font-size: 14px;
-    color: #4A5568;
-    margin-bottom: 3px;
-  }
-  .contact-us-text>img {
-    height: 25px;
-    width: 25px;
-  }
-  .contact-us-text>div {
-    margin-left: 10px;
-  }
-  .contact-us-text {
-    margin-top: 25px;
-    align-items: center;
-    display: flex;
-    line-height: 16px;
-    letter-spacing: 0.023em;
-    color: #8B8A8A;
-    justify-content: start;
-    font-size: 13.5px;
-  }
-  .contact-number {
-    color: #041F60;
-    text-decoration: underline;
-  }
-  @media (min-width: 768px) {
-    .footer-item-right-padding {
-      padding-right: 50.4% !important;
-    }
-    .footer-items li div {
-      font-size: 10px;
-    }
-  }
-  div.owl-stage-outer a>div {
-    color: #041F60 !important;
-  }
-  @media (min-width: 992px) {
-    .footer-item-right-padding {
-      padding-right: 33.4% !important;
-    }
-    .footer-items li div {
-      font-size: 12.5px;
-    }
-  }
-  .padding-left-15x {
-    padding-left: 45px !important;
-  }
-  .input-field-suffix {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    padding-right: 15px !important;
-    margin: auto;
-    cursor: pointer;
-    height: 10px;
-  }
-  .input-field-prefix {
-    position: absolute;
-    top: 0;
-    height: 20px;
-    left: 0;
-    margin: auto;
-    bottom: 0;
-    border-right: 1px solid rgba(170, 170, 170, 0.13);
-    padding-right: 10px;
-    padding-left: 10px;
-  }
-  .footer-items .sub-menu>ul {
-    background: #FFFFFF;
-    border-radius: 14px;
-  }
-  .footer-items .sub-menu>ul {
-    margin-bottom: 17px !important;
-    position: absolute;
-    padding: 0;
-    margin: 0;
-  }
-  .footer-items .sub-menu>ul a {
-    text-align: center;
-    color: #404246;
-  }
-  .footer-items .sub-menu>ul a {
-    border-radius: 14px;
-    padding: 15px 10px;
-	border-radius: 14px;
-	border-radius: 14px;
-
-  }
-   .footer-items .sub-menu>ul a {
-    border-radius: 14px;
-    padding: 15px 10px;
-	border-radius: 14px;
-	border-radius: 14px;
-   	
-   	
-  }
-  .footer-items .sub-menu>ul li:not(:last-child) {
-    border-bottom: 1px solid rgba(112, 112, 112, 0.20);
-  }
-  .footer-items .sub-menu>ul li {
-    margin-top: 0 !important;
-  }
-  .footer-items .submenu-triangle {
-    left: 0;
-    position: absolute;
-    right: 0;
-    width: 0;
-    height: 0;
-    border-left: 13px solid transparent;
-    border-right: 13px solid transparent;
-    border-top: 14px solid white;
-    margin: auto;
-  }
-  .width-100{
-      width:100% !important
-  }
-  ul#open-account.dropdown-menu {
-        right:0;
-        left:0;
-        border:0
-  }
-  ul#open-account.dropdown-menu li:last-child {
-        border-bottom-left-radius: 14px;
-        border-bottom-right-radius: 14px;
-  }
-  ul#open-account.dropdown-menu li:first-child {
-        border-top-left-radius: 14px;
-        border-top-right-radius: 14px;
-  }
-  ul#open-account.dropdown-menu li {
-        margin-right: -33px;
-        margin-left: -33px;
-        background: white;
-  }
-  
-  
-  
-  .contact-number:hover{
-    cursor: pointer;
-    color: #dc4b10;
-    text-decoration: underline;
-}
-  button.btn.btn-register.width-100:hover {
-      background: rgba(220,220,220,0.3);
-  }
-  
-  
-  /* this is a _demo_ container. remember the importance of relative and absolute positioning */
-.tooltip-container {
-    position: relative;
-    display: flex;
-    place-content: center;
+if (!isAdmin) {
+setPendingSubmissions([]);
+return;
 }
 
-/* styling of the tooltip display */
-p#tooltip-text {
-    display: none;
-    position: absolute;
-    top: -60px;
-    z-index: 1;
-    background: #00732c;
-    padding: 8px;
-    font-size: 1rem;
-    color: #fff;
-    border-radius: 2px;
-    animation: fadeIn 0.6s;
+const loadPendingSubmissions = async () => {
+const { data, error } = await supabase
+.from('film_submissions')
+.select('*')
+.order('created_at', { ascending: false });
+
+
+
+
+if (error) {
+setSubmissionError(
+'ADMIN QUERY ERROR: ' + error.message
+);
+return;
 }
 
+setPendingSubmissions(data || []);
 
 
-.popup {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+};
+
+loadPendingSubmissions();
+}, [isAdmin]);
+
+useEffect(() => {
+const loadWatchlist = async () => {
+if (!user) {
+setWatchlist([]);
+return;
 }
 
-/* The actual popup */
-.popup .popuptext {
-  visibility: hidden;
-  width: 160px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 8px 0;
-  position: absolute;
-  z-index: 1;
-  bottom: 125%;
-  left: 50%;
-  margin-left: -80px;
+const { data, error } = await supabase
+.from('watchlist')
+.select('movie_id')
+.eq('user_id', user.id);
+
+if (error) {
+console.error(
+'Could not load My List:',
+error
+);
+return;
 }
 
-/* Popup arrow */
-.popup .popuptext::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
+setWatchlist(
+(data || []).map((item) => Number(item.movie_id))
+);
+};
+
+loadWatchlist();
+}, [user]);
+
+useEffect(() => {
+const loadMovies = async () => {
+
+
+
+const { data, error } = await supabase
+.from('movies')
+.select('*')
+.order('year', { ascending: false });
+
+
+if (error) {
+console.error(
+'Could not load movies from Supabase:',
+error
+);
+return;
+}
+console.log('MOVIES FROM SUPABASE:', data);
+
+if (!data || data.length === 0) {
+return;
 }
 
-/* Toggle this class - hide and show the popup */
-.popup .show {
-  visibility: visible;
-  -webkit-animation: fadeIn 1s;
-  animation: fadeIn 1s;
+const databaseFilms = data.map((movie) => {
+
+
+const existingFilm = fallbackFilms.find(
+(film) => film.title === movie.title
+);
+
+return {
+id: movie.id,
+
+title:
+movie.title ||
+existingFilm?.title ||
+'Untitled Film',
+
+year:
+movie.year ||
+existingFilm?.year ||
+2026,
+
+runtime:
+movie.duration ||
+existingFilm?.runtime ||
+'',
+
+genre:
+movie.genre ||
+existingFilm?.genre ||
+'AI Cinema',
+
+country:
+existingFilm?.country ||
+'International',
+
+creator:
+movie.director ||
+existingFilm?.creator ||
+'Unknown',
+
+description:
+movie.description ||
+existingFilm?.description ||
+'An AI-generated or AI-assisted film.',
+
+poster:
+movie.title === 'The Night The Flag Changed'
+? 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/683501478_1786619703436515.jpg'
+: movie.poster_url?.trim() || existingFilm?.poster || '',
+
+videoUrl:
+movie.video_url ||
+existingFilm?.videoUrl ||
+'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4',
+};
+});
+
+
+setFilms(databaseFilms);
+};
+
+loadMovies();
+}, []);
+
+const filtered = useMemo(() => {
+const q = query.toLowerCase().trim();
+
+if (!q) return films;
+
+return films.filter((film) =>
+[film.title, film.genre, film.country, film.creator].some(
+(value) => value && value.toLowerCase().includes(q)
+)
+);
+}, [query, films]);
+
+const toggleWatchlist = async (id) => {
+console.log('MY LIST CLICKED:', id);
+console.log('CURRENT USER:', user);
+
+if (!user) {
+setAuthError('Please sign in to use My List.');
+setAuthMode('login');
+return;
 }
 
-/* Add animation (fade in the popup) */
-@-webkit-keyframes fadeIn {
-  from {opacity: 0;} 
-  to {opacity: 1;}
+const alreadySaved = watchlist.includes(id);
+
+console.log('ALREADY SAVED:', alreadySaved);
+
+if (alreadySaved) {
+const { data, error } = await supabase
+.from('watchlist')
+.delete()
+.eq('user_id', user.id)
+.eq('movie_id', String(id))
+.select();
+
+console.log('DELETE RESULT:', data);
+console.log('DELETE ERROR:', error);
+
+if (error) {
+alert('DELETE ERROR: ' + error.message);
+return;
 }
 
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity:1 ;}
+setWatchlist((current) =>
+current.filter((item) => item !== id)
+);
+
+} else {
+const { data, error } = await supabase
+.from('watchlist')
+.insert({
+user_id: user.id,
+movie_id: String(id)
+})
+.select();
+
+console.log('INSERT RESULT:', data);
+console.log('INSERT ERROR:', error);
+
+if (error) {
+alert('INSERT ERROR: ' + error.message);
+return;
 }
-  
-  
-  .hide {
-  display: none;
+
+setWatchlist((current) => [
+...current,
+id
+ ]);
 }
-    
-.myDIV:hover+.hide {
-  display: block;
-  color: white;
+};
+const submitFilm = async () => {
+setSubmissionError('');
+setSubmissionMessage('');
+
+if (!user) {
+setSubmissionError(
+'Please sign in before submitting a film.'
+);
+setAuthMode('login');
+return;
 }
 
+if (!submissionTitle.trim()) {
+setSubmissionError('Please enter a film title.');
+return;
+}
 
+if (!submissionPoster) {
+setSubmissionError('Please upload a film poster.');
+return;
+}
 
-  
-</style>
-<body>
-  <section class="login cover equalizer-container  h-100" style="background-image:url('/oamcustompages/pages/images/pink-icon/backscreen.jpg');">
-	<!-- Added by Junaid Ahmad 10-10-2017 for Security Popup -->
-  
-<div class="securityPopupContainer">
-    <div class="securityPopup">
-        <div id="securityPopupHeader">
-            <center>
-        <span id="popupHeadingEnglish" style="display:block;font-weight:bold;font-size:18px;color:#E88522">Secure Internet Banking Tips</span>
-                  <span id="popupHeadingUrdu" dir="rtl" style="display:none;font-weight:bold;font-family:'Noto Nastaliq Urdu Draft';font-size:16px;color:#E88522">تجاویز برائےمحفوظ انٹرنیٹ بینکنگ</span>
-      </center>      
-        </div>
-        <br/>
-		<div id="popupContentEnglish" style="display:block;font-size:14px">																											   
-			<p>Allied Bank never asks you for your personal information (myABL ID, password, ATM PIN, OTP) through phone calls, web links, SMS, emails and social media. Also, we only call our customers from 1222 and never call from 111-225-225. Do not share any personal information to callers claiming to be from Allied Bank/government/security companies.</p>
-			<ul style="color:#222222;margin-top:20px;font-style:oblique">
-				<li>Never store myABL ID/passwords, card numbers on your browser.</li>
-				<li>Always choose a unique and strong password, and change it regularly.</li>
-				<li>Keep your browser, and antivirus updated and periodically scan your computer.</li>
-				<li>Login to myABL Internet Banking through <a href="https://www.abl.com/">https://www.abl.com</a> into your browser.</li>
-				<li>Always logout myABL  after use.</li>
-				<li>Check your last login details and transaction history.</li>
-				<li>In case of any suspicious activity, immediately contact our helpline 111-225-225.</li>
-			</ul>
-		</div>
-      <div id="popupContentUrdu" dir="rtl" style="font-size:14px;font-family:'Noto Nastaliq Urdu Draft';font-weight:500;display:none;line-height:28px">
-          <p>الائیڈبینک آپ کی ذاتی معلومات جیسا کہ (انٹرینٹ آئی ڈی اور پاسورڈ ) کے بارے میں بذریعہ فون کالز، ویب لنکس، ایس ایم ایس، ای میل اور سوشل میڈیا کےذریعے کبھی بھی نہیں پوچھتا اور ہم اپنے صارفین کو صرف 1222 سے کال کرتے ہیں اور کبھی بھی 225-225-111.سے کال نہیں کرتے۔ اگر کبھی آپ کو ایسی کوئی کال/ای میل یا ایس ایم ایس موصول ہو جس میں الائیڈ بینک/گورنمنٹ/سکورٹی اداروں کا نام استعمال کر کے آپ سے معلومات حاصل کرنے کی کوشش کی جائے تو معلومات فراہم نہ کریں۔</p>
-        <ul style="color:#222222;margin-top:20px">
-                <li>کبھی بھی   myABL   آئی  ڈی/پاسورڈ ، کارڈ نمبرزبراؤزر میں سٹور مت کریں۔</li>
-                <li>ہمیشہ  ایک منفرد اور مضبوط پاسورڈ کا انتخاب کریں، اور باقاعدگی سے بدلتے رہیں۔</li>
-                <li>اپنے براؤزر اور اینٹی وائرس کو اپ ڈیٹ رکھیں اوروقفے وقفے سےاپنے کمپیوٹر  کو جانچتے رہیے۔</li>
-                <li>ہمیشہ myABL      استعمال کرلینے کے بعد اسے لاگ آؤٹ کریں۔</li>
-                <li>اپنے آخری لاگ ان کی تفصیلات اور ٹرانزیکشن کی تاریخ کی جانچ پڑتال کریں۔</li>
-                <li>کسی قسم کی مشکوک سرگرمی کی صورت میں، فوری ہماری ہیلپ لائن 225-225-111 پر رابطہ کریں۔</li>
-            </ul>
-    </div>
-    <br/>
-        <!--p style="color:#222222;font-size: 14px;font-style: oblique;margin-left: 20px">Allied bank is not responsible if customers do not comply with above security guidelines.</p-->
-    <!-- Begin DigiCert site seal HTML and JavaScript -->
+if (!submissionVideo) {
+setSubmissionError('Please upload your film/video.');
+return;
+}
 
+try {
+// Create unique file names
+const posterPath =
+${user.id}/${Date.now()}-${submissionPoster.name}`;
 
-<script type="text/javascript">
+const videoPath =
+``${user.id}/ {submissionVideo.name}`;
 
-var __dcid = __dcid || [];__dcid.push(["DigiCertClickID_9yJtmmFC", "11", "m", "black", "9yJtmmFC"]);(function(){var cid=document.createElement("script");cid.async=true;cid.src="//seal.digicert.com/seals/cascade/seal.min.js";var s = document.getElementsByTagName("script");var ls = s[(s.length - 1)];ls.parentNode.insertBefore(cid, ls.nextSibling);}());
+// Upload poster
+const { error: posterError } = await supabase.storage
+.from('posters')
+.upload(posterPath, submissionPoster);
 
-</script>
+if (posterError) {
+console.error('POSTER UPLOAD ERROR:', posterError);
+setSubmissionError(
+'Could not upload poster: ' + posterError.message
+);
+return;
+}
 
-<!-- End DigiCert site seal HTML and JavaScript -->
-        <div style="width:100%; height: 50px; margin-top: -10px;padding-top:10px;">
-        <span id="DigiCertClickID_K2BAxMS0" data-language="en" style="float:left;padding-left:30px;">
+// Upload video
+const { error: videoError } = await supabase.storage
+.from('videos')
+.upload(videoPath, submissionVideo);
 
-            <a href="https://www.digicert.com/ev-ssl-certification/"></a>
+if (videoError) {
+console.error('VIDEO UPLOAD ERROR:', videoError);
+setSubmissionError(
+'Could not upload video: ' + videoError.message
+);
+return;
+}
 
-        </span>
-            <Button style="float: right;background: #e56419;color: #f2f2f2;margin-top:10px;" onclick="closeSecurityPopup()">Proceed</Button>
-      <a id="btnChangePopupLanguage" style="font-face:Lato;float:right;margin-top:6px;padding-right:20px;font-size:24px;font-weight:500;color:#1A0DAB;cursor:pointer;text-align:right;" onclick="togglePopupLanguage()">اردو</a>
-        </div>
-    </div>
+// Get public poster URL
+const { data: posterData } = supabase.storage
+.from('posters')
+.getPublicUrl(posterPath);
+
+// Get public video URL
+const { data: videoData } = supabase.storage
+.from('videos')
+.getPublicUrl(videoPath);
+
+// Save submission information + file URLs
+const { error } = await supabase
+.from('film_submissions')
+.insert({
+user_id: user.id,
+title: submissionTitle.trim(),
+description: submissionDescription.trim(),
+genre: submissionGenre.trim(),
+country: submissionCountry.trim(),
+director: submissionDirector.trim(),
+year: submissionYear.trim(),
+duration: submissionDuration.trim(),
+filmmaker_email: user.email,
+poster_url: posterData.publicUrl,
+video_url: videoData.publicUrl,
+status: 'pending'
+});
+
+if (error) {
+console.error('SUBMISSION ERROR:', error);
+setSubmissionError(
+'Could not submit your film: ' + error.message
+);
+return;
+}
+
+setSubmissionMessage(
+'Your film has been submitted successfully and is now pending review.'
+);
+
+setSubmissionTitle('');
+setSubmissionDescription('');
+setSubmissionGenre('');
+setSubmissionCountry('');
+setSubmissionDirector('');
+setSubmissionYear('');
+setSubmissionDuration('');
+setSubmissionPoster(null);
+setSubmissionVideo(null);
+
+} catch (err) {
+console.error('UNEXPECTED SUBMISSION ERROR:', err);
+setSubmissionError(
+'Something went wrong while submitting your film.'
+);
+}
+};
+const openFilm = (film) => {
+console.log('SELECTED FILM:', film);
+console.log('VIDEO URL:', film.videoUrl);
+
+setSelected(film);
+setPlaying(false);
+};
+
+const closeFilm = () => {
+setSelected(null);
+setPlaying(false);
+};
+
+const heroFilm = films[0];
+return (
+<div className="app">
+
+{/* NAVIGATION */}
+<header className="nav">
+<div className="brand">
+AI<span>FLIX</span>
 </div>
-  
-<!--*****************************************************-->
-      <div class="container-fluid">
-  <div class="row rowMain " style=" display: flex; ">
-      <style>
-      .h-100{ height: 100% !important;  }</style>
-              <div class="h-100 col-sm-6 col-md-8 equalize rightPanel hidden-xs" 
-                ></div>
-              <div class="h-100 col-sm-6 col-md-4 equalize loginSide" style="background: #F9FAFB;;   position: absolute; right: 0;">
-                  <div class="loginScreen display-flex-center" style="z-index: 1;">
-                      <ul style="display: none;" class="list-inline main-tab hidden-xs">
-                  <li><a href="#" class="active">Personal</a></li>
-                  <li><a target="_blank" href="https://business.myabl.com">Business</a></li>
-                </ul>
-                <div class="clear"></div>
-                <div class=" col-xs-9 col-sm-8 col-md-8 col-lg-8 loginContent" style="    padding-left: 0;padding-right: 0;">
-                  <div class="logoLogin">
-                    <img style="height:45px !important;" src="/oamcustompages/pages/images/icons-png/myabl-logo.png" alt="My ABL">
-                  </div>
-                  <div class="loginDesc">
-                    <h2 style="font-size: 25px;margin:34px 0 17px 0">Welcome!</h2>
-               </div>
-			<div class="form-group has-feedback" style="margin-bottom:5px !important">
-							
-                   <div align="center" id="errorBar1" class="errorBar1" enctype="text/plain" name="errorBar1" >
-                <div id="errMsg" style="line-height:15px;color:red;">
-                  <p id="result1" class="loginFailed"> </p> 
-                </div>
-              </div>
-              
-            </div>
-                  <form  id="form" onSubmit=""  method="post"  autocomplete="off">
-                    <div class="input-field-label">Username</div>
-                    <div class="login-input-field form-group has-feedback">
-                      <label class="sr-only control-label" for="uID">Username</label>
-                      <input type="text" class="padding-left-15x form-control " name="username1" id="username1"
-                          autocomplete="off" placeholder="Username">
-                  <img class="input-field-prefix" src="/oamcustompages/pages/images/icons-png/username-field.png" />
-                  </div>
-                  <div class="input-field-label">Password</div>
-                  <div class="login-input-field form-group has-feedback">
-                    <label class="sr-only control-label" for="uPass">Password</label>
-                    <input autocomplete="off" type="password" class="padding-left-15x form-control " name="password1"
-                    id="password1" onkeypress="return HandleKeyPress(event);"
-                    placeholder="Password">
-            <img class="input-field-prefix" src="/oamcustompages/pages/images/icons-png/password-field.png" />
-            <img class="input-field-suffix" id='eye_icon' onclick="togglePassword()" src="/oamcustompages/pages/images/icons-png/eye_1.png" />
-                    </div>
-                    <div class="form-link margin-bottom-15x" style="display: flex; justify-content: flex-start;">
-                      <a href="https://www.myabl.com/?module=forgot-password"
-                        class="having-trouble-logIn-text">Having Trouble Logging In ?</a>
-                      </div>
-                    <button type="button" name="sSubmit" id="sSubmit" class="btn btn-submit sSubmit">Sign
-                      in</button>
-                      <footer class="formFooter footer-btn-register">
-                      <button type="button" class="btn btn-register width-100"><a href="https://www.myabl.com/?module=registration" class="width-100">Register Now</a></button>
-                    </footer>
-                  </form>
-          <form name="frmmain" action="/oam/server/auth_cred_submit" method="post"  autocomplete="off">
-            <input name="request_id" value="" type="hidden">&nbsp;<input name="username" value="" autocomplete="off"  type="hidden"><input name="password" value="" autocomplete="off"  type="hidden" autocomplete="new-password">
-          </form>
-          <div class="contact-us-text">
-              <img src="/oamcustompages/pages/images/icons-png/contact-us.png" />
-              <div>
-                  <div>Need Any Help ?</div>
-                  <div>Contact Us&nbsp;<a class="contact-number" href="tel:111-225-225">111-225-225</a></div>
-                </div>
-              </div>
+<nav>
+<button onClick={() => setActivePage('home')}>
+Home
+</button>
 
+<button onClick={() => setActivePage('browse')}>
+Browse
+</button>
 
-                </div>
-              </div>
-      
-            </div>
+<button
+onClick={() => {
+console.log('MY LIST BUTTON CLICKED');
+setActivePage('mylist');
+}}
+>
+My List
+</button>
 
-            <ul class="list-inline col-sm-6 col-md-8 col-lg-8 footer-items owl-responsive footer-item-right-padding" style="left: 0;position: fixed;bottom: 0;"> 
-                <li>
-                  <a href="https://www.myabl.com/pages/public/features.html" target="popup" onclick="window.open('https://www.myabl.com/pages/public/features.html#fundstransfer','popup','width=600,height=600,scrollbars=yes,resizable=yes'); return false;">
-                    <img src="/oamcustompages/pages/images/icons-png/features.png" />
-                    <div>Features</div>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.myabl.com/pages/public/FAQ.html" target="popup" onclick="window.open('https://www.myabl.com/pages/public/FAQ.html','popup','width=600,height=600,scrollbars=yes,resizable=yes'); return false;">
-                    <img src="/oamcustompages/pages/images/icons-png/faqs.png" / class="no-change">
-                    <div>FAQ's</div>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.myabl.com/pages/public/password-security.html" target="popup" onclick="window.open('https://www.myabl.com/pages/public/password-security.html','popup','width=600,height=600,scrollbars=yes,resizable=yes'); return false;">
-                    <img src="/oamcustompages/pages/images/icons-png/security.png" />
-                    <div>Security</div>
-                  </a>
-                </li>
-            <li class="dropdown dropup customRda sub-menu">
-                       <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
-                    <img src="/oamcustompages/pages/images/icons-png/open-account.png" />
-                          <div>Open Account</div>
-                       </a>
-                       <ul class="dropdown-menu" id="open-account" aria-labelledby="dropdownMenuLink" style="padding: 0; margin: 0;min-width: -webkit-fill-available;">
-                          <li style="transform: skew(-0deg, 0deg);display: block"><a style="transform: skew(-0deg, 0deg);" class="dropdown-item" href="https://rda.abl.com/#/customer-onboarding?customerType=RDA" target="_blank">Roshan Digital Account</a></li>
-                          <li style="transform: skew(-0deg, 0deg);display: block"><a style="transform: skew(-0deg, 0deg);" class="dropdown-item" href="https://rda.abl.com/#/customer-onboarding?customerType=DAO" target="_blank">myPakistan Digital Account</a></li>
-                          <li style="transform: skew(-0deg, 0deg);display: block"><a style="transform: skew(-0deg, 0deg);" class="dropdown-item" href="https://www.abl.com/be-our-customer/" target="_blank">Be Our Customer</a><div class="submenu-triangle"></div></li>
-                       </ul>
-                </li>
-                
-            <li>
-              <a href="https://www.abl.com/latest-offers/"  target="_blank">
-                <img src="/oamcustompages/pages/images/icons-png/offers.png" / class="no-change">
-                <div>Offers</div>
-              </a>
-            </li>
-                   <li class="dropdown dropup customRewards sub-menu" style="display: none">
-                       <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
-                    <img src="/oamcustompages/pages/images/icons-png/offers.png" />
-                          <div>Rewards & Offers</div>
-                       </a>
-                       <ul class="dropdown-menu" id ="offers-rewards" aria-labelledby="dropdownMenuLink" style="padding: 0; margin: 0;min-width: -webkit-fill-available;">
-					   <li style="transform: skew(-0deg, 0deg);display: block"><a style="transform: skew(-0deg, 0deg);" class="dropdown-item" href="http://10.224.3.147/(S(0grbxpwdpx2rxwoj0bex0vgm))/index.aspx " target="_blank">myABL coins</a></li>
-                          <li style="transform: skew(-0deg, 0deg);display: block"><a style="transform: skew(-0deg, 0deg);" class="dropdown-item" href="#" target="_blank">myABL Rewards</a></li>
-						    <li style="transform: skew(-0deg, 0deg);display: block"><a style="transform: skew(-0deg, 0deg);" class="dropdown-item" href="#" target="_blank">ABL Cards</a></li>
-							  <li style="transform: skew(-0deg, 0deg);display: block"><a style="transform: skew(-0deg, 0deg);" class="dropdown-item" href="#" target="_blank">Master Cards QR</a></li>
-                          <li style="transform: skew(-0deg, 0deg);display: block"><a style="transform: skew(-0deg, 0deg);" class="dropdown-item" href="#" target="_blank">Golootlo</a><div class="submenu-triangle"></div></li>
-                       </ul>
-                
-                </li>
-                <li>        
-                  <a href="https://www.abl.com/services/branch-network/" target="_blank">
-                    <img src="/oamcustompages/pages/images/icons-png/locate-us.png" />
-                    <div>Locate Us</div>
-                  </a>
-                </li>
-                  <li class="dropdown dropup customhelp sub-menu">
-                       <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
-                    <img src="/oamcustompages/pages/images/icons-png/help.png" />
-                          <div>Help and Support</div>
-                       </a>
-                       <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="padding: 0; margin: 0;min-width: -webkit-fill-available;">
-                          <li style="transform: skew(-0deg, 0deg);display: block"><a style="transform: skew(-0deg, 0deg);" class="dropdown-item" href="https://www.abl.com/help-and-support/complaints/" target="_blank">Complaints</a></li>
-                          <li style="transform: skew(-0deg, 0deg);display: block"><a style="transform: skew(-0deg, 0deg);" class="dropdown-item" href="https://www.abl.com/
-						  -and-support/dispute-settlement" target="_blank">Disputes</a><div class="submenu-triangle"></div></li>
-                       </ul>
-                </li>
-          </ul>
-          </div>
-      </div>
-  </section>
+{isAdmin && (
+<button onClick={() => setActivePage('admin')}>
+Admin Review
+</button>
+)}
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="/oamcustompages/pages/js/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="/oamcustompages/pages/js/bootstrap.min.js"></script>
-    <script src="/oamcustompages/pages/js/owl.carousel.min.js"></script>
+<button onClick={() => setActivePage('categories')}>
+Categories
+</button>
+</nav>
 
-    <script type="text/javascript">
-	  $(document).ready(function() {
-		  
-			/* Added by Asif: 10-nov-2017
-				Greeting the Customer
-			*/
-			var myDate = new Date();
-			var hrs = myDate.getHours();
+<div className="navRight">
+<div className="search">
+<Search size={18} />
 
-			var greet;
+<input
+value={query}
+onChange={(e) => setQuery(e.target.value)}
+placeholder="Search films..."
+/>
+</div>
 
-			if (hrs < 12)
-				greet = 'Good Morning!';
-			else if (hrs >= 12 && hrs < 16)
-				greet = 'Good Afternoon!';
-			else if (hrs >= 16 && hrs < 21)
-				greet = 'Good Evening!';
-			else if (hrs >= 21 && hrs <= 24)
-				greet = 'Good Evening!';
-		
-        var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-			var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-							  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-							];
-			var dateStringFormat = days[myDate.getDay()] + ', ' + monthNames[myDate.getMonth()] + ' ' + myDate.getDate() + ', ' + myDate.getFullYear();
-			$('#greetDiv').html('<h3>'+ greet +'</h3><span>' + dateStringFormat + '</span>');
-			//console.log(dateStringFormat);
-			/* Greet code finishes here */
-
-      $(".errorBar1").hide();
-      $('.sSubmit').click(function () {
-
-        $('.sSubmit').attr('disabled', true);
-        var $form = $(this).closest('form'); 
-        
-        var userName = $form.find('#username1').val();
-        var password = $form.find('#password1').val(); 
-        var datastr = 'userName='+userName+'&password='+password;
-        Testfn(userName, password);
+<button
+className="iconBtn"
+onClick={() => {
+setAuthError('');
+setAuthMessage('');
+setAuthMode(user ? 'account' : 'login');
+}}
+<User size={19} />
+</button>
+</div>
+</header>
 
 
 
+<main>
+{activePage === 'admin' && isAdmin ? (
+<section className="section submitPage">
+
+<div className="sectionHead">
+<h2>Admin Review</h2>
+
+<p className="adminIntro">
+Review filmmaker submissions before they appear on AI Flix.
+</p>
+</div>
+
+{pendingSubmissions.length === 0 ? (
+<div className="emptyState adminEmpty">
+<h3>No pending submissions</h3>
+
+<p>
+New filmmaker submissions will appear here when they are ready
+for review.
+</p>
+</div>
+) : (
+<div className="submissionList">
+
+{pendingSubmissions.map((submission) => (
+
+<div
+key={submission.id}
+className="submissionCard"
+>
+
+<div className="submissionHeader">
+
+<div>
+<span className="submissionLabel">
+FILM SUBMISSION
+</span>
+
+<h3>{submission.title}</h3>
+</div>
+
+<span className="submissionStatus">
+{submission.status}
+</span>
+
+</div>
+
+{submission.poster_url && (
+<div className="submissionPoster">
+<img
+src={submission.poster_url}
+alt={submission.title}
+/>
+</div>
+)}
+
+<div className="submissionDetails">
+
+<div>
+<strong>Director</strong>
+<span>{submission.director || '—'}</span>
+</div>
+
+<div>
+<strong>Genre</strong>
+<span>{submission.genre || '—'}</span>
+</div>
+
+<div>
+<strong>Country</strong>
+<span>{submission.country || '—'}</span>
+</div>
+
+<div>
+<strong>Year</strong>
+<span>{submission.year || '—'}</span>
+</div>
+
+<div>
+<strong>Duration</strong>
+<span>{submission.duration || '—'}</span>
+</div>
+
+<div>
+<strong>Filmmaker</strong>
+<span>{submission.filmmaker_email || '—'}</span>
+</div>
+
+</div>
+
+{submission.description && (
+<div className="submissionDescription">
+
+<strong>Description</strong>
+
+<p>
+{submission.description}
+</p>
+
+</div>
+)}
+
+{submission.video_url && (
+<div className="submissionVideo">
+
+<strong>Film Preview</strong>
+
+<video
+controls
+preload="metadata"
+>
+<source
+src={submission.video_url}
+type="video/mp4"
+/>
+
+Your browser does not support video playback.
+</video>
+
+</div>
+)}
+<div className="submissionActions">
+
+<button
+className="primary"
+onClick={async () => {
+const { error: movieError } = await supabase
+.from('movies')
+.insert({
+id: crypto.randomUUID(),
+title: submission.title,
+description: submission.description,
+genre: submission.genre,
+director: submission.director,
+year: Number(submission.year),
+duration: submission.duration,
+poster_url: submission.poster_url,
+video_url: submission.video_url
+});
+
+if (movieError) {
+alert('Could not approve film: ' + movieError.message);
+return;
+}
+
+const { error: updateError } = await supabase
+.from('film_submissions')
+.update({
+status: 'approved'
+})
+.eq('id', submission.id);
+
+if (updateError) {
+alert('Film added, but status update failed: ' + updateError.message);
+return;
+}
+
+setPendingSubmissions((current) =>
+current.filter((item) => item.id !== submission.id)
+);
+
+alert('Film approved and added to AI Flix!');
+}}
+>
+Approve Film
+</button>
+
+
+<button
+className="secondary rejectButton"
+onClick={async () => {
+
+const { error } = await supabase
+.from('film_submissions')
+.update({
+status: 'rejected'
+})
+.eq('id', submission.id);
+
+if (error) {
+alert('Could not reject film: ' + error.message);
+return;
+}
+
+setPendingSubmissions((current) =>
+current.filter((item) => item.id !== submission.id)
+);
+
+alert('Film rejected.');
+}}
+>
+Reject Film
+</button>
+
+</div>
+
+</div>
+
+))}
+
+</div>
+)}
 
 
 
+</section>
+) : activePage === 'submit' ? (
+<section className="section submitPage">
+
+<div className="sectionHead">
+<h2>Submit a Film</h2>
+</div>
+
+{!user ? (
+<div className="emptyState">
+<h2>Sign in to submit a film</h2>
+
+<p>
+You need an AI Flix account before submitting a film.
+</p>
+
+<button
+className="primary"
+onClick={() => {
+setAuthError('');
+setAuthMessage('');
+setAuthMode('login');
+}}
+>
+Sign In
+</button>
+</div>
+) : (
+<div className="submissionForm">
+
+<div className="eyebrow">
+FILMMAKER SUBMISSION
+</div>
+
+<h2>Tell us about your film</h2>
+
+<p>
+Submit your AI-generated or AI-assisted film
+for review by AI Flix.
+</p>
+
+{submissionError && (
+<p className="authError">
+{submissionError}
+</p>
+)}
+
+{submissionMessage && (
+<p className="authMessage">
+{submissionMessage}
+</p>
+)}
+
+<input
+type="text"
+placeholder="Film title"
+value={submissionTitle}
+onChange={(e) =>
+setSubmissionTitle(e.target.value)
+}
+/>
+
+<textarea
+placeholder="Film description / synopsis"
+value={submissionDescription}
+onChange={(e) =>
+setSubmissionDescription(e.target.value)
+}
+/>
+
+<input
+type="text"
+placeholder="Genre"
+value={submissionGenre}
+onChange={(e) =>
+setSubmissionGenre(e.target.value)
+}
+/>
+
+<input
+type="text"
+placeholder="Country"
+value={submissionCountry}
+onChange={(e) =>
+setSubmissionCountry(e.target.value)
+}
+/>
+
+<input
+type="text"
+placeholder="Director / Creator"
+value={submissionDirector}
+onChange={(e) =>
+setSubmissionDirector(e.target.value)
+}
+/>
+
+<input
+type="text"
+placeholder="Year"
+value={submissionYear}
+onChange={(e) =>
+setSubmissionYear(e.target.value)
+}
+/>
+
+<input
+type="text"
+placeholder="Duration (e.g. 22 min)"
+value={submissionDuration}
+onChange={(e) =>
+setSubmissionDuration(e.target.value)
+}
+/>
+<label>Film Poster</label>
+<input
+type="file"
+accept="image/*"
+onChange={(e) =>
+setSubmissionPoster(e.target.files[0])
+}
+/>
+
+<label>Film / Video</label>
+<input
+type="file"
+accept="video/*"
+onChange={(e) =>
+setSubmissionVideo(e.target.files[0])
+}
+/>
+
+<button
+className="primary"
+onClick={submitFilm}
+>
+Submit Film
+<ChevronRight size={18} />
+</button>
+
+</div>
+)}
+
+</section>
+) : activePage === 'mylist' ? (
+<section className="section myListPage">
+
+<div className="sectionHead">
+<h2>My List</h2>
+</div>
+
+{watchlist.length === 0 ? (
+<div className="emptyState">
+<h2>Your list is empty</h2>
+<p>
+Films you add to My List will appear here.
+</p>
+
+<button
+className="primary"
+onClick={() => setActivePage('browse')}
+>
+Browse Films
+</button>
+</div>
+) : (
+<div className="grid">
+
+{films
+.filter((film) =>
+watchlist.includes(film.id)
+)
+.map((film) => (
+<article
+className="card"
+key={film.id}
+onClick={() => openFilm(film)}
+>
+
+<img
+src={film.poster}
+alt={film.title}
+/>
+
+<div className="cardOverlay">
+<span>{film.runtime}</span>
+<span>{film.genre}</span>
+</div>
+
+<div className="cardBody">
+<h3>{film.title}</h3>
+
+<p>
+{film.country} • {film.year}
+</p>
+</div>
+
+</article>
+))}
+
+</div>
+)}
+
+</section>
+) : (
+<>
+{heroFilm && (
+<section
+className="hero"
+style={{
+backgroundImage: linear-gradient( 90deg, rgba(5,5,8,.72) 0%, rgba(5,5,8,.42) 45%, rgba(5,5,8,.08) 100% ), url(${heroFilm.poster})`
+}}
+>
+<div className="heroCopy">
+
+<div className="eyebrow">
+AI FLIX ORIGINAL • {heroFilm.year}
+</div>
+
+<h1>{heroFilm.title}</h1>
+
+<p className="meta">
+{heroFilm.year} • {heroFilm.runtime} • {heroFilm.genre}
+</p>
+
+<p className="description">
+{heroFilm.description}
+</p>
+<div className="actions">
+
+<button
+className="primary"
+onClick={() => openFilm(heroFilm)}
+>
+<Play size={18} fill="currentColor" />
+Watch
+</button>
+
+<button
+className="secondary"
+onClick={() => toggleWatchlist(heroFilm.id)}
+>
+{watchlist.includes(heroFilm.id) ? (
+<Check size={18} />
+) : (
+<Plus size={18} />
+)}
+
+{watchlist.includes(heroFilm.id)
+? 'In My List'
+: 'My List'}
+</button>
+
+</div>
+</div>
+</section>
+)}
+
+{/* FILMS */}
+<section className="section">
+
+<div className="sectionHead">
+
+<h2>
+{query
+? 'Search Results'
+: films.length === 1
+? 'Now Streaming'
+: 'Featured AI Cinema'}
+</h2>
+<ChevronRight size={20} />
+</div>
+
+<div className="grid">
+
+{filtered.map((film) => (
+<article
+className="card"
+key={film.id}
+onClick={() => openFilm(film)}
+>
+<img
+src={film.poster}
+alt={film.title}
+/>
+
+<div className="cardOverlay">
+<span>{film.runtime}</span>
+<span>{film.genre}</span>
+</div>
+
+<div className="cardBody">
+<h3>{film.title}</h3>
+<p>
+{film.country} • {film.year}
+</p>
+</div>
+</article>
+))}
+
+</div>
+</section>
+{!query && films.length === 1 && (
+<section className="section">
+<div className="sectionHead">
+<h2>More AI Cinema Coming Soon</h2>
+</div>
+
+<p style={{
+color: '#aaa',
+maxWidth: '650px',
+fontSize: '16px',
+lineHeight: '1.7'
+}}>
+AI Flix is growing. New AI-generated and AI-assisted films
+will be added as filmmakers join the platform.
+</p>
+</section>
+)}
+
+{/* CATEGORIES */}
+<section className="section">
+
+<div className="sectionHead">
+<h2>Explore AI Cinema</h2>
+</div>
+
+<div className="chips">
+
+{[
+...new Set([
+...films.map((film) => film.genre).filter(Boolean),
+...films.map((film) => film.country).filter(Boolean)
+ ])
+].map((category) => (
+<button
+key={category}
+onClick={() => setQuery(category)}
+>
+{category}
+</button>
+))}
+
+</div>
+</section>
+
+{/* FILMMAKER SECTION */}
+<section className="creatorBanner">
+
+<div>
+
+<div className="eyebrow">
+FOR FILMMAKERS
+</div>
+
+<h2>
+Have an AI film?
+</h2>
+
+<p>
+AI Flix is being built as a home for
+AI-generated and AI-assisted cinema.
+</p>
+
+</div>
+
+<button
+className="primary"
+onClick={() => setActivePage('submit')}
+Submit a Film
+<ChevronRight size={18} />
+</button>
+
+</section>
+
+</>
+)}
+
+</main>
+{/* FOOTER */}
+<footer>
+
+<div className="brand">
+AI<span>FLIX</span>
+</div>
+
+<p>
+© 2026 AI Flix. A home for AI cinema.
+</p>
+
+<p>
+Support: <a href="mailto:support@aiflixmovies.com">
+support@aiflixmovies.com
+</a>
+</p>
+
+</footer>
+
+{/* AUTH MODAL */}
+{authMode && (
+<div
+className="modal"
+onClick={() => setAuthMode(null)}
+>
+<div
+className="modalCard authCard"
+onClick={(event) => event.stopPropagation()}
+>
+
+<button
+className="close"
+onClick={() => setAuthMode(null)}
+>
+<X size={20} />
+</button>
+
+{authMode === 'login' && (
+<div className="modalContent">
+
+<div className="eyebrow">
+WELCOME BACK
+</div>
+
+<h2>Sign in to AI Flix</h2>
+
+<p>
+Continue watching AI-generated and
+AI-assisted cinema.
+</p>
+
+{authError && (
+<p className="authError">
+{authError}
+</p>
+)}
+
+{authMessage && (
+<p className="authMessage">
+{authMessage}
+</p>
+)}
+
+<input
+type="email"
+placeholder="Email"
+value={email}
+onChange={(e) => setEmail(e.target.value)}
+/>
+
+<input
+type="password"
+placeholder="Password"
+value={password}
+onChange={(e) => setPassword(e.target.value)}
+/>
+
+<button
+className="primary"
+onClick={async () => {
+
+setAuthError('');
+setAuthMessage('');
+
+const { error } =
+await supabase.auth.signInWithPassword({
+email,
+password
+});
+
+if (error) {
+setAuthError(error.message);
+return;
+}
+
+setAuthMode(null);
+setEmail('');
+setPassword('');
+}}
+>
+Sign In
+</button>
+
+<button
+className="secondary"
+onClick={() => {
+setAuthMode('signup');
+setAuthError('');
+setAuthMessage('');
+}}
+>
+Create an account
+</button>
+
+</div>
+)}
+
+{authMode === 'signup' && (
+<div className="modalContent">
+
+<div className="eyebrow">
+JOIN AI FLIX
+</div>
+
+<h2>Create your account</h2>
+
+<p>
+Join the home for AI cinema.
+</p>
+
+{authError && (
+<p className="authError">
+{authError}
+</p>
+)}
+
+{authMessage && (
+<p className="authMessage">
+{authMessage}
+</p>
+)}
+
+<input
+type="text"
+placeholder="Full name"
+value={fullName}
+onChange={(e) => setFullName(e.target.value)}
+/>
+
+<input
+type="email"
+placeholder="Email"
+value={email}
+onChange={(e) => setEmail(e.target.value)}
+/>
+
+<input
+type="password"
+placeholder="Password"
+value={password}
+onChange={(e) => setPassword(e.target.value)}
+/>
+
+<button
+className="primary"
+onClick={async () => {
+
+setAuthError('');
+setAuthMessage('');
+
+const { data, error } =
+await supabase.auth.signUp({
+email,
+password,
+options: {
+data: {
+full_name: fullName
+}
+}
+});
+
+if (error) {
+setAuthError(error.message);
+return;
+}
+
+if (data.user) {
+setAuthMessage(
+'Account created successfully.'
+);
+}
+}}
+>
+Create Account
+</button>
+
+<button
+className="secondary"
+onClick={() => {
+setAuthMode('login');
+setAuthError('');
+setAuthMessage('');
+}}
+>
+Already have an account? Sign in
+</button>
+
+</div>
+)}
+
+{authMode === 'account' && user && (
+<div className="modalContent">
+
+<div className="eyebrow">
+YOUR ACCOUNT
+</div>
+
+<h2>
+{user.user_metadata?.full_name ||
+'AI Flix Member'}
+</h2>
+
+<p>
+{user.email}
+</p>
+
+<button
+className="primary"
+onClick={async () => {
+await supabase.auth.signOut();
+setAuthMode(null);
+}}
+>
+Sign Out
+</button>
+
+</div>
+)}
+
+</div>
+</div>
+)}
+
+{/* FILM MODAL */}
+{selected && (
+
+<div
+className="modal"
+onClick={closeFilm}
+>
+<div
+className={modalCard${playing ? 'playingCard' : ''}`}
+onClick={(event) => event.stopPropagation()}
+>
+{/* VIDEO PLAYER */}
+
+{playing ? (
+<div className="videoWrapper">
+<video
+controls
+autoPlay
+playsInline
+src={selected?.videoUrl || 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4'}
+style={{
+width: '100%',
+height: 'auto',
+display: 'block',
+background: '#000'
+}}
+/>
+</div>
+) : (
+<img
+src={selected.poster}
+alt={selected.title}
+/>
+)}
 
 
+<div className="modalContent">
 
+<button
+className="close"
+onClick={closeFilm}
+>
+<X size={20} />
+</button>
 
+<div className="eyebrow">
+{selected.country} • {selected.year}
+</div>
 
+<h2>
+{selected.title}
+</h2>
 
+<p className="meta">
+{selected.runtime} • {selected.genre}
+</p>
 
+<p>
+{selected.description}
+</p>
 
+<p className="creator">
+<Film size={16} />
+Created by {selected.creator}
+</p>
 
-      });
-      $(window).on('load resize', function () {
-        if (window.innerWidth >= 480) {
-          // $('.col1').height($('.wraper').height());
-          // $('.col2').height($('.wraper').height());
-          // $('.col3').height($('.wraper').height());
-          var bodyheight = $('body').height()
-          var footerheight = $('.sitefooter').height();
-          var containerheight = $('.equalizer-container').height();
-          var targetheight = bodyheight - footerheight;
-          $('.equalizer-container, .equalize').height(targetheight);
-        }
-        if (window.innerWidth < 480) {
-          // $('.col1').height('auto');
-          // $('.col2').height('auto');
-          // $('.col3').height('auto');
-          var bodyheight = $('body').height()
-          var footerheight = $('.sitefooter').height();
-          var containerheight = $('.equalizer-container').height();
-          var targetheight = bodyheight - footerheight;
-          //$('.equalizer-container, .equalize').height('-webkit-fill-available');
-        }
-        $("#size-stylesheet").attr("href", "/oamcustompages/pages/css/main_desktop.css");
+<div className="actions">
 
-        if ($(window).width() >= 767) {
-          // $("#size-stylesheet").attr("href", "/oamcustompages/pages/css/main_desktop.css");
-          $("#font-stylesheet").attr("href", "/oamcustompages/pages/css/fonts.css");
-          
-         } else {
-          // $("#size-stylesheet").attr("href", "/oamcustompages/pages/css/main.css");
-          $("#font-stylesheet").attr("href", "/oamcustompages/pages/css/fonts_new.css");
-        }
-      });
- 
-      // var bodyheight = $('body').height()
-      // var footerheight = $('.sitefooter').height();
-      // var containerheight = $('.equalizer-container').height();
-      // var targetheight = bodyheight - footerheight;
-      // $('.equalizer-container, .equalize').height(targetheight);
+<button
+className="primary"
+onClick={() => setPlaying(true)}
+<Play
+size={18}
+fill="currentColor"
+/>
+Watch Film
+</button>
 
+<button
+className="secondary"
+onClick={() =>
+toggleWatchlist(selected.id)
+}
+>
+{watchlist.includes(selected.id) ? (
+<Check size={18} />
+) : (
+<Plus size={18} />
+)}
 
-      $(function () {
-        setTimeout(function(){
-          var owl = $('.owl-responsive'),
-          owlOptions = {
-            loop: false,
-            margin: 0,
-            items: 3,
-            slideBy: 3,
-            nav: true,
-            navText: ['<i class="icon-back"></i>', '<i class="icon-next"></i>'],
-                // responsive:{
-                //   0:{
-                //       items:3
-                //   },
-                //   480:{
-                //       items:3
-                //   },
-                //   640:{
-                //     items:3
-                //   }
-                // }
-          };
+{watchlist.includes(selected.id)
+? 'In My List'
+: 'My List'}
+</button>
 
+</div>
 
-           
+{playing && (
+<p className="notice">
+You are watching on AI Flix.
+</p>
+)}
 
-          if ( $(window).width() < 767 ) {
-            var owlActive = owl.owlCarousel(owlOptions);
-          } else {
-            owl.addClass('off');
-          }
-        owl.on('changed.owl.carousel', function (event) {
-          if (event.item.index==0) {
-            $('.owl-next').removeClass('owl-disabled');
-            $('.owl-prev').addClass('owl-disabled');
-          } else {
-            $('.owl-prev').removeClass('owl-disabled');
-            $('.owl-next').addClass('owl-disabled');
-          }
+</div>
 
-        });
+</div>
+</div>
 
-        $(window).resize(function () {
-          if ($(window).width() < 767) {
-            if ($('.owl-responsive').hasClass('off')) {
-              var owlActive = owl.owlCarousel(owlOptions);
-              owl.removeClass('off');
-            }
-          } else {
-            if (!$('.owl-responsive').hasClass('off')) {
-              owl.addClass('off').trigger('destroy.owl.carousel');
-              owl.find('.owl-stage-outer').children(':eq(0)').unwrap();
-            }
-          }
-        });
-      }, 2000)
+)}
+</div>
+);
+}
 
-      });
-      $(".customRda").mouseenter(function(){
-				  var $image = $(this).find("img");
-				  var imgSrc = $image.attr("src");
-				  var updatedPath = imgSrc.split("/");
-				  updatedPath[updatedPath.length - 1] = "open-account.png";
-				  updatedPath = updatedPath.join("/")
-				  $image.attr("src",updatedPath);
-			  }).mouseleave(function(){
-				  var $image = $(this).find("img");
-				  var imgSrc = $image.attr("src");
-				  var updatedPath = imgSrc.split("/");
-				  updatedPath[updatedPath.length - 1] = "open-account.png";
-				  updatedPath = updatedPath.join("/")
-				  $image.attr("src",updatedPath);
-			  });
-    
-      $(".customhelp").mouseenter(function(){
-				  var $image = $(this).find("img");
-				  var imgSrc = $image.attr("src");
-				  var updatedPath = imgSrc.split("/");
-				  updatedPath[updatedPath.length - 1] = "help.png";
-				  updatedPath = updatedPath.join("/")
-				  $image.attr("src",updatedPath);
-			  }).mouseleave(function(){
-				  var $image = $(this).find("img");
-				  var imgSrc = $image.attr("src");
-				  var updatedPath = imgSrc.split("/");
-				  updatedPath[updatedPath.length - 1] = "help.png";
-				  updatedPath = updatedPath.join("/")
-				  $image.attr("src",updatedPath);
-			  });
-			   $(".customRewards").mouseenter(function(){
-				  var $image = $(this).find("img");
-				  var imgSrc = $image.attr("src");
-				  var updatedPath = imgSrc.split("/");
-				  updatedPath[updatedPath.length - 1] = "offers.png";
-				  updatedPath = updatedPath.join("/")
-				  $image.attr("src",updatedPath);
-			  }).mouseleave(function(){
-				  var $image = $(this).find("img");
-				  var imgSrc = $image.attr("src");
-				  var updatedPath = imgSrc.split("/");
-				  updatedPath[updatedPath.length - 1] = "offers.png";
-				  updatedPath = updatedPath.join("/")
-				  $image.attr("src",updatedPath);
-			  });
-      });
-    </script>
-		<script type="text/javascript">
-	window.__lc = window.__lc || {};
-	window.__lc.license = 1125501;
-	(function() {
-	  var lc = document.createElement('script');
-	  lc.type = 'text/javascript'; 
-	  lc.async = true;
-	  lc.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.livechatinc.com/tracking.js';
-	  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(lc, s);
-	});
-</script>
-
-  </body>
-</html>
+createRoot(document.getElementById('root')).render(<App />);
