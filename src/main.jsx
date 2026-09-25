@@ -585,7 +585,7 @@ function App() {
               >
                 {loading
                   ? "Submitting..."
-                  : "Submit Travel Inquiry"}
+                  : "Reserve for 50% off | You won't be charged"}
               </button>
 
             </form>
