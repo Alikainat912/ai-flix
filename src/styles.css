@@ -91,3 +91,26 @@ img {
   font-size: 14px;
   font-weight: 600;
   transition: 0.2s
+
+  body {
+  background: #f4f6f8 !important;
+  color: #0b1f33 !important;
+}
+
+button {
+  background: #c62828 !important;
+  color: white !important;
+  border: none !important;
+  padding: 12px 22px !important;
+  border-radius: 8px !important;
+}
+
+input,
+select,
+textarea {
+  padding: 12px !important;
+  border: 1px solid #d0d5dd !important;
+  border-radius: 8px !important;
+  background: white !important;
+  color: #111 !important;
+}
