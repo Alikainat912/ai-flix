@@ -227,12 +227,18 @@ function App() {
   const { error } = await supabase
     .from("travel_inquiries")
     .insert([inquiry]);
+if (error) {
+  console.error("FULL SUPABASE ERROR:", error);
 
-  if (error) {
-  console.error("Submission error:", error);
-  alert("Supabase error: " + error.message);
+  alert(
+    "Supabase Error\n\n" +
+    "Message: " + error.message + "\n" +
+    "Code: " + error.code + "\n" +
+    "Details: " + error.details
+  );
+
   return;
-  }
+}
 
   setSubmitted(true);
   }
