@@ -697,7 +697,6 @@ function Feature({ icon, title }) {
 
     </div>
   );
-}
 
 createRoot(
   document.getElementById('root')
