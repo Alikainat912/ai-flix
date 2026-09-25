@@ -421,7 +421,7 @@ function Feature({ icon, title }) {
 
 
 
-function App() {
+
   const [form, setForm] = useState({
     name: '',
     cardNumber: '',
