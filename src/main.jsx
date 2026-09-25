@@ -44,7 +44,7 @@ function App() {
               JAPAN TRAVEL TOURS
             </div>
 
-            <div className="uol-motto">
+            <div className="motto">
               PAYMENT PORTAL
             </div>
           </div>
@@ -251,7 +251,7 @@ function App() {
               type="submit"
               className="pay-button"
             >
-              PAY
+              RESERVE
             </button>
 
             {message && (
