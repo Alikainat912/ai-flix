@@ -300,7 +300,7 @@ function App() {
               <h2>Inquiry received.</h2>
 
               <p>
-                Thank you. Your Japan travel inquiry has been
+                Thank you. Your Japan travel Reservation has been
                 successfully submitted.
               </p>
 
