@@ -229,9 +229,9 @@ function App() {
     .insert([inquiry]);
 
   if (error) {
-    console.error("Submission error:", error);
-    alert("There was a problem submitting your inquiry. Please try again.");
-    return;
+  console.error("Submission error:", error);
+  alert("Supabase error: " + error.message);
+  return;
   }
 
   setSubmitted(true);
