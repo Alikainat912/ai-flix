@@ -33,14 +33,14 @@ function App() {
   };
 
   return (
-    <div className="uol-app">
+    <div className="app">
 
-      <header className="uol-header">
-        <div className="uol-brand">
-          <div className="uol-crest">UOL</div>
+      <header className="JTT-header">
+        <div className="JTT-brand">
+          <div className="JTT-crest">JTT</div>
 
           <div>
-            <div className="uol-name">
+            <div className="JTT-name">
               JAPAN TRAVEL TOURS
             </div>
 
