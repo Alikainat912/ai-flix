@@ -297,11 +297,11 @@ function App() {
                 borderRadius: "8px",
               }}
             >
-              <h2>Inquiry received.</h2>
+              <h2>Reservation received.</h2>
 
               <p>
-                Thank you. Your Japan travel Reservation has been
-                successfully submitted.
+                Thank you. Your Japan travel Reservation has been recieved
+                successfully.
               </p>
 
               <button
