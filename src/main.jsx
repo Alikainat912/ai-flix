@@ -421,10 +421,6 @@ function Feature({ icon, title }) {
 
 
 
-import React, { useState } from 'react';
-import { createRoot } from 'react-dom/client';
-import './styles.css';
-
 function App() {
   const [form, setForm] = useState({
     name: '',
