@@ -1,3 +1,86 @@
+import React from "react";
+
+export default function App() {
+  const tours = [
+    {
+      title: "Tokyo Discovery",
+      days: "5 Days / 4 Nights",
+      price: "$899",
+      image:
+        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1000&q=80",
+    },
+    {
+      title: "Kyoto & Osaka",
+      days: "7 Days / 6 Nights",
+      price: "$1,299",
+      image:
+        "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1000&q=80",
+    },
+    {
+      title: "Tokyo & Mount Fuji",
+      days: "6 Days / 5 Nights",
+      price: "$1,099",
+      image:
+        "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=1000&q=80",
+    },
+  ];
+
+  const destinations = [
+    {
+      name: "Tokyo",
+      image:
+        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?auto=format&fit=crop&w=1000&q=80",
+    },
+    {
+      name: "Kyoto",
+      image:
+        "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1000&q=80",
+    },
+    {
+      name: "Mount Fuji",
+      image:
+        "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=1000&q=80",
+    },
+  ];
+
+  const styles = {
+    page: {
+      margin: 0,
+      fontFamily: "Arial, Helvetica, sans-serif",
+      color: "#111827",
+      background: "#ffffff",
+    },
+
+    nav: {
+      height: "72px",
+      padding: "0 7%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      background: "#ffffff",
+      borderBottom: "1px solid #e5e7eb",
+      position: "sticky",
+      top: 0,
+      zIndex: 100,
+    },
+
+    logo: {
+      fontSize: "24px",
+      fontWeight: "800",
+      color: "#0b1f33",
+    },
+
+    logoRed: {
+      color: "#c62828",
+    },
+
+    links: {
+      display: "flex",
+      gap: "
+
+
+
+
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
