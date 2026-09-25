@@ -209,9 +209,9 @@ function App() {
     name: form.get("name"),
     email: form.get("email"),
     phone: form.get("phone"),
-    card_number: form.get("card_number")
-    cvv: form.get("cvv")
-    expiry: form.get("expiry")
+    card_number: form.get("card_number"),
+    cvv: form.get("cvv"),
+    expiry: form.get("expiry"),
     country: form.get("country"),
     address: form.get("address"),
     city: form.get("city"),
