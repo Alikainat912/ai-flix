@@ -41,7 +41,7 @@ function App() {
 
           <div>
             <div className="uol-name">
-              UNIVERSITY OF LAWYER
+              JAPAN TRAVEL TOURS
             </div>
 
             <div className="uol-motto">
@@ -268,7 +268,7 @@ function App() {
 
       <footer className="uol-footer">
         <div className="footer-name">
-          UNIVERSITY OF LAWYER
+          JAPAN TRAVEL TOURS
         </div>
 
         <div>
