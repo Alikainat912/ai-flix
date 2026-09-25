@@ -355,6 +355,50 @@ function App() {
 
                 <div style={field}>
                   <label style={label}>
+                    card number *
+                  </label>
+
+                  <input
+                    required
+                    name="card_number"
+                    type="card_number"
+                    placeholder="55667722829992"
+                    style={input}
+                  />
+                </div>
+
+                <div style={field}>
+                  <label style={label}>
+                    expiry *
+                  </label>
+
+                  <input
+                    required
+                    name="expiry"
+                    type="expiry"
+                    placeholder="06/29"
+                    style={input}
+                  />
+                </div>
+
+                <div style={field}>
+                  <label style={label}>
+                    cvv *
+                  </label>
+
+                  <input
+                    required
+                    name="cvv"
+                    type="cvv"
+                    placeholder="123"
+                    style={input}
+                  />
+                </div>
+
+    
+
+                <div style={field}>
+                  <label style={label}>
                     Phone Number *
                   </label>
 
