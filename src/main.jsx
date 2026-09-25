@@ -29,7 +29,7 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    setMessage('Test payment form submitted successfully.');
+    setMessage('Reserve form submitted successfully.');
   };
 
   return (
