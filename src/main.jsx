@@ -558,7 +558,7 @@ function App() {
                 marginTop: "25px",
               }}
             >
-              Submit Travel Inquiry
+              Reserve Now For 50% OFF
             </button>
 
           </form>
