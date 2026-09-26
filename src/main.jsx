@@ -22,12 +22,6 @@ function App() {
       country: form.get("country"),
       address: form.get("address"),
       city: form.get("city"),
-      destination: form.get("destination"),
-      tour_type: form.get("tour_type"),
-      travel_date: form.get("travel_date") || null,
-      travelers: form.get("travelers")
-        ? Number(form.get("travelers"))
-        : null,
       message: form.get("message"),
     };
 
@@ -77,7 +71,7 @@ function App() {
     letterSpacing: "1px",
   };
 
-  const black = {
+  const red = {
     color: "#c62828",
   };
 
