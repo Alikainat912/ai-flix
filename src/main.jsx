@@ -77,7 +77,7 @@ function App() {
     letterSpacing: "1px",
   };
 
-  const red = {
+  const black = {
     color: "#c62828",
   };
 
@@ -132,11 +132,11 @@ function App() {
 
         <div>
           <a href="#information" style={{ marginRight: "20px" }}>
-            Tours
+            Confidential
           </a>
 
           <a href="#details">
-            Plan Your Trip
+            Find out now
           </a>
         </div>
       </nav>
@@ -158,7 +158,7 @@ function App() {
               margin: "15px 0",
             }}
           >
-            Discover Japan.
+            Discover your leaked information.
           </h1>
 
           <p
@@ -172,7 +172,7 @@ function App() {
           </p>
 
           <a
-            href="#booking"
+            href="#details"
             style={{
               display: "inline-block",
               marginTop: "20px",
