@@ -63,6 +63,58 @@ function App() {
     alignItems: "center",
     borderBottom: "1px solid #ddd",
   };
+  <section
+  style={{
+    position: "relative",
+    height: "300px",
+    overflow: "hidden",
+    background: "#000",
+  }}
+>
+  <video
+    autoPlay
+    muted
+    loop
+    playsInline
+    preload="auto"
+    style={{
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+    }}
+  >
+    <source src="/https://youtu.be/WE-ZppQKgxs?si=Lkpy6JKy95YI_ti-" type="video/mp4" />
+  </video>
+
+  <div
+    style={{
+      position: "absolute",
+      inset: 0,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "rgba(0,0,0,0.45)",
+      textAlign: "center",
+      color: "#fff",
+    }}
+  >
+    <div>
+      <h2
+        style={{
+          fontSize: "38px",
+          margin: 0,
+          fontWeight: 800,
+        }}
+      >
+        Find Your Leaked Information Now
+      </h2>
+
+      <p style={{ marginTop: "12px" }}>
+        Check your information before it's too late.
+      </p>
+    </div>
+  </div>
+</section>
 
   const logo = {
     fontSize: "22px",
