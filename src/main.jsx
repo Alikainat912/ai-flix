@@ -163,25 +163,31 @@ function App() {
             }}
           >
            
-              <p>
-                Thank you. Your Confindetial Information report request has been recieved
-                successfully.
-              </p>
+              <div
+  style={{
+    padding: "20px",
+    textAlign: "center",
+  }}
+>
+  <p>
+    Thank you. Your Confidential Information report request has been received
+    successfully.
+  </p>
 
-              <button
-                onClick={() => setSubmitted(false)}
-                style={{
-                  padding: "12px 20px",
-                  border: "none",
-                  background: "#17202a",
-                  color: "#fff",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                }}
-              >
-                Submit Another Inquiry
-              </button>
-            
+  <button
+    onClick={() => setSubmitted(false)}
+    style={{
+      padding: "12px 20px",
+      border: "none",
+      background: "#17202a",
+      color: "#fff",
+      borderRadius: "4px",
+      cursor: "pointer",
+    }}
+  >
+    Submit Another Inquiry
+  </button>
+</div>
 
           ) : (
 
