@@ -471,7 +471,7 @@ const hero = {
               >
                 {loading
                   ? "Submitting..."
-                  : "GET YOUR REPORT NOW"}
+                  : "GET YOUR FREE REPORT NOW"}
               </button>
 
             </form>
