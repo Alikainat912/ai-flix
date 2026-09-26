@@ -63,37 +63,6 @@ function App() {
     alignItems: "center",
     borderBottom: "1px solid #ddd",
   };
-  
-
-  <div
-    style={{
-      position: "absolute",
-      inset: 0,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      background: "rgba(0,0,0,0.45)",
-      textAlign: "center",
-      color: "#fff",
-    }}
-  >
-    <div>
-      <h2
-        style={{
-          fontSize: "38px",
-          margin: 0,
-          fontWeight: 800,
-        }}
-      >
-        Find Your Leaked Information Now
-      </h2>
-
-      <p style={{ marginTop: "12px" }}>
-        Check your information before it's too late.
-      </p>
-    </div>
-  </div>
-</section>
 
   const logo = {
     fontSize: "22px",
