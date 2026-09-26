@@ -181,7 +181,7 @@ function App() {
               >
                 Submit Another Inquiry
               </button>
-            </div>
+            
 
           ) : (
 
