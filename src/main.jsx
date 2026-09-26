@@ -177,7 +177,7 @@ const hero = {
               fontWeight: "700",
             }}
           >
-            Get your report
+            Get your Free report below
           </a>
         </div>
       </section>
