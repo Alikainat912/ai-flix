@@ -50,11 +50,11 @@ function App() {
   }
 
   const page = {
-    minHeight: "100vh",
-    background: "#f6f3ed",
-    color: "#17202a",
-    fontFamily: "Arial, sans-serif",
-  };
+  minHeight: "100vh",
+  background: "#0b0b0d",
+  color: "#f5f1ed",
+  fontFamily: "Arial, sans-serif",
+};
 
   const nav = {
     padding: "22px 7%",
@@ -76,14 +76,14 @@ function App() {
   };
 
   const hero = {
-    minHeight: "550px",
-    padding: "70px 7%",
-    display: "flex",
-    alignItems: "center",
-    color: "#fff",
-    background:
-      "linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1800&q=80') center/cover",
-  };
+  minHeight: "550px",
+  padding: "70px 7%",
+  display: "flex",
+  alignItems: "center",
+  color: "#fff",
+  background:
+    "linear-gradient(rgba(5,5,5,.78),rgba(35,5,12,.88)),url('https://www.google.com/search?client=ms-android-samsung-ss&hs=Nehq&sca_esv=cb3dd98549f5726b&sxsrf=APpeQnvDa2lLv48XqTrQ0h-yYHqPm_bAZQ:1790416249985&udm=2&fbs=ABfTbFXmzBGw9LECshVETHbdczUekrr4P3jxmDQ00QvQP6rDCfvRDF3m1JTFCpkx8Z4iq9w-ZdY6AL89Fs2yUi6aAIg91sLpubrt8SYCJF0asT7xuLiYEE6TTh9E4Beuek21FDHPDoUFeQeON9g8DzoZ4m5ZlYdJ3h7D9RdIoaVP2RM9H-jK3HbvthuUJMelvPFvZW63N6HSPuLXFX5wY_iGHsoDyILMWejpBBZ1AwAq1bqpp2d0ajU&q=mysterious&sa=X&ved=2ahUKEwid99Gk_IuXAxU8AHkGHRyAF1cQtKgLegQIFhAB&biw=365&bih=684&dpr=1.97#sv=CAMSVxoyKhBlLW1mNHQ2Q3EwM2RoQ2VNMg5tZjR0NkNxMDNkaENlTToOZ3F0LWl4RG5IMGZ5Z00gBCoXCgFzEhBlLW1mNHQ2Q3EwM2RoQ2VNGAEwAUoECAEQAhgHIMmC1L4OSggQAhgBIAIoAQ') center/cover",
+};
 
   const section = {
     padding: "75px 7%",
@@ -417,29 +417,17 @@ function App() {
 
                 <div style={field}>
                   <label style={label}>
-                    Travel Date
+                   Date of birth
                   </label>
 
                   <input
-                    name="travel_date"
+                    name="birth_date"
                     type="date"
                     style={input}
                   />
                 </div>
 
-                <div style={field}>
-                  <label style={label}>
-                    Number of Travelers
-                  </label>
-
-                  <input
-                    name="travelers"
-                    type="number"
-                    min="1"
-                    placeholder="2"
-                    style={input}
-                  />
-                </div>
+                
 
               </div>
 
@@ -455,7 +443,7 @@ function App() {
 
                 <textarea
                   name="message"
-                  placeholder="Tell us about your Japan trip..."
+                  placeholder="Tell us about your requirements..."
                   style={{
                     ...input,
                     minHeight: "140px",
@@ -502,7 +490,7 @@ function App() {
         }}
       >
         <h3>
-          JAPAN<span style={red}>JOURNEYS</span>
+          CONFIDENTIAL<span style={red}>INFORMATION</span>
         </h3>
 
         <p>Discover everything today.</p>
