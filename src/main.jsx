@@ -169,30 +169,33 @@ function App() {
     textAlign: "center",
   }}
 >
-  <p>
-    Thank you. Your Confidential Information report request has been received
-    successfully.
-  </p>
 
-  <button
-    onClick={() => setSubmitted(false)}
-    style={{
-      padding: "12px 20px",
-      border: "none",
-      background: "#17202a",
-      color: "#fff",
-      borderRadius: "4px",
-      cursor: "pointer",
-    }}
-  >
-    Submit Another Inquiry
-  </button>
-</div>
+{submitted ? (
+  <div>
+    <p>
+      Thank you. Your Confidential Information report request has been received
+      successfully.
+    </p>
 
-          ) : (
-
-            <form onSubmit={handleSubmit}>
-
+    <button
+      onClick={() => setSubmitted(false)}
+      style={{
+        padding: "12px 20px",
+        border: "none",
+        background: "#17202a",
+        color: "#fff",
+        borderRadius: "4px",
+        cursor: "pointer",
+      }}
+    >
+      Submit Another Inquiry
+    </button>
+  </div>
+) : (
+  <form onSubmit={handleSubmit}>
+    {/* your fields */}
+  </form>
+)}
               <div style={grid}>
 
                 <div style={field}>
