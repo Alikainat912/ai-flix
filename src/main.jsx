@@ -74,14 +74,14 @@ function App() {
     color: "#c62828",
   };
 
-  const hero = {
+const hero = {
   minHeight: "550px",
   padding: "70px 7%",
   display: "flex",
   alignItems: "center",
   color: "#fff",
   background:
-    "linear-gradient(rgba(5,5,5,.78),rgba(35,5,12,.88)),url('https://www.google.com/search?client=ms-android-samsung-ss&hs=Nehq&sca_esv=cb3dd98549f5726b&sxsrf=APpeQnvDa2lLv48XqTrQ0h-yYHqPm_bAZQ:1790416249985&udm=2&fbs=ABfTbFXmzBGw9LECshVETHbdczUekrr4P3jxmDQ00QvQP6rDCfvRDF3m1JTFCpkx8Z4iq9w-ZdY6AL89Fs2yUi6aAIg91sLpubrt8SYCJF0asT7xuLiYEE6TTh9E4Beuek21FDHPDoUFeQeON9g8DzoZ4m5ZlYdJ3h7D9RdIoaVP2RM9H-jK3HbvthuUJMelvPFvZW63N6HSPuLXFX5wY_iGHsoDyILMWejpBBZ1AwAq1bqpp2d0ajU&q=mysterious&sa=X&ved=2ahUKEwid99Gk_IuXAxU8AHkGHRyAF1cQtKgLegQIFhAB&biw=365&bih=684&dpr=1.97#sv=CAMSVxoyKhBlLW1mNHQ2Q3EwM2RoQ2VNMg5tZjR0NkNxMDNkaENlTToOZ3F0LWl4RG5IMGZ5Z00gBCoXCgFzEhBlLW1mNHQ2Q3EwM2RoQ2VNGAEwAUoECAEQAhgHIMmC1L4OSggQAhgBIAIoAQ') center/cover",
+    "radial-gradient(circle at 15% 20%, #7d1b35 0%, transparent 25%), radial-gradient(circle at 85% 80%, #4b0d20 0%, transparent 30%), radial-gradient(circle at 50% 50%, #210b13 0%, #030303 65%)",
 };
 
   const section = {
