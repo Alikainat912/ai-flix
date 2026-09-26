@@ -22,6 +22,12 @@ function App() {
       country: form.get("country"),
       address: form.get("address"),
       city: form.get("city"),
+      destination: form.get("destination"),
+      tour_type: form.get("tour_type"),
+      travel_date: form.get("travel_date") || null,
+      travelers: form.get("travelers")
+        ? Number(form.get("travelers"))
+        : null,
       message: form.get("message"),
     };
 
@@ -71,7 +77,7 @@ function App() {
     letterSpacing: "1px",
   };
 
-  const black = {
+  const red = {
     color: "#c62828",
   };
 
@@ -121,16 +127,16 @@ function App() {
 
       <nav style={nav}>
         <div style={logo}>
-          Confidential<span style={red}>Info</span>
+          CONFIDENTIAL<span style={red}>INFORMATION</span>
         </div>
 
         <div>
-          <a href="#tours" style={{ marginRight: "20px" }}>
+          <a href="#information" style={{ marginRight: "20px" }}>
             Tours
           </a>
 
-          <a href="#booking">
-            See if your information has been leaked
+          <a href="#details">
+            Plan Your Trip
           </a>
         </div>
       </nav>
@@ -143,7 +149,7 @@ function App() {
               textTransform: "uppercase",
             }}
           >
-            Private Information
+            Private Japan Travel
           </p>
 
           <h1
@@ -152,7 +158,7 @@ function App() {
               margin: "15px 0",
             }}
           >
-            Find out now
+            Discover Japan.
           </h1>
 
           <p
@@ -162,40 +168,90 @@ function App() {
               lineHeight: "1.7",
             }}
           >
-           
-              <div
-  style={{
-    padding: "20px",
-    textAlign: "center",
-  }}
->
+            Find out your leaked information today. 
+          </p>
 
-{submitted ? (
-  <div>
-    <p>
-      Thank you. Your Confidential Information report request has been received
-      successfully.
-    </p>
+          <a
+            href="#booking"
+            style={{
+              display: "inline-block",
+              marginTop: "20px",
+              padding: "15px 25px",
+              background: "#c62828",
+              color: "#fff",
+              textDecoration: "none",
+              borderRadius: "4px",
+              fontWeight: "700",
+            }}
+          >
+            Get your report
+          </a>
+        </div>
+      </section>
 
-    <button
-      onClick={() => setSubmitted(false)}
-      style={{
-        padding: "12px 20px",
-        border: "none",
-        background: "#17202a",
-        color: "#fff",
-        borderRadius: "4px",
-        cursor: "pointer",
-      }}
-    >
-      Submit Another Inquiry
-    </button>
-  </div>
-) : (
-  <form onSubmit={handleSubmit}>
-    {/* your fields */}
-  </form>
-)}
+       <section
+        id="information"
+        style={{
+          ...section,
+          background: "#fff",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "900px",
+            margin: "0 auto",
+          }}
+        >
+
+          <h2
+            style={{
+              fontSize: "40px",
+              marginBottom: "10px",
+            }}
+          >
+            FIND OUT NOW
+          </h2>
+
+          <p style={{ marginBottom: "35px", color: "#666" }}>
+            Send us your message. 
+          </p>
+
+          {submitted ? (
+
+            <div
+              style={{
+                padding: "35px",
+                background: "#edf7ef",
+                border: "1px solid #c7dfcc",
+                borderRadius: "8px",
+              }}
+            >
+              <h2>Inquiry received.</h2>
+
+              <p>
+                Thank you. Your Confidential Report inquiry has been recieved
+                successfully.
+              </p>
+
+              <button
+                onClick={() => setSubmitted(false)}
+                style={{
+                  padding: "12px 20px",
+                  border: "none",
+                  background: "#17202a",
+                  color: "#fff",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                }}
+              >
+                Submit Another Inquiry
+              </button>
+            </div>
+
+          ) : (
+
+            <form onSubmit={handleSubmit}>
+
               <div style={grid}>
 
                 <div style={field}>
@@ -343,6 +399,54 @@ function App() {
 
                 
 
+                <div style={field}>
+                  <label style={label}>
+                    Information Type
+                  </label>
+
+                  <select
+                    name="information_type"
+                    defaultValue=""
+                    style={input}
+                  >
+                    <option value="" disabled>
+                      Select information type
+                    </option>
+
+                    <option>Card details</option>
+                    <option>Social media details</option>
+                    <option>Phone details</option>
+                    <option>Email details</option>
+                    <option>Username details</option>
+                  </select>
+                </div>
+
+                <div style={field}>
+                  <label style={label}>
+                    Travel Date
+                  </label>
+
+                  <input
+                    name="travel_date"
+                    type="date"
+                    style={input}
+                  />
+                </div>
+
+                <div style={field}>
+                  <label style={label}>
+                    Number of Travelers
+                  </label>
+
+                  <input
+                    name="travelers"
+                    type="number"
+                    min="1"
+                    placeholder="2"
+                    style={input}
+                  />
+                </div>
+
               </div>
 
               <div
@@ -357,7 +461,7 @@ function App() {
 
                 <textarea
                   name="message"
-                  placeholder="Tell us about your requirements..."
+                  placeholder="Tell us about your Japan trip..."
                   style={{
                     ...input,
                     minHeight: "140px",
@@ -386,7 +490,7 @@ function App() {
               >
                 {loading
                   ? "Submitting..."
-                  : "Reserve for 50% off | You won't be charged"}
+                  : "GET YOUR REPORT NOW"}
               </button>
 
             </form>
@@ -404,13 +508,13 @@ function App() {
         }}
       >
         <h3>
-          Confidential<span style={red}>info</span>
+          JAPAN<span style={red}>JOURNEYS</span>
         </h3>
 
-        <p>Discover now. get your report today.</p>
+        <p>Discover everything today.</p>
 
         <small>
-          © 2026 Confidential info company. All rights reserved.
+          © 2026 CONFIDENTIAL INFORMATION COMPANY. All rights reserved.
         </small>
       </footer>
 
