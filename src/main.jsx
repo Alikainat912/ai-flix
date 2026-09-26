@@ -51,11 +51,10 @@ function App() {
 
   const page = {
   minHeight: "100vh",
-  background: "#0b0b0d",
-  color: "#f5f1ed",
+  background: "#f6f3ed",
+  color: "#111111",
   fontFamily: "Arial, sans-serif",
 };
-
   const nav = {
     padding: "22px 7%",
     background: "#fff",
