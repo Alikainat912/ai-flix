@@ -142,7 +142,7 @@ function App() {
               textTransform: "uppercase",
             }}
           >
-            Private Japan Travel
+            Private Information
           </p>
 
           <h1
