@@ -22,12 +22,6 @@ function App() {
       country: form.get("country"),
       address: form.get("address"),
       city: form.get("city"),
-      destination: form.get("destination"),
-      tour_type: form.get("tour_type"),
-      travel_date: form.get("travel_date") || null,
-      travelers: form.get("travelers")
-        ? Number(form.get("travelers"))
-        : null,
       message: form.get("message"),
     };
 
@@ -77,7 +71,7 @@ function App() {
     letterSpacing: "1px",
   };
 
-  const red = {
+  const black = {
     color: "#c62828",
   };
 
@@ -127,7 +121,7 @@ function App() {
 
       <nav style={nav}>
         <div style={logo}>
-          JAPAN<span style={red}>JOURNEYS</span>
+          Confidential<span style={red}>Info</span>
         </div>
 
         <div>
@@ -136,7 +130,7 @@ function App() {
           </a>
 
           <a href="#booking">
-            Plan Your Trip
+            See if your information has been leaked
           </a>
         </div>
       </nav>
@@ -149,7 +143,7 @@ function App() {
               textTransform: "uppercase",
             }}
           >
-            Private Japan Travel
+            Private Information
           </p>
 
           <h1
@@ -158,7 +152,7 @@ function App() {
               margin: "15px 0",
             }}
           >
-            Discover Japan.
+            Find out now
           </h1>
 
           <p
@@ -168,139 +162,9 @@ function App() {
               lineHeight: "1.7",
             }}
           >
-            Carefully planned journeys through Tokyo, Kyoto,
-            Osaka, Mount Fuji and beyond.
-          </p>
-
-          <a
-            href="#booking"
-            style={{
-              display: "inline-block",
-              marginTop: "20px",
-              padding: "15px 25px",
-              background: "#c62828",
-              color: "#fff",
-              textDecoration: "none",
-              borderRadius: "4px",
-              fontWeight: "700",
-            }}
-          >
-            Plan Your Journey
-          </a>
-        </div>
-      </section>
-
-      <section id="tours" style={section}>
-        <h2>Featured Journeys</h2>
-
-        <p>
-          Explore Japan with a journey built around your interests,
-          schedule and travel style.
-        </p>
-
-        <div style={grid}>
-
-          <div
-            style={{
-              background: "#fff",
-              padding: "25px",
-              borderRadius: "8px",
-            }}
-          >
-            <h3>Tokyo</h3>
-            <p>
-              Experience modern Tokyo, shopping, food,
-              culture and nightlife.
-            </p>
-          </div>
-
-          <div
-            style={{
-              background: "#fff",
-              padding: "25px",
-              borderRadius: "8px",
-            }}
-          >
-            <h3>Kyoto</h3>
-            <p>
-              Discover temples, gardens and traditional
-              Japanese neighborhoods.
-            </p>
-          </div>
-
-          <div
-            style={{
-              background: "#fff",
-              padding: "25px",
-              borderRadius: "8px",
-            }}
-          >
-            <h3>Mount Fuji</h3>
-            <p>
-              Explore spectacular landscapes surrounding
-              Japan's iconic mountain.
-            </p>
-          </div>
-
-          <div
-            style={{
-              background: "#fff",
-              padding: "25px",
-              borderRadius: "8px",
-            }}
-          >
-            <h3>Osaka</h3>
-            <p>
-              Enjoy Japanese cuisine, entertainment and
-              Osaka's vibrant atmosphere.
-            </p>
-          </div>
-
-        </div>
-      </section>
-
-      <section
-        id="booking"
-        style={{
-          ...section,
-          background: "#fff",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "900px",
-            margin: "0 auto",
-          }}
-        >
-
-          <h2
-            style={{
-              fontSize: "40px",
-              marginBottom: "10px",
-            }}
-          >
-            Plan Your Japan Journey
-          </h2>
-
-          <p style={{ marginBottom: "35px", color: "#666" }}>
-            Send us your travel requirements and our team
-            can help plan your journey.
-          </p>
-
-          {submitted ? (
-
-            <div
-              style={{
-                padding: "35px",
-                background: "#edf7ef",
-                border: "1px solid #c7dfcc",
-                borderRadius: "8px",
-              }}
-            >
-              <h2>Reservation received.</h2>
-
+           
               <p>
-                Thank you. Your Japan travel Reservation has been recieved
+                Thank you. Your Confindetial Information report request has been recieved
                 successfully.
               </p>
 
@@ -468,79 +332,7 @@ function App() {
                   />
                 </div>
 
-                <div style={field}>
-                  <label style={label}>
-                    Destination
-                  </label>
-
-                  <select
-                    name="destination"
-                    defaultValue=""
-                    style={input}
-                  >
-                    <option value="" disabled>
-                      Select destination
-                    </option>
-
-                    <option>Tokyo</option>
-                    <option>Kyoto</option>
-                    <option>Osaka</option>
-                    <option>Mount Fuji</option>
-                    <option>Hokkaido</option>
-                    <option>Tokyo + Kyoto</option>
-                    <option>Tokyo + Kyoto + Osaka</option>
-                    <option>Custom Itinerary</option>
-                  </select>
-                </div>
-
-                <div style={field}>
-                  <label style={label}>
-                    Tour Type
-                  </label>
-
-                  <select
-                    name="tour_type"
-                    defaultValue=""
-                    style={input}
-                  >
-                    <option value="" disabled>
-                      Select tour type
-                    </option>
-
-                    <option>Private Tour</option>
-                    <option>Family Tour</option>
-                    <option>Honeymoon</option>
-                    <option>Group Tour</option>
-                    <option>Business Travel</option>
-                    <option>Custom Tour</option>
-                  </select>
-                </div>
-
-                <div style={field}>
-                  <label style={label}>
-                    Travel Date
-                  </label>
-
-                  <input
-                    name="travel_date"
-                    type="date"
-                    style={input}
-                  />
-                </div>
-
-                <div style={field}>
-                  <label style={label}>
-                    Number of Travelers
-                  </label>
-
-                  <input
-                    name="travelers"
-                    type="number"
-                    min="1"
-                    placeholder="2"
-                    style={input}
-                  />
-                </div>
+                
 
               </div>
 
@@ -556,7 +348,7 @@ function App() {
 
                 <textarea
                   name="message"
-                  placeholder="Tell us about your Japan trip..."
+                  placeholder="Tell us about your requirements..."
                   style={{
                     ...input,
                     minHeight: "140px",
@@ -603,13 +395,13 @@ function App() {
         }}
       >
         <h3>
-          JAPAN<span style={red}>JOURNEYS</span>
+          Confidential<span style={red}>info</span>
         </h3>
 
-        <p>Discover Japan. Your way.</p>
+        <p>Discover now. get your report today.</p>
 
         <small>
-          © 2026 Japan Journeys. All rights reserved.
+          © 2026 Confidential info company. All rights reserved.
         </small>
       </footer>
 
