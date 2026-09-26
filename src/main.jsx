@@ -63,28 +63,7 @@ function App() {
     alignItems: "center",
     borderBottom: "1px solid #ddd",
   };
-  <section
-  style={{
-    position: "relative",
-    height: "300px",
-    overflow: "hidden",
-    background: "#000",
-  }}
->
-  <video
-    autoPlay
-    muted
-    loop
-    playsInline
-    preload="auto"
-    style={{
-      width: "100%",
-      height: "100%",
-      objectFit: "cover",
-    }}
-  >
-    <source src="/https://youtu.be/WE-ZppQKgxs?si=Lkpy6JKy95YI_ti-" type="video/mp4" />
-  </video>
+  
 
   <div
     style={{
