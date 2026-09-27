@@ -943,7 +943,7 @@ function App() {
         </small>
       </footer>
 
-    </div>
+    
   );
 }
 
