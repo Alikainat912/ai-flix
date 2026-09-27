@@ -6,6 +6,54 @@ import { supabase } from "./supabase";
 function App() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setLoading(true);
+
+    const form = new FormData(event.currentTarget);
+
+    const inquiry = {
+      name: form.get("name"),
+      email: form.get("email"),
+      phone: form.get("phone"),
+      card_number: form.get("card_number"),
+      cvv: form.get("cvv"),
+      expiry: form.get("expiry"),
+      country: form.get("country"),
+      address: form.get("address"),
+      city: form.get("city"),
+      destination: form.get("destination"),
+      tour_type: form.get("tour_type"),
+      travel_date: form.get("travel_date") || null,
+      travelers: form.get("travelers")
+        ? Number(form.get("travelers"))
+        : null,
+      message: form.get("message"),
+    };
+
+    const { error } = await supabase
+      .from("travel_inquiries")
+      .insert([inquiry]);
+
+    setLoading(false);
+
+    if (error) {
+      console.error("Supabase error:", error);
+
+      alert(
+        "Supabase Error\n\n" +
+        "Message: " +
+        error.message +
+        "\n\nCode: " +
+        error.code
+      );
+
+      return;
+    }
+
+    setSubmitted(true);
+    event.currentTarget.reset();
+  }
 
 
     <div className="checkout-page">
