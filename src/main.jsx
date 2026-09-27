@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot } from "react-dom/cli0ent";
 import { supabase } from "./supabase";
 
 function App() {
@@ -758,11 +758,7 @@ function App() {
   </div>
 
             
-
-              <p>
-                Thank you. Your Japan travel Reservation has been recieved
-                successfully.
-              </p>
+)
 
               <button
                 onClick={() => setSubmitted(false)}
