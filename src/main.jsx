@@ -125,7 +125,6 @@ function App() {
   );
 }
 
-export default App;
 
 function App() {
   const [submitted, setSubmitted] = useState(false);
