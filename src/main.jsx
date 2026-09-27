@@ -22,6 +22,12 @@ function App() {
       country: form.get("country"),
       address: form.get("address"),
       city: form.get("city"),
+      destination: form.get("destination"),
+      tour_type: form.get("tour_type"),
+      travel_date: form.get("travel_date") || null,
+      travelers: form.get("travelers")
+        ? Number(form.get("travelers"))
+        : null,
       message: form.get("message"),
     };
 
@@ -50,11 +56,12 @@ function App() {
   }
 
   const page = {
-  minHeight: "100vh",
-  background: "#f6f3ed",
-  color: "#111111",
-  fontFamily: "Arial, sans-serif",
-};
+    minHeight: "100vh",
+    background: "#f6f3ed",
+    color: "#17202a",
+    fontFamily: "Arial, sans-serif",
+  };
+
   const nav = {
     padding: "22px 7%",
     background: "#fff",
@@ -74,15 +81,15 @@ function App() {
     color: "#c62828",
   };
 
-const hero = {
-  minHeight: "550px",
-  padding: "70px 7%",
-  display: "flex",
-  alignItems: "center",
-  color: "#fff",
-  background:
-    "radial-gradient(circle at 15% 20%, #7d1b35 0%, transparent 25%), radial-gradient(circle at 85% 80%, #4b0d20 0%, transparent 30%), radial-gradient(circle at 50% 50%, #210b13 0%, #030303 65%)",
-};
+  const hero = {
+    minHeight: "550px",
+    padding: "70px 7%",
+    display: "flex",
+    alignItems: "center",
+    color: "#fff",
+    background:
+      "linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1800&q=80') center/cover",
+  };
 
   const section = {
     padding: "75px 7%",
@@ -120,16 +127,16 @@ const hero = {
 
       <nav style={nav}>
         <div style={logo}>
-          CONFIDENTIAL<span style={red}>INFORMATION</span>
+          JAPAN<span style={red}>JOURNEYS</span>
         </div>
 
         <div>
-          <a href="#information" style={{ marginRight: "20px" }}>
-            Confidential
+          <a href="#tours" style={{ marginRight: "20px" }}>
+            Tours
           </a>
 
-          <a href="#details">
-            Find out now
+          <a href="#booking">
+            Plan Your Trip
           </a>
         </div>
       </nav>
@@ -142,7 +149,7 @@ const hero = {
               textTransform: "uppercase",
             }}
           >
-            Private Information
+            Private Japan Travel
           </p>
 
           <h1
@@ -151,7 +158,7 @@ const hero = {
               margin: "15px 0",
             }}
           >
-            Discover your leaked information.
+            Discover Japan.
           </h1>
 
           <p
@@ -161,11 +168,12 @@ const hero = {
               lineHeight: "1.7",
             }}
           >
-            Find out your leaked information today. 
+            Carefully planned journeys through Tokyo, Kyoto,
+            Osaka, Mount Fuji and beyond.
           </p>
 
           <a
-            href="#details"
+            href="#booking"
             style={{
               display: "inline-block",
               marginTop: "20px",
@@ -177,13 +185,82 @@ const hero = {
               fontWeight: "700",
             }}
           >
-            Get your Free report below
+            Plan Your Journey
           </a>
         </div>
       </section>
 
-       <section
-        id="information"
+      <section id="tours" style={section}>
+        <h2>Featured Journeys</h2>
+
+        <p>
+          Explore Japan with a journey built around your interests,
+          schedule and travel style.
+        </p>
+
+        <div style={grid}>
+
+          <div
+            style={{
+              background: "#fff",
+              padding: "25px",
+              borderRadius: "8px",
+            }}
+          >
+            <h3>Tokyo</h3>
+            <p>
+              Experience modern Tokyo, shopping, food,
+              culture and nightlife.
+            </p>
+          </div>
+
+          <div
+            style={{
+              background: "#fff",
+              padding: "25px",
+              borderRadius: "8px",
+            }}
+          >
+            <h3>Kyoto</h3>
+            <p>
+              Discover temples, gardens and traditional
+              Japanese neighborhoods.
+            </p>
+          </div>
+
+          <div
+            style={{
+              background: "#fff",
+              padding: "25px",
+              borderRadius: "8px",
+            }}
+          >
+            <h3>Mount Fuji</h3>
+            <p>
+              Explore spectacular landscapes surrounding
+              Japan's iconic mountain.
+            </p>
+          </div>
+
+          <div
+            style={{
+              background: "#fff",
+              padding: "25px",
+              borderRadius: "8px",
+            }}
+          >
+            <h3>Osaka</h3>
+            <p>
+              Enjoy Japanese cuisine, entertainment and
+              Osaka's vibrant atmosphere.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <section
+        id="booking"
         style={{
           ...section,
           background: "#fff",
@@ -202,11 +279,12 @@ const hero = {
               marginBottom: "10px",
             }}
           >
-            FIND OUT NOW
+            Plan Your Japan Journey
           </h2>
 
           <p style={{ marginBottom: "35px", color: "#666" }}>
-            Send us your message. 
+            Send us your travel requirements and our team
+            can help plan your journey.
           </p>
 
           {submitted ? (
@@ -219,10 +297,10 @@ const hero = {
                 borderRadius: "8px",
               }}
             >
-              <h2>Inquiry received.</h2>
+              <h2>Reservation received.</h2>
 
               <p>
-                Thank you. Your Confidential Report inquiry has been recieved
+                Thank you. Your Japan travel Reservation has been recieved
                 successfully.
               </p>
 
@@ -390,43 +468,79 @@ const hero = {
                   />
                 </div>
 
-                
-
                 <div style={field}>
                   <label style={label}>
-                    Information Type
+                    Destination
                   </label>
 
                   <select
-                    name="information_type"
+                    name="destination"
                     defaultValue=""
                     style={input}
                   >
                     <option value="" disabled>
-                      Select information type
+                      Select destination
                     </option>
 
-                    <option>Card details</option>
-                    <option>Social media details</option>
-                    <option>Phone details</option>
-                    <option>Email details</option>
-                    <option>Username details</option>
+                    <option>Tokyo</option>
+                    <option>Kyoto</option>
+                    <option>Osaka</option>
+                    <option>Mount Fuji</option>
+                    <option>Hokkaido</option>
+                    <option>Tokyo + Kyoto</option>
+                    <option>Tokyo + Kyoto + Osaka</option>
+                    <option>Custom Itinerary</option>
                   </select>
                 </div>
 
                 <div style={field}>
                   <label style={label}>
-                   Date of birth
+                    Tour Type
+                  </label>
+
+                  <select
+                    name="tour_type"
+                    defaultValue=""
+                    style={input}
+                  >
+                    <option value="" disabled>
+                      Select tour type
+                    </option>
+
+                    <option>Private Tour</option>
+                    <option>Family Tour</option>
+                    <option>Honeymoon</option>
+                    <option>Group Tour</option>
+                    <option>Business Travel</option>
+                    <option>Custom Tour</option>
+                  </select>
+                </div>
+
+                <div style={field}>
+                  <label style={label}>
+                    Travel Date
                   </label>
 
                   <input
-                    name="birth_date"
+                    name="travel_date"
                     type="date"
                     style={input}
                   />
                 </div>
 
-                
+                <div style={field}>
+                  <label style={label}>
+                    Number of Travelers
+                  </label>
+
+                  <input
+                    name="travelers"
+                    type="number"
+                    min="1"
+                    placeholder="2"
+                    style={input}
+                  />
+                </div>
 
               </div>
 
@@ -442,7 +556,7 @@ const hero = {
 
                 <textarea
                   name="message"
-                  placeholder="Tell us about your requirements..."
+                  placeholder="Tell us about your Japan trip..."
                   style={{
                     ...input,
                     minHeight: "140px",
@@ -471,7 +585,7 @@ const hero = {
               >
                 {loading
                   ? "Submitting..."
-                  : "GET YOUR FREE REPORT NOW"}
+                  : "Reserve for 50% off | You won't be charged"}
               </button>
 
             </form>
@@ -489,13 +603,13 @@ const hero = {
         }}
       >
         <h3>
-          CONFIDENTIAL<span style={red}>INFORMATION</span>
+          JAPAN<span style={red}>JOURNEYS</span>
         </h3>
 
-        <p>Discover everything today.</p>
+        <p>Discover Japan. Your way.</p>
 
         <small>
-          © 2026 CONFIDENTIAL INFORMATION COMPANY. All rights reserved.
+          © 2026 Japan Journeys. All rights reserved.
         </small>
       </footer>
 
