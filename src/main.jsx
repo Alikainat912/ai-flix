@@ -5,6 +5,7 @@ import { supabase } from "./supabase";
 function App() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
