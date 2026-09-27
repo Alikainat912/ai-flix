@@ -5,7 +5,10 @@ import { supabase } from "./supabase";
 import "./style.css";
 
 function App() {
-  return (
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+
     <div className="checkout-page">
       <div className="checkout-container">
 
@@ -126,9 +129,6 @@ function App() {
 }
 
 
-function App() {
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
