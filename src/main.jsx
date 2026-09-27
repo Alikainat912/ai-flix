@@ -791,9 +791,6 @@ function App() {
               </button>
             </div>
 
-          ) 
-
-            <form onSubmit={handleSubmit}>
 
               <div style={grid}>
 
