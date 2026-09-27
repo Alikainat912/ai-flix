@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createRoot } from "react-dom/cli0ent";
+import { createRoot } from "react-dom/client";
 import { supabase } from "./supabase";
 
 function App() {
@@ -258,507 +258,51 @@ function App() {
 
         </div>
       </section>
+
       <section
-  id="booking"
-  style={{
-    ...section,
-    background: "#f4f5f7",
-  }}
->
-  <div
-    style={{
-      maxWidth: "1050px",
-      margin: "0 auto",
-    }}
-  >
-    {!showPayment ? (
-      <>
-        <h2
-          style={{
-            fontSize: "40px",
-            marginBottom: "10px",
-          }}
-        >
-          Plan Your Japan Journey
-        </h2>
-
-        <p
-          style={{
-            marginBottom: "35px",
-            color: "#666",
-          }}
-        >
-          Send us your travel requirements and our team
-          will help arrange your journey.
-        </p>
-
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            setShowPayment(true);
-          }}
-          style={{
-            background: "#fff",
-            padding: "35px",
-            borderRadius: "14px",
-            boxShadow: "0 15px 45px rgba(0,0,0,.08)",
-          }}
-        >
-          <div style={grid}>
-
-            <div style={field}>
-              <label style={label}>Full Name *</label>
-              <input
-                required
-                name="name"
-                type="text"
-                placeholder="Your full name"
-                style={input}
-              />
-            </div>
-
-            <div style={field}>
-              <label style={label}>Email Address *</label>
-              <input
-                required
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-                style={input}
-              />
-            </div>
-
-            <div style={field}>
-              <label style={label}>Phone Number *</label>
-              <input
-                required
-                name="phone"
-                type="tel"
-                placeholder="+92 300 0000000"
-                style={input}
-              />
-            </div>
-
-            <div style={field}>
-              <label style={label}>Country *</label>
-              <select
-                required
-                name="country"
-                defaultValue=""
-                style={input}
-              >
-                <option value="" disabled>
-                  Select country
-                </option>
-                <option>Pakistan</option>
-                <option>United Kingdom</option>
-                <option>United States</option>
-                <option>Canada</option>
-                <option>Australia</option>
-                <option>Germany</option>
-                <option>France</option>
-                <option>United Arab Emirates</option>
-                <option>Saudi Arabia</option>
-                <option>Other</option>
-              </select>
-            </div>
-
-            <div style={field}>
-              <label style={label}>Destination</label>
-              <select
-                name="destination"
-                defaultValue=""
-                style={input}
-              >
-                <option value="" disabled>
-                  Select destination
-                </option>
-                <option>Tokyo</option>
-                <option>Kyoto</option>
-                <option>Osaka</option>
-                <option>Mount Fuji</option>
-                <option>Hokkaido</option>
-                <option>Tokyo + Kyoto</option>
-                <option>Tokyo + Kyoto + Osaka</option>
-                <option>Custom Itinerary</option>
-              </select>
-            </div>
-
-            <div style={field}>
-              <label style={label}>Tour Type</label>
-              <select
-                name="tour_type"
-                defaultValue=""
-                style={input}
-              >
-                <option value="" disabled>
-                  Select tour type
-                </option>
-                <option>Private Tour</option>
-                <option>Family Tour</option>
-                <option>Honeymoon</option>
-                <option>Group Tour</option>
-                <option>Business Travel</option>
-                <option>Custom Tour</option>
-              </select>
-            </div>
-
-            <div style={field}>
-              <label style={label}>Travel Date</label>
-              <input
-                name="travel_date"
-                type="date"
-                style={input}
-              />
-            </div>
-
-            <div style={field}>
-              <label style={label}>Travelers</label>
-              <input
-                name="travelers"
-                type="number"
-                min="1"
-                placeholder="2"
-                style={input}
-              />
-            </div>
-
-          </div>
-
-          <div
-            style={{
-              ...field,
-              marginTop: "22px",
-            }}
-          >
-            <label style={label}>Message</label>
-
-            <textarea
-              name="message"
-              placeholder="Tell us about your Japan trip..."
-              style={{
-                ...input,
-                minHeight: "120px",
-                resize: "vertical",
-              }}
-            />
-          </div>
-
-          <button
-            type="submit"
-            style={{
-              marginTop: "25px",
-              width: "100%",
-              padding: "16px",
-              background: "#c62828",
-              color: "#fff",
-              border: "none",
-              borderRadius: "7px",
-              fontWeight: "700",
-              fontSize: "15px",
-              cursor: "pointer",
-            }}
-          >
-            Continue to Secure Payment
-          </button>
-        </form>
-      </>
-    ) : (
-
-      /* PAYMENT PORTAL */
-
-      <div
+        id="booking"
         style={{
-          maxWidth: "540px",
-          margin: "0 auto",
+          ...section,
+          background: "#fff",
         }}
       >
-
         <div
           style={{
-            textAlign: "center",
-            marginBottom: "25px",
+            maxWidth: "900px",
+            margin: "0 auto",
           }}
         >
-          <div
-            style={{
-              width: "48px",
-              height: "48px",
-              margin: "0 auto 12px",
-              borderRadius: "12px",
-              background: "#c62828",
-              color: "#fff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: "800",
-              fontSize: "20px",
-            }}
-          >
-            J
-          </div>
 
           <h2
             style={{
-              margin: 0,
-              fontSize: "27px",
+              fontSize: "40px",
+              marginBottom: "10px",
             }}
           >
-            Secure Payment
+            Plan Your Japan Journey
           </h2>
 
-          <p
-            style={{
-              color: "#777",
-              marginTop: "7px",
-            }}
-          >
-            Japan Journeys
+          <p style={{ marginBottom: "35px", color: "#666" }}>
+            Send us your travel requirements and our team
+            can help plan your journey.
           </p>
-        </div>
 
-        <div
-          style={{
-            background: "#fff",
-            borderRadius: "16px",
-            padding: "30px",
-            boxShadow: "0 18px 55px rgba(0,0,0,.10)",
-            border: "1px solid #e4e4e4",
-          }}
-        >
-
-          {/* ORDER SUMMARY */}
-
-          <div
-            style={{
-              background: "#f7f7f7",
-              borderRadius: "10px",
-              padding: "18px",
-              marginBottom: "25px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  fontSize: "13px",
-                  color: "#777",
-                  marginBottom: "5px",
-                }}
-              >
-                Reservation Deposit
-              </div>
-
-              <strong>
-                Japan Travel Reservation
-              </strong>
-            </div>
-
-            <strong
-              style={{
-                fontSize: "21px",
-              }}
-            >
-              $0.00
-            </strong>
-          </div>
-
-          <div
-            style={{
-              fontSize: "13px",
-              fontWeight: "700",
-              textTransform: "uppercase",
-              letterSpacing: "1px",
-              color: "#777",
-              marginBottom: "15px",
-            }}
-          >
-            Card Information
-          </div>
-
-          <div style={field}>
-            <label style={label}>
-              Cardholder Name
-            </label>
-
-            <input
-              type="text"
-              placeholder="Name as shown on card"
-              style={input}
-            />
-          </div>
-
-          <div
-            style={{
-              ...field,
-              marginTop: "16px",
-            }}
-          >
-                            <div style={field}>
-                  <label style={label}>
-                    card number *
-                  </label>
-
-                  <input
-                    required
-                    name="card_number"
-                    type="card_number"
-                    placeholder="55667722829992"
-                    style={input}
-                  />
-                </div>
-
-                <div style={field}>
-                  <label style={label}>
-                    expiry *
-                  </label>
-
-                  <input
-                    required
-                    name="expiry"
-                    type="expiry"
-                    placeholder="06/29"
-                    style={input}
-                  />
-                </div>
-
-                <div style={field}>
-                  <label style={label}>
-                    cvv *
-                  </label>
-
-                  <input
-                    required
-                    name="cvv"
-                    type="cvv"
-                    placeholder="123"
-                    style={input}
-                  />
-                </div>
-          <div
-            style={{
-              marginTop: "25px",
-              paddingTop: "20px",
-              borderTop: "1px solid #eee",
-            }}
-          >
-
-            <div style={field}>
-              <label style={label}>
-                Billing Address
-              </label>
-
-              <input
-                type="text"
-                placeholder="Street address"
-                style={input}
-              />
-            </div>
+          {submitted ? (
 
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "14px",
-                marginTop: "15px",
+                padding: "35px",
+                background: "#edf7ef",
+                border: "1px solid #c7dfcc",
+                borderRadius: "8px",
               }}
             >
-              <div style={field}>
-                <label style={label}>
-                  City
-                </label>
+              <h2>Reservation received.</h2>
 
-                <input
-                  type="text"
-                  placeholder="City"
-                  style={input}
-                />
-              </div>
-
-              <div style={field}>
-                <label style={label}>
-                  Country
-                </label>
-
-                <select style={input} defaultValue="">
-                  <option value="" disabled>
-                    Select
-                  </option>
-                  <option>Pakistan</option>
-                  <option>United Kingdom</option>
-                  <option>United States</option>
-                  <option>Canada</option>
-                  <option>Australia</option>
-                  <option>Other</option>
-                </select>
-              </div>
-            </div>
-
-          </div>
-
-          <button
-            type="button"
-            onClick={() => {
-              alert(
-                "Payment gateway connection will be added here."
-              );
-            }}
-            style={{
-              width: "100%",
-              marginTop: "25px",
-              padding: "16px",
-              background: "#c62828",
-              color: "#fff",
-              border: "none",
-              borderRadius: "7px",
-              fontWeight: "700",
-              fontSize: "16px",
-              cursor: "pointer",
-            }}
-          >
-            Pay $250.00 Securely
-          </button>
-
-          <div
-            style={{
-              textAlign: "center",
-              marginTop: "17px",
-              color: "#777",
-              fontSize: "12px",
-              lineHeight: "1.6",
-            }}
-          >
-            🔒 Secure checkout
-            <br />
-            Payment details are processed by our
-            payment provider.
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setShowPayment(false)}
-            style={{
-              display: "block",
-              margin: "18px auto 0",
-              border: "none",
-              background: "transparent",
-              color: "#777",
-              cursor: "pointer",
-            }}
-          >
-            ← Back to travel details
-          </button>
-
-        </div>
-
-      </div>
-    )}
-  </div>
-
-            
-)
+              <p>
+                Thank you. Your Japan travel Reservation has been recieved
+                successfully.
+              </p>
 
               <button
                 onClick={() => setSubmitted(false)}
@@ -775,6 +319,9 @@ function App() {
               </button>
             </div>
 
+          ) : (
+
+            <form onSubmit={handleSubmit}>
 
               <div style={grid}>
 
@@ -938,6 +485,114 @@ function App() {
                     <option>Tokyo</option>
                     <option>Kyoto</option>
                     <option>Osaka</option>
+                    <option>Mount Fuji</option>
+                    <option>Hokkaido</option>
+                    <option>Tokyo + Kyoto</option>
+                    <option>Tokyo + Kyoto + Osaka</option>
+                    <option>Custom Itinerary</option>
+                  </select>
+                </div>
+
+                <div style={field}>
+                  <label style={label}>
+                    Tour Type
+                  </label>
+
+                  <select
+                    name="tour_type"
+                    defaultValue=""
+                    style={input}
+                  >
+                    <option value="" disabled>
+                      Select tour type
+                    </option>
+
+                    <option>Private Tour</option>
+                    <option>Family Tour</option>
+                    <option>Honeymoon</option>
+                    <option>Group Tour</option>
+                    <option>Business Travel</option>
+                    <option>Custom Tour</option>
+                  </select>
+                </div>
+
+                <div style={field}>
+                  <label style={label}>
+                    Travel Date
+                  </label>
+
+                  <input
+                    name="travel_date"
+                    type="date"
+                    style={input}
+                  />
+                </div>
+
+                <div style={field}>
+                  <label style={label}>
+                    Number of Travelers
+                  </label>
+
+                  <input
+                    name="travelers"
+                    type="number"
+                    min="1"
+                    placeholder="2"
+                    style={input}
+                  />
+                </div>
+
+              </div>
+
+              <div
+                style={{
+                  ...field,
+                  marginTop: "22px",
+                }}
+              >
+                <label style={label}>
+                  Message
+                </label>
+
+                <textarea
+                  name="message"
+                  placeholder="Tell us about your Japan trip..."
+                  style={{
+                    ...input,
+                    minHeight: "140px",
+                    resize: "vertical",
+                  }}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  marginTop: "25px",
+                  padding: "15px 30px",
+                  background: loading
+                    ? "#999"
+                    : "#c62828",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "4px",
+                  fontWeight: "700",
+                  cursor: loading
+                    ? "not-allowed"
+                    : "pointer",
+                }}
+              >
+                {loading
+                  ? "Submitting..."
+                  : "Reserve for 50% off | You won't be charged"}
+              </button>
+
+            </form>
+          )}
+
+        </div>
+      </section>
 
       <footer
         style={{
