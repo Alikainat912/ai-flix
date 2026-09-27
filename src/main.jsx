@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
 import { supabase } from "./supabase";
 
-import "./style.css";
 
 function App() {
   const [submitted, setSubmitted] = useState(false);
