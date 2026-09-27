@@ -197,6 +197,56 @@ function App() {
           Explore Japan with a journey built around your interests,
           schedule and travel style.
         </p>
+        <section style={{
+  padding: "70px 8%",
+  background: "#f7f5f2"
+}}>
+  <h2 style={{
+    fontSize: "38px",
+    color: "#111",
+    marginBottom: "35px"
+  }}>
+    Featured Hotels in Japan
+  </h2>
+
+  <div style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: "25px"
+  }}>
+
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/4/47/Ryokan-hakone-en-1.jpg"
+      alt="Traditional Japanese ryokan in Hakone"
+      style={{
+        width: "100%",
+        height: "320px",
+        objectFit: "cover"
+      }}
+    />
+
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/a/ac/JP_%E6%97%A5%E6%9C%AC_Japan_%E4%BA%AC%E9%83%BD_Kyoto_tourism_1630pm_June_2026_N13P_06_hotel_facade.jpg"
+      alt="Hotel in Kyoto"
+      style={{
+        width: "100%",
+        height: "320px",
+        objectFit: "cover"
+      }}
+    />
+
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/d/d3/The_Royal_Park_Hotel_Iconic_Kyoto_20220504-001.jpg"
+      alt="Royal Park Hotel Kyoto"
+      style={{
+        width: "100%",
+        height: "320px",
+        objectFit: "cover"
+      }}
+    />
+
+  </div>
+</section>
 
         <div style={grid}>
 
