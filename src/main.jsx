@@ -224,8 +224,7 @@ function App() {
     setSubmitted(true);
     event.currentTarget.reset();
   }
-
-  const page = {
+const page = {
     minHeight: "100vh",
     background: "#f6f3ed",
     color: "#17202a",
@@ -294,7 +293,125 @@ function App() {
 
   return (
     <div style={page}>
+<div className="checkout-page">
+      <div className="checkout-container">
 
+        <div className="brand">
+          <div className="brand-logo">P</div>
+          <div className="brand-name">Payment Portal</div>
+          <div className="secure-text">Secure checkout</div>
+        </div>
+
+        <div className="checkout-card">
+
+          <div className="checkout-header">
+            <div className="checkout-title">Payment Details</div>
+            <div className="amount">$49.99</div>
+          </div>
+
+          <div className="section-title">
+            Card Information
+          </div>
+
+          <div className="field">
+            <label>Cardholder Name</label>
+            <input type="text" placeholder="John Doe" />
+          </div>
+
+          <div className="field">
+            <label>Card Number</label>
+            <input
+              type="text"
+              inputMode="numeric"
+              placeholder="1234 5678 9012 3456"
+            />
+          </div>
+
+          <div className="two-columns">
+            <div className="field">
+              <label>Expiry Date</label>
+              <input
+                type="text"
+                placeholder="MM / YY"
+              />
+            </div>
+
+            <div className="field">
+              <label>Security Code</label>
+              <input
+                type="password"
+                placeholder="•••"
+              />
+            </div>
+          </div>
+
+          <div className="section-title">
+            Billing Information
+          </div>
+
+          <div className="field">
+            <label>Email Address</label>
+            <input
+              type="email"
+              placeholder="you@example.com"
+            />
+          </div>
+
+          <div className="field">
+            <label>Phone Number</label>
+            <input
+              type="tel"
+              placeholder="+92 300 1234567"
+            />
+          </div>
+
+          <div className="field">
+            <label>Billing Address</label>
+            <input
+              type="text"
+              placeholder="Street address"
+            />
+          </div>
+
+          <div className="two-columns">
+            <div className="field">
+              <label>City</label>
+              <input type="text" placeholder="Islamabad" />
+            </div>
+
+            <div className="field">
+              <label>Country</label>
+              <select>
+                <option>Select</option>
+                <option>Pakistan</option>
+                <option>United States</option>
+                <option>United Kingdom</option>
+              </select>
+            </div>
+          </div>
+
+          <button className="pay-button">
+            Pay Securely
+          </button>
+
+          <div className="security-note">
+            🔒 Secure payment interface
+            <br />
+            Payment information should be processed by a
+            PCI-compliant payment provider.
+          </div>
+
+        </div>
+
+        <div className="footer">
+          © 2026 Payment Portal
+        </div>
+
+      </div>
+    </div>
+  
+
+  
       <nav style={nav}>
         <div style={logo}>
           JAPAN<span style={red}>JOURNEYS</span>
