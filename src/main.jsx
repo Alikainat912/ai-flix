@@ -757,19 +757,7 @@ function App() {
     )}
   </div>
 
-      
-
-   (
-
-            <div
-              style={{
-                padding: "35px",
-                background: "#edf7ef",
-                border: "1px solid #c7dfcc",
-                borderRadius: "8px",
-              }}
-            >
-              <h2>Reservation received.</h2>
+            
 
               <p>
                 Thank you. Your Japan travel Reservation has been recieved
