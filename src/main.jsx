@@ -147,6 +147,86 @@ function App() {
             style={{
               letterSpacing: "4px",
               textTransform: "uppercase",
+              <section style={{
+  padding: "70px 8%",
+  background: "#f7f5f2"
+}}>
+  <h2 style={{
+    textAlign: "center",
+    fontSize: "38px",
+    marginBottom: "45px"
+  }}>
+    Stay in Japan
+  </h2>
+
+  <div style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gap: "25px"
+  }}>
+
+    <div>
+      <img
+        src="/images/hotels/tokyo-hotel.jpg"
+        alt="Luxury hotel in Tokyo"
+        style={{
+          width: "100%",
+          height: "230px",
+          objectFit: "cover",
+          borderRadius: "14px"
+        }}
+      />
+      <h3>Tokyo Luxury Hotel</h3>
+      <p>Tokyo, Japan</p>
+    </div>
+
+    <div>
+      <img
+        src="/images/hotels/kyoto-hotel.jpg"
+        alt="Traditional hotel in Kyoto"
+        style={{
+          width: "100%",
+          height: "230px",
+          objectFit: "cover",
+          borderRadius: "14px"
+        }}
+      />
+      <h3>Kyoto Traditional Stay</h3>
+      <p>Kyoto, Japan</p>
+    </div>
+
+    <div>
+      <img
+        src="/images/hotels/osaka-hotel.jpg"
+        alt="Hotel in Osaka"
+        style={{
+          width: "100%",
+          height: "230px",
+          objectFit: "cover",
+          borderRadius: "14px"
+        }}
+      />
+      <h3>Osaka City Hotel</h3>
+      <p>Osaka, Japan</p>
+    </div>
+
+    <div>
+      <img
+        src="/images/hotels/fuji-hotel.jpg"
+        alt="Hotel near Mount Fuji"
+        style={{
+          width: "100%",
+          height: "230px",
+          objectFit: "cover",
+          borderRadius: "14px"
+        }}
+      />
+      <h3>Mount Fuji Retreat</h3>
+      <p>Near Mount Fuji, Japan</p>
+    </div>
+
+  </div>
+</section>
             }}
           >
             Private Japan Travel
