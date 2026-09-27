@@ -757,33 +757,7 @@ function App() {
     )}
   </div>
 
-      <section
-        id="booking"
-        style={{
-          ...section,
-          background: "#fff",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "900px",
-            margin: "0 auto",
-          }}
-        >
-
-          <h2
-            style={{
-              fontSize: "40px",
-              marginBottom: "10px",
-            }}
-          >
-            Plan Your Japan Journey
-          </h2>
-
-          <p style={{ marginBottom: "35px", color: "#666" }}>
-            Send us your travel requirements and our team
-            can help plan your journey.
-          </p>
+      
 
           {submitted ? (
 
