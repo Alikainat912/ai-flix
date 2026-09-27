@@ -151,6 +151,91 @@ function App() {
           >
             Private Japan Travel
           </p>
+          <section style={{
+  padding: "70px 8%",
+  background: "#f7f5f2"
+}}>
+  <h2 style={{
+    fontSize: "38px",
+    marginBottom: "40px",
+    color: "#111"
+  }}>
+    Handpicked Hotels in Japan
+  </h2>
+
+  <div style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+    gap: "25px"
+  }}>
+
+    <div>
+      <img
+        src="/japan-hotel-1.jpg"
+        alt="Japan hotel"
+        style={{
+          width: "100%",
+          height: "280px",
+          objectFit: "cover",
+          display: "block"
+        }}
+      />
+    </div>
+
+    <div>
+      <img
+        src="/images (11).jpeg"
+        alt="Japan hotel"
+        style={{
+          width: "100%",
+          height: "280px",
+          objectFit: "cover",
+          display: "block"
+        }}
+      />
+    </div>
+
+    <div>
+      <img
+        src="/images (10).jpeg"
+        alt="Japan hotel"
+        style={{
+          width: "100%",
+          height: "280px",
+          objectFit: "cover",
+          display: "block"
+        }}
+      />
+    </div>
+
+    <div>
+      <img
+        src="/hoshinoya-kyoto-exrterior-3-1549909536.jpg"
+        alt="Hoshinoya Kyoto"
+        style={{
+          width: "100%",
+          height: "280px",
+          objectFit: "cover",
+          display: "block"
+        }}
+      />
+    </div>
+
+    <div>
+      <img
+        src="/8-japan-luxury-hotels-gora-kadan.jpg"
+        alt="Gora Kadan"
+        style={{
+          width: "100%",
+          height: "280px",
+          objectFit: "cover",
+          display: "block"
+        }}
+      />
+    </div>
+
+  </div>
+</section>
 
           <h1
             style={{
