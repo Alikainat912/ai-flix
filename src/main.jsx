@@ -1,18 +1,8 @@
-
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  Search,
-  Play,
-  Plus,
-  Check,
-  ChevronRight,
-  Film,
-  User,
-  X,
-  LockKeyhole,
-  Mail,
-  ArrowRight
+  Search, Play, Plus, Check, ChevronRight, Film, User, X,
+  LockKeyhole, Mail, ArrowRight
 } from 'lucide-react';
 import './styles.css';
 import { supabase } from './supabase';
@@ -28,13 +18,22 @@ const FALLBACK_FILMS = [
     genre: 'Historical Thriller',
     country: 'Pakistan',
     creator: 'Kainat Ali',
-    description:
-      'A historical thriller exploring a pivotal night through AI-assisted cinema.',
-    poster:
-      'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/683501478_1786619703436515.jpg',
+    description: 'A historical thriller exploring a pivotal night through AI-assisted cinema.',
+    poster: 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/683501478_1786619703436515.jpg',
     videoUrl: 'https://www.youtube.com/embed/oh3EBozQ19M'
   }
 ];
+
+const fieldStyle = {
+  width: '100%',
+  boxSizing: 'border-box',
+  padding: '13px 14px',
+  borderRadius: '8px',
+  border: '1px solid #444',
+  background: '#1c1c1c',
+  color: '#fff',
+  fontSize: '15px'
+};
 
 function App() {
   const [films, setFilms] = useState(FALLBACK_FILMS);
@@ -54,18 +53,15 @@ function App() {
   const [loadingFilms, setLoadingFilms] = useState(true);
   const [watchlistLoading, setWatchlistLoading] = useState(false);
   const [hasFilmAccess, setHasFilmAccess] = useState(false);
-const [checkingFilmAccess, setCheckingFilmAccess] = useState(false);
-  const [showAccessModal, setShowAccessModal] = useState(false);
+  const [checkingFilmAccess, setCheckingFilmAccess] = useState(false);
 
-  // ACCESS REQUEST FORM
+  const [showAccessModal, setShowAccessModal] = useState(false);
   const [accessName, setAccessName] = useState('');
   const [accessEmail, setAccessEmail] = useState('');
-  const [accessFilm, setAccessFilm] = useState(
-    'The Night The Flag Changed'
-  );
+  const [accessFilm, setAccessFilm] = useState('The Night The Flag Changed');
   const [accessError, setAccessError] = useState('');
+  const [submittingAccess, setSubmittingAccess] = useState(false);
 
-  // AUTHENTICATION
   useEffect(() => {
     let mounted = true;
 
@@ -92,7 +88,6 @@ const [checkingFilmAccess, setCheckingFilmAccess] = useState(false);
     };
   }, []);
 
-  // LOAD FILMS
   useEffect(() => {
     let mounted = true;
 
@@ -116,31 +111,30 @@ const [checkingFilmAccess, setCheckingFilmAccess] = useState(false);
         }
 
         const databaseFilms = data.map((movie) => {
-  const existingFilm = FALLBACK_FILMS.find(
-    (film) => film.title === movie.title
-  );
+          const existingFilm = FALLBACK_FILMS.find(
+            (film) => film.title === movie.title
+          );
 
-  const videoUrl =
-    movie.title?.trim() === 'The Night The Flag Changed'
-      ? 'https://www.youtube.com/embed/oh3EBozQ19M'
-      : movie.video_url || existingFilm?.videoUrl || '';
+          const videoUrl =
+            movie.title?.trim() === 'The Night The Flag Changed'
+              ? 'https://www.youtube.com/embed/oh3EBozQ19M'
+              : movie.video_url || existingFilm?.videoUrl || '';
 
-  return {
-    id: movie.id,
-    title: movie.title || 'Untitled Film',
-    year: movie.year || 2026,
-    runtime: movie.duration || '',
-    genre: movie.genre || 'Original Cinema',
-    country: existingFilm?.country || 'International',
-    creator: movie.director || 'Kainat Ali',
-    description:
-      movie.description || 'An original film from AI Flix.',
-    poster:
-      movie.poster_url?.trim() || existingFilm?.poster || '',
-    videoUrl
-  };
-});
-    
+          return {
+            id: movie.id,
+            title: movie.title || 'Untitled Film',
+            year: movie.year || 2026,
+            runtime: movie.duration || '',
+            genre: movie.genre || 'Original Cinema',
+            country: existingFilm?.country || 'International',
+            creator: movie.director || 'Kainat Ali',
+            description:
+              movie.description || 'An original film from AI Flix.',
+            poster: movie.poster_url?.trim() || existingFilm?.poster || '',
+            videoUrl
+          };
+        });
+
         setFilms(databaseFilms);
       } catch (error) {
         console.error('Unexpected movie loading error:', error);
@@ -156,7 +150,6 @@ const [checkingFilmAccess, setCheckingFilmAccess] = useState(false);
     };
   }, []);
 
-  // LOAD WATCHLIST
   useEffect(() => {
     let mounted = true;
 
@@ -180,9 +173,7 @@ const [checkingFilmAccess, setCheckingFilmAccess] = useState(false);
         }
 
         if (mounted) {
-          setWatchlist(
-            (data || []).map((item) => String(item.movie_id))
-          );
+          setWatchlist((data || []).map((item) => String(item.movie_id)));
         }
       } finally {
         if (mounted) setWatchlistLoading(false);
@@ -198,6 +189,7 @@ const [checkingFilmAccess, setCheckingFilmAccess] = useState(false);
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
+
     if (!q) return films;
 
     return films.filter((film) =>
@@ -214,97 +206,103 @@ const [checkingFilmAccess, setCheckingFilmAccess] = useState(false);
     setAuthMessage('');
   };
 
-  // REQUEST ACCESS: OPENS THE CUSTOMER'S EMAIL APP
-  
+  const openAccessModal = (
+    filmTitle = 'The Night The Flag Changed'
+  ) => {
+    setAccessFilm(filmTitle);
+    setAccessError('');
+    setShowAccessModal(true);
+  };
 
-const requestAccess = async (event) => {
-  event.preventDefault();
-  setAccessError('');
+  const requestAccess = async (event) => {
+    event.preventDefault();
+    setAccessError('');
 
-  if (!user) {
-    setAccessError('Please sign in or create an account before requesting access.');
-    setAuthMode('login');
-    return;
-  }
+    if (!user) {
+      setAccessError(
+        'Please sign in or create an account before requesting access.'
+      );
+      setAuthMode('login');
+      return;
+    }
 
-  if (!accessName.trim() || !accessEmail.trim()) {
-    setAccessError('Please enter your name and email address.');
-    return;
-  }
+    if (!accessName.trim() || !accessEmail.trim()) {
+      setAccessError('Please enter your name and email address.');
+      return;
+    }
 
-  const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-    accessEmail.trim()
-  );
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+      accessEmail.trim()
+    );
 
-  if (!validEmail) {
-    setAccessError('Please enter a valid email address.');
-    return;
-  }
+    if (!validEmail) {
+      setAccessError('Please enter a valid email address.');
+      return;
+    }
+        if (!validEmail) {
+      setAccessError('Please enter a valid email address.');
+      return;
+    }
 
-  const { data: existing, error: lookupError } = await supabase
-    .from('access_requests')
-    .select('id, status')
-    .eq('user_id', user.id)
-    .eq('film_slug', 'night-flag')
-    .eq('status', 'pending')
-    .limit(1);
+    setSubmittingAccess(true);
+    try {
+      const { data: existing, error: lookupError } = await supabase
+        .from('access_requests')
+        .select('id, status')
+        .eq('user_id', user.id)
+        .eq('film_slug', 'night-flag')
+        .eq('status', 'pending')
+        .limit(1);
 
-  if (lookupError) {
-    setAccessError('Could not check your existing request. Please try again.');
-    return;
-  }
+      if (lookupError) {
+        setAccessError('Could not check your existing request. Please try again.');
+        return;
+      }
+      if (existing && existing.length > 0) {
+        setAccessError('You already have a pending request for this film.');
+        return;
+      }
 
-  if (existing && existing.length > 0) {
-    setAccessError('You already have a pending request for this film.');
-    return;
-  }
+      const { data: request, error } = await supabase
+        .from('access_requests')
+        .insert({
+          user_id: user.id,
+          film_slug: 'night-flag',
+          customer_name: accessName.trim(),
+          customer_email: accessEmail.trim(),
+          amount: 4.99,
+          currency: 'USD'
+        })
+        .select('id')
+        .single();
 
-  const { data: request, error } = await supabase
-    .from('access_requests')
-    .insert({
-      user_id: user.id,
-      film_slug: 'night-flag',
-      customer_name: accessName.trim(),
-      customer_email: accessEmail.trim(),
-      amount: 4.99,
-      currency: 'USD'
-    })
-    .select('id')
-    .single();
+      if (error) {
+        setAccessError('Your request could not be saved: ' + error.message);
+        return;
+      }
 
-  if (error) {
-    setAccessError('Your request could not be saved: ' + error.message);
-    return;
-  }
+      const subject = `AI Flix payment request - ${request.id}`;
+      const body = [
+        'Hello AI Flix Support,', '',
+        'A customer has requested access to a film.', '',
+        `Request ID: ${request.id}`,
+        `Customer: ${accessName.trim()}`,
+        `Customer email: ${accessEmail.trim()}`,
+        `Account user ID: ${user.id}`,
+        `Film: ${accessFilm}`,
+        'Price: $4.99 USD',
+        'Status: Pending payment', '',
+        'Please send the customer an individual Veem payment request.', '',
+        'Thank you.'
+      ].join('\n');
 
-  const subject = `AI Flix payment request - ${request.id}`;
-  const body = [
-    'Hello AI Flix Support,',
-    '',
-    'A customer has requested access to a film.',
-    '',
-    `Request ID: ${request.id}`,
-    `Customer: ${accessName.trim()}`,
-    `Customer email: ${accessEmail.trim()}`,
-    `Account user ID: ${user.id}`,
-    `Film: ${accessFilm}`,
-    'Price: $4.99 USD',
-    'Status: Pending payment',
-    '',
-    'Please send the customer an individual Veem payment request.',
-    '',
-    'Thank you.'
-  ].join('\n');
+      setShowAccessModal(false);
+      window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    } finally {
+      setSubmittingAccess(false);
+    }
+  };
 
-  const mailto =
-    `mailto:${SUPPORT_EMAIL}` +
-    `?subject=${encodeURIComponent(subject)}` +
-    `&body=${encodeURIComponent(body)}`;
-
-  window.location.href = mailto;
-};
-
-  // WATCHLIST
   const toggleWatchlist = async (id) => {
     if (!user) {
       clearAuthMessages();
@@ -312,173 +310,130 @@ const requestAccess = async (event) => {
       setAuthMode('login');
       return;
     }
-
     const movieId = String(id);
     const alreadySaved = watchlist.includes(movieId);
-
     if (alreadySaved) {
-      const { error } = await supabase
-        .from('watchlist')
-        .delete()
-        .eq('user_id', user.id)
-        .eq('movie_id', movieId);
-
+      const { error } = await supabase.from('watchlist').delete().eq('user_id', user.id).eq('movie_id', movieId);
       if (error) {
         alert('Could not remove film: ' + error.message);
         return;
       }
-
-      setWatchlist((current) =>
-        current.filter((item) => item !== movieId)
-      );
+      setWatchlist((current) => current.filter((item) => item !== movieId));
     } else {
-      const { error } = await supabase.from('watchlist').insert({
-        user_id: user.id,
-        movie_id: movieId
-      });
-
+      const { error } = await supabase.from('watchlist').insert({ user_id: user.id, movie_id: movieId });
       if (error) {
         alert('Could not save film: ' + error.message);
         return;
       }
-
       setWatchlist((current) => [...current, movieId]);
     }
   };
 
-  // FILM MODAL
-
-const openFilm = (film) => {
-  setSelected(film);
-  setPlaying(false);
-  setHasFilmAccess(false);
-  setCheckingFilmAccess(false);
-};
-
-const playSelectedFilm = async () => {
-  if (!selected) return;
-
-  // Other films are not changed by this Night Flag check.
-  if (selected.title !== 'The Night The Flag Changed') {
-    setPlaying(true);
-    return;
-  }
-
-  if (!user) {
+  const openFilm = (film) => {
+    setSelected(film);
     setPlaying(false);
-    clearAuthMessages();
-    setAuthError('Please sign in and request access to watch this film.');
-    setAuthMode('login');
-    return;
-  }
-
-  setCheckingFilmAccess(true);
-  setPlaying(false);
-  setHasFilmAccess(false);
-
-  try {
-    const { data, error } = await supabase
-      .from('film_access')
-      .select('film_slug')
-      .eq('user_id', user.id)
-      .eq('film_slug', 'night-flag')
-      .maybeSingle();
-
-    if (error) {
-      console.error('Access check failed:', error.message);
-      setAccessError('Unable to verify access. Please try again.');
-      return;
-    }
-
-    if (!data) {
-      setAccessError('Access has not been approved for your account. Please request access for $4.99.');
-      return;
-    }
-
-    setHasFilmAccess(true);
-    setPlaying(true);
-    setAccessError('');
-  } finally {
+    setHasFilmAccess(false);
     setCheckingFilmAccess(false);
-  }
-};
+    setAccessError('');
+  };
+
+  const playSelectedFilm = async () => {
+    if (!selected) return;
+    if (selected.title !== 'The Night The Flag Changed') {
+      setPlaying(true);
+      return;
+    }
+    if (!user) {
+      setPlaying(false);
+      clearAuthMessages();
+      setAuthError('Please sign in and request access to watch this film.');
+      setAuthMode('login');
+      return;
+    }
+    setCheckingFilmAccess(true);
+    setPlaying(false);
+    setHasFilmAccess(false);
+    try {
+      const { data, error } = await supabase
+        .from('film_access')
+        .select('film_slug')
+        .eq('user_id', user.id)
+        .eq('film_slug', 'night-flag')
+        .maybeSingle();
+      if (error) {
+        console.error('Access check failed:', error.message);
+        setAccessError('Unable to verify access. Please try again.');
+        return;
+      }
+      if (!data) {
+        setAccessError('Access has not been approved for your account. Please request access for $4.99.');
+        return;
+      }
+      setHasFilmAccess(true);
+      setPlaying(true);
+      setAccessError('');
+    } finally {
+      setCheckingFilmAccess(false);
+    }
+  };
 
   const closeFilm = () => {
     setSelected(null);
     setPlaying(false);
+    setHasFilmAccess(false);
   };
 
-  // LOGIN
   const signIn = async () => {
     clearAuthMessages();
-
     if (!email.trim() || !password) {
       setAuthError('Please enter your email and password.');
       return;
     }
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
-      password
-    });
-
+    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
     if (error) {
       setAuthError(error.message);
       return;
     }
-
     setAuthMode(null);
     setEmail('');
     setPassword('');
   };
 
-  // CREATE ACCOUNT
   const signUp = async () => {
     clearAuthMessages();
-
     if (!fullName.trim() || !email.trim() || !password) {
       setAuthError('Please complete all fields.');
       return;
     }
-
     if (password.length < 6) {
       setAuthError('Your password must contain at least 6 characters.');
       return;
     }
-
     const { data, error } = await supabase.auth.signUp({
       email: email.trim(),
       password,
-      options: {
-        data: { full_name: fullName.trim() }
-      }
+      options: { data: { full_name: fullName.trim() } }
     });
-
     if (error) {
       setAuthError(error.message);
       return;
     }
-
     if (data.session) {
       setAuthMode(null);
       setEmail('');
       setPassword('');
       setFullName('');
     } else {
-      setAuthMessage(
-        'Account created. Please check your email to confirm your account before signing in.'
-      );
+      setAuthMessage('Account created. Please check your email to confirm your account before signing in.');
     }
   };
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
-
     if (error) {
       setAuthError(error.message);
       return;
     }
-
     setAuthMode(null);
     setActivePage('home');
   };
@@ -496,28 +451,17 @@ const playSelectedFilm = async () => {
 
   return (
     <div className="app">
-      {/* NAVIGATION */}
-      <header className="nav">
-        <div
-          className="brand"
-          onClick={() => changePage('home')}
-          style={{ cursor: 'pointer' }}
-        >
+            <header className="nav">
+        <div className="brand" onClick={() => changePage('home')} style={{ cursor: 'pointer' }}>
           AI<span>FLIX</span>
         </div>
-
         <nav>
           <button onClick={() => changePage('home')}>Home</button>
           <button onClick={() => changePage('browse')}>Browse</button>
           <button onClick={() => changePage('mylist')}>My List</button>
-          <button onClick={() => changePage('categories')}>
-            Categories
-          </button>
-          <button onClick={() => changePage('unlock')}>
-            Unlock
-          </button>
+          <button onClick={() => changePage('categories')}>Categories</button>
+          <button onClick={() => openAccessModal()}>Unlock</button>
         </nav>
-
         <div className="navRight">
           <div className="search">
             <Search size={18} />
@@ -531,74 +475,154 @@ const playSelectedFilm = async () => {
               aria-label="Search films"
             />
           </div>
-
-          <button
-            className="iconBtn"
-            onClick={openAccount}
-            aria-label="Your account"
-          >
+          <button className="iconBtn" onClick={openAccount} aria-label="Your account">
             <User size={19} />
           </button>
         </div>
       </header>
 
       <main>
-        {/* UNLOCK AI FLIX */}
-        {activePage === 'unlock' && (
+        {activePage === 'mylist' ? (
+          <section className="section myListPage">
+            <div className="sectionHead"><h2>My List</h2></div>
+            {!user ? (
+              <div className="emptyState">
+                <h2>Sign in to view My List</h2>
+                <p>Sign in to save your favourite original films.</p>
+                <button className="primary" onClick={() => { clearAuthMessages(); setAuthMode('login'); }}>Sign In</button>
+              </div>
+            ) : watchlistLoading ? (
+              <div className="emptyState"><p>Loading your list...</p></div>
+            ) : films.filter((film) => watchlist.includes(String(film.id))).length === 0 ? (
+              <div className="emptyState">
+                <h2>Your list is empty</h2>
+                <p>Films you save will appear here.</p>
+                <button className="primary" onClick={() => changePage('browse')}>Browse Films</button>
+              </div>
+            ) : (
+              <div className="grid">
+                {films.filter((film) => watchlist.includes(String(film.id))).map((film) => (
+                  <article className="card" key={film.id} onClick={() => openFilm(film)}>
+                    <img src={film.poster} alt={film.title} />
+                    <div className="cardOverlay"><span>{film.runtime}</span><span>{film.genre}</span></div>
+                    <div className="cardBody"><h3>{film.title}</h3><p>{film.country} • {film.year}</p></div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        ) : activePage === 'categories' ? (
           <section className="section">
-            <div
-              style={{
-                maxWidth: '720px',
-                margin: '25px auto',
-                padding: '32px 22px',
-                border: '1px solid #333',
-                borderRadius: '16px',
-                background: '#111',
-                textAlign: 'center'
-              }}
-            >
-              <LockKeyhole
-                size={38}
-                style={{ margin: '0 auto 16px', color: '#e50914' }}
-              />
+            <div className="sectionHead"><h2>Explore Categories</h2></div>
+            <div className="chips">
+              {[...new Set(films.map((film) => film.genre).filter(Boolean))].map((category) => (
+                <button key={category} onClick={() => { setQuery(category); setActivePage('browse'); }}>{category}</button>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <>
+            {activePage === 'home' && heroFilm && (
+              <section className="hero" style={{ backgroundImage: `linear-gradient(90deg, rgba(5,5,8,.82) 0%, rgba(5,5,8,.48) 48%, rgba(5,5,8,.12) 100%), url("${heroFilm.poster}")` }}>
+                <div className="heroCopy">
+                  <div className="eyebrow">AI FLIX ORIGINAL • {heroFilm.year}</div>
+                  <h1>{heroFilm.title}</h1>
+                  <p className="meta">{heroFilm.year} • {heroFilm.runtime} • {heroFilm.genre}</p>
+                  <p className="description">{heroFilm.description}</p>
+                  <div className="actions">
+                    <button className="primary" onClick={() => openFilm(heroFilm)}><Play size={18} fill="currentColor" /> View Film</button>
+                    <button className="secondary" onClick={() => toggleWatchlist(heroFilm.id)}>
+                      {watchlist.includes(String(heroFilm.id)) ? <Check size={18} /> : <Plus size={18} />}
+                      {watchlist.includes(String(heroFilm.id)) ? 'In My List' : 'My List'}
+                    </button>
+                    <button className="primary" onClick={() => openAccessModal(heroFilm.title)}><LockKeyhole size={17} /> Unlock for $4.99</button>
+                  </div>
+                </div>
+              </section>
+            )}
 
+            <section className="section">
+              <div className="sectionHead">
+                <h2>{query ? 'Search Results' : activePage === 'browse' ? 'Browse Our Films' : films.length === 1 ? 'Now Streaming' : 'AI Flix Originals'}</h2>
+                <ChevronRight size={20} />
+              </div>
+              {loadingFilms ? (
+                <div className="emptyState"><p>Loading films...</p></div>
+              ) : filtered.length === 0 ? (
+                <div className="emptyState">
+                  <h2>No films found</h2>
+                  <p>Try another search or check back for future releases.</p>
+                  {query && <button className="secondary" onClick={() => setQuery('')}>Clear Search</button>}
+                </div>
+              ) : (
+                <div className="grid">
+                  {filtered.map((film) => (
+                    <article className="card" key={film.id} onClick={() => openFilm(film)}>
+                      <img src={film.poster} alt={film.title} />
+                      <div className="cardOverlay"><span>{film.runtime}</span><span>{film.genre}</span></div>
+                      <div className="cardBody"><h3>{film.title}</h3><p>{film.country} • {film.year}</p></div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            {!query && activePage === 'home' && (
+              <>
+                <section className="section">
+                  <div className="sectionHead"><h2>More Original Films Coming Soon</h2></div>
+                  <p style={{ color: '#aaa', maxWidth: '650px', fontSize: '14px', lineHeight: '1.9' }}>
+                    Discover original stories and independent cinema created by Kainat Ali. New films will join the AI Flix catalogue as they are released.
+                  </p>
+                </section>
+                <section className="section">
+                  <div className="sectionHead"><h2>Explore AI Cinema</h2></div>
+                  <div className="chips">
+                    {[...new Set(films.map((film) => film.genre).filter(Boolean))].map((category) => (
+                      <button key={category} onClick={() => { setQuery(category); setActivePage('browse'); }}>{category}</button>
+                    ))}
+                  </div>
+                </section>
+                <section className="section">
+                  <div style={{ padding: '28px 22px', border: '1px solid #333', borderRadius: '14px', background: '#111', textAlign: 'center' }}>
+                    <h2>Discover Independent Cinema</h2>
+                    <p style={{ color: '#aaa', lineHeight: 1.8 }}>Get access to original films from AI Flix for $4.99 USD.</p>
+                    <button className="primary" onClick={() => openAccessModal()}><LockKeyhole size={17} /> Unlock AI Flix <ArrowRight size={18} /></button>
+                  </div>
+                </section>
+              </>
+            )}
+          </>
+        )}
+      </main>
+
+      <footer>
+        <div className="brand" onClick={() => changePage('home')} style={{ cursor: 'pointer' }}>AI<span>FLIX</span></div>
+        <p>© 2026 AI Flix. Original films. Independent cinema.</p>
+        <p>Support: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
+        <button className="secondary" onClick={() => openAccessModal()}>Unlock AI Flix — $4.99</button>
+      </footer>
+
+      {/* REQUEST ACCESS POPUP: the complete form is inside this modal. */}
+      {showAccessModal && (
+        <div className="modal accessRequestModal" onClick={() => setShowAccessModal(false)}>
+          <div className="modalCard accessRequestCard" onClick={(event) => event.stopPropagation()}>
+            <button className="close" type="button" onClick={() => setShowAccessModal(false)} aria-label="Close request access">
+              <X size={20} />
+            </button>
+                        <div className="modalContent">
               <div className="eyebrow">INDEPENDENT CINEMA</div>
-              <h1 style={{ fontSize: 'clamp(28px, 5vw, 42px)' }}>
-                Unlock AI Flix
-              </h1>
-
-              <p style={{ color: '#bbb', lineHeight: 1.8 }}>
-                Experience original films by independent filmmaker
-                Kainat Ali.
-              </p>
-
-              <div
-                style={{
-                  fontSize: '42px',
-                  fontWeight: 800,
-                  margin: '22px 0 8px'
-                }}
-              >
+              <h2>Request Film Access</h2>
+              <div style={{ fontSize: '32px', fontWeight: 800, margin: '18px 0 8px' }}>
                 $4.99 <span style={{ fontSize: '16px' }}>USD</span>
               </div>
-
               <p style={{ color: '#aaa', fontSize: '14px' }}>
-                Request access to a film. We will send you payment
-                instructions individually.
+                Request access to a film. We will send you payment instructions individually.
               </p>
-
-              <form
-                onSubmit={requestAccess}
-                style={{
-                  display: 'grid',
-                  gap: '14px',
-                  textAlign: 'left',
-                  marginTop: '26px'
-                }}
-              >
-                <label htmlFor="access-name">Full name</label>
+              <form onSubmit={requestAccess} style={{ display: 'grid', gap: '14px', textAlign: 'left', marginTop: '24px' }}>
+                <label htmlFor="modal-access-name">Full name</label>
                 <input
-                  id="access-name"
+                  id="modal-access-name"
                   type="text"
                   autoComplete="name"
                   placeholder="Your full name"
@@ -607,10 +631,9 @@ const playSelectedFilm = async () => {
                   required
                   style={fieldStyle}
                 />
-
-                <label htmlFor="access-email">Email address</label>
+                <label htmlFor="modal-access-email">Email address</label>
                 <input
-                  id="access-email"
+                  id="modal-access-email"
                   type="email"
                   autoComplete="email"
                   placeholder="you@example.com"
@@ -619,10 +642,9 @@ const playSelectedFilm = async () => {
                   required
                   style={fieldStyle}
                 />
-
-                <label htmlFor="access-film">Choose a film</label>
+                <label htmlFor="modal-access-film">Choose a film</label>
                 <select
-                  id="access-film"
+                  id="modal-access-film"
                   value={accessFilm}
                   onChange={(event) => setAccessFilm(event.target.value)}
                   style={fieldStyle}
@@ -633,313 +655,47 @@ const playSelectedFilm = async () => {
                     </option>
                   ))}
                 </select>
-
-                {accessError && (
-                  <p className="authError">{accessError}</p>
-                )}
-
+                {accessError && <p className="authError">{accessError}</p>}
                 <button
                   type="submit"
                   className="primary"
-                  style={{
-                    width: '100%',
-                    justifyContent: 'center',
-                    marginTop: '8px'
-                  }}
+                  disabled={submittingAccess}
+                  style={{ width: '100%', justifyContent: 'center', marginTop: '8px' }}
                 >
                   <Mail size={18} />
-                  Request Payment Instructions
+                  {submittingAccess ? 'Submitting...' : 'Request Payment Instructions'}
                   <ArrowRight size={18} />
                 </button>
               </form>
-
-              <p
-                style={{
-                  color: '#888',
-                  fontSize: '12px',
-                  lineHeight: 1.7,
-                  marginTop: '20px'
-                }}
-              >
-                This opens your email app with a prepared request.
-                Your request is not submitted until you send that email.
-                We will send an individual payment request and confirm
-                payment before granting access.
+              <p style={{ color: '#888', fontSize: '12px', lineHeight: 1.7, marginTop: '20px' }}>
+                Submitting saves your request and opens your email app with a prepared message. Please send the email. We will send an individual payment request and confirm payment before granting access.
               </p>
-            </div>
-          </section>
-        )}
-
-        {/* MY LIST */}
-        {activePage === 'mylist' ? (
-          <section className="section myListPage">
-            <div className="sectionHead"><h2>My List</h2></div>
-
-            {!user ? (
-              <div className="emptyState">
-                <h2>Sign in to view My List</h2>
-                <p>Sign in to save your favourite original films.</p>
-                <button
-                  className="primary"
-                  onClick={() => {
-                    clearAuthMessages();
-                    setAuthMode('login');
-                  }}
-                >
-                  Sign In
-                </button>
-              </div>
-            ) : watchlistLoading ? (
-              <div className="emptyState"><p>Loading your list...</p></div>
-            ) : films.filter((film) =>
-                watchlist.includes(String(film.id))
-              ).length === 0 ? (
-              <div className="emptyState">
-                <h2>Your list is empty</h2>
-                <p>Films you save will appear here.</p>
-                <button
-                  className="primary"
-                  onClick={() => changePage('browse')}
-                >
-                  Browse Films
-                </button>
-              </div>
-            ) : (
-              <div className="grid">
-                {films.filter((film) =>
-                  watchlist.includes(String(film.id))
-                ).map((film) => (
-                  <article
-                    className="card"
-                    key={film.id}
-                    onClick={() => openFilm(film)}
-                  >
-                    <img src={film.poster} alt={film.title} />
-                    <div className="cardOverlay">
-                      <span>{film.runtime}</span>
-                      <span>{film.genre}</span>
-                    </div>
-                    <div className="cardBody">
-                      <h3>{film.title}</h3>
-                      <p>{film.country} • {film.year}</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            )}
-          </section>
-        ) : activePage === 'categories' ? (
-          <section className="section">
-            <div className="sectionHead"><h2>Explore Categories</h2></div>
-            <div className="chips">
-              {[...new Set(films.map((film) => film.genre).filter(Boolean))]
-                .map((category) => (
+              {!user && (
+                <p style={{ color: '#ddd', fontSize: '13px', marginTop: '12px' }}>
+                  You must sign in before requesting access.{' '}
                   <button
-                    key={category}
+                    type="button"
+                    className="secondary"
                     onClick={() => {
-                      setQuery(category);
-                      setActivePage('browse');
+                      setShowAccessModal(false);
+                      clearAuthMessages();
+                      setAuthMode('login');
                     }}
                   >
-                    {category}
+                    Sign in
                   </button>
-                ))}
-            </div>
-          </section>
-        ) : activePage !== 'unlock' ? (
-          <>
-            {/* HOME HERO */}
-            {activePage === 'home' && heroFilm && (
-              <section
-                className="hero"
-                style={{
-                  backgroundImage: `linear-gradient(
-                    90deg,
-                    rgba(5,5,8,.82) 0%,
-                    rgba(5,5,8,.48) 48%,
-                    rgba(5,5,8,.12) 100%
-                  ), url("${heroFilm.poster}")`
-                }}
-              >
-                <div className="heroCopy">
-                  <div className="eyebrow">
-                    AI FLIX ORIGINAL • {heroFilm.year}
-                  </div>
-                  <h1>{heroFilm.title}</h1>
-                  <p className="meta">
-                    {heroFilm.year} • {heroFilm.runtime} • {heroFilm.genre}
-                  </p>
-                  <p className="description">{heroFilm.description}</p>
-                  <div className="actions">
-                    <button className="primary" onClick={() => openFilm(heroFilm)}>
-                      <Play size={18} fill="currentColor" />
-                      View Film
-                    </button>
-                    <button
-                      className="secondary"
-                      onClick={() => toggleWatchlist(heroFilm.id)}
-                    >
-                      {watchlist.includes(String(heroFilm.id))
-                        ? <Check size={18} />
-                        : <Plus size={18} />}
-                      {watchlist.includes(String(heroFilm.id))
-                        ? 'In My List'
-                        : 'My List'}
-                    </button>
-                    <button
-  className="primary"
-  onClick={() => {
-    setAccessFilm('The Night The Flag Changed');
-    setShowAccessModal(true);
-  }}
->
-  <LockKeyhole size={17} />
-  Unlock for $4.99
-</button>
-                  </div>
-                </div>
-              </section>
-            )}
-
-            {/* FILM CATALOGUE */}
-            <section className="section">
-              <div className="sectionHead">
-                <h2>
-                  {query
-                    ? 'Search Results'
-                    : activePage === 'browse'
-                      ? 'Browse Our Films'
-                      : films.length === 1
-                        ? 'Now Streaming'
-                        : 'AI Flix Originals'}
-                </h2>
-                <ChevronRight size={20} />
-              </div>
-
-              {loadingFilms ? (
-                <div className="emptyState"><p>Loading films...</p></div>
-              ) : filtered.length === 0 ? (
-                <div className="emptyState">
-                  <h2>No films found</h2>
-                  <p>Try another search or check back for future releases.</p>
-                  {query && (
-                    <button className="secondary" onClick={() => setQuery('')}>
-                      Clear Search
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <div className="grid">
-                  {filtered.map((film) => (
-                    <article
-                      className="card"
-                      key={film.id}
-                      onClick={() => openFilm(film)}
-                    >
-                      <img src={film.poster} alt={film.title} />
-                      <div className="cardOverlay">
-                        <span>{film.runtime}</span>
-                        <span>{film.genre}</span>
-                      </div>
-                      <div className="cardBody">
-                        <h3>{film.title}</h3>
-                        <p>{film.country} • {film.year}</p>
-                      </div>
-                    </article>
-                  ))}
-                </div>
+                </p>
               )}
-            </section>
-
-            {!query && activePage === 'home' && (
-              <>
-                <section className="section">
-                  <div className="sectionHead">
-                    <h2>More Original Films Coming Soon</h2>
-                  </div>
-                  <p style={{ color: '#aaa', maxWidth: '650px', fontSize: '14px', lineHeight: '1.9' }}>
-                    Discover original stories and independent cinema
-                    created by Kainat Ali. New films will join the AI Flix
-                    catalogue as they are released.
-                  </p>
-                </section>
-
-                <section className="section">
-                  <div className="sectionHead"><h2>Explore AI Cinema</h2></div>
-                  <div className="chips">
-                    {[...new Set(films.map((film) => film.genre).filter(Boolean))]
-                      .map((category) => (
-                        <button
-                          key={category}
-                          onClick={() => {
-                            setQuery(category);
-                            setActivePage('browse');
-                          }}
-                        >
-                          {category}
-                        </button>
-                      ))}
-                  </div>
-                </section>
-
-                <section className="section">
-                  <div
-                    style={{
-                      padding: '28px 22px',
-                      border: '1px solid #333',
-                      borderRadius: '14px',
-                      background: '#111',
-                      textAlign: 'center'
-                    }}
-                  >
-                    <h2>Discover Independent Cinema</h2>
-                    <p style={{ color: '#aaa', lineHeight: 1.8 }}>
-                      Get access to original films from AI Flix for $4.99 USD.
-                    </p>
-                    <button
-                      className="primary"
-                      onClick={() => changePage('unlock')}
-                    >
-                      Unlock AI Flix <ArrowRight size={18} />
-                    </button>
-                  </div>
-                </section>
-              </>
-            )}
-          </>
-        ) : null}
-      </main>
-
-      {/* FOOTER */}
-      <footer>
-        <div
-          className="brand"
-          onClick={() => changePage('home')}
-          style={{ cursor: 'pointer' }}
-        >
-          AI<span>FLIX</span>
+            </div>
+          </div>
         </div>
-        <p>© 2026 AI Flix. Original films. Independent cinema.</p>
-        <p>
-          Support: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
-        </p>
-        <button className="secondary" onClick={() => changePage('unlock')}>
-          Unlock AI Flix — $4.99
-        </button>
-      </footer>
+      )}
 
       {/* AUTH MODAL */}
       {authMode && (
         <div className="modal" onClick={() => setAuthMode(null)}>
-          <div
-            className="modalCard authCard"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button
-              className="close"
-              onClick={() => setAuthMode(null)}
-              aria-label="Close"
-            >
+          <div className="modalCard authCard" onClick={(event) => event.stopPropagation()}>
+            <button className="close" onClick={() => setAuthMode(null)} aria-label="Close">
               <X size={20} />
             </button>
 
@@ -950,33 +706,10 @@ const playSelectedFilm = async () => {
                 <p>Continue exploring original cinema.</p>
                 {authError && <p className="authError">{authError}</p>}
                 {authMessage && <p className="authMessage">{authMessage}</p>}
-                <input
-                  type="email"
-                  placeholder="Email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') signIn();
-                  }}
-                />
+                <input type="email" placeholder="Email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+                <input type="password" placeholder="Password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') signIn(); }} />
                 <button className="primary" onClick={signIn}>Sign In</button>
-                <button
-                  className="secondary"
-                  onClick={() => {
-                    clearAuthMessages();
-                    setAuthMode('signup');
-                  }}
-                >
-                  Create an Account
-                </button>
+                <button className="secondary" onClick={() => { clearAuthMessages(); setAuthMode('signup'); }}>Create an Account</button>
               </div>
             )}
 
@@ -987,37 +720,11 @@ const playSelectedFilm = async () => {
                 <p>Join us for original cinematic storytelling.</p>
                 {authError && <p className="authError">{authError}</p>}
                 {authMessage && <p className="authMessage">{authMessage}</p>}
-                <input
-                  type="text"
-                  placeholder="Full name"
-                  autoComplete="name"
-                  value={fullName}
-                  onChange={(event) => setFullName(event.target.value)}
-                />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                />
-                <input
-                  type="password"
-                  placeholder="Password (at least 6 characters)"
-                  autoComplete="new-password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                />
+                <input type="text" placeholder="Full name" autoComplete="name" value={fullName} onChange={(event) => setFullName(event.target.value)} />
+                <input type="email" placeholder="Email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+                <input type="password" placeholder="Password (at least 6 characters)" autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} />
                 <button className="primary" onClick={signUp}>Create Account</button>
-                <button
-                  className="secondary"
-                  onClick={() => {
-                    clearAuthMessages();
-                    setAuthMode('login');
-                  }}
-                >
-                  Already have an account? Sign In
-                </button>
+                <button className="secondary" onClick={() => { clearAuthMessages(); setAuthMode('login'); }}>Already have an account? Sign In</button>
               </div>
             )}
 
@@ -1037,27 +744,18 @@ const playSelectedFilm = async () => {
       {/* FILM DETAILS AND PLAYER */}
       {selected && (
         <div className="modal" onClick={closeFilm}>
-          <div
-            className={`modalCard ${playing ? 'playingCard' : ''}`}
-            onClick={(event) => event.stopPropagation()}
-          >
-            {playing && !selected.requiresAccess ? (
+          <div className={`modalCard ${playing ? 'playingCard' : ''}`} onClick={(event) => event.stopPropagation()}>
+            {playing && (selected.title !== 'The Night The Flag Changed' || hasFilmAccess) ? (
               <div className="videoWrapper">
                 {selected.videoUrl ? (
-  <iframe
-  src="https://www.youtube.com/embed/oh3EBozQ19M"
-  title="The Night The Flag Changed"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-  allowFullScreen
-  style={{
-    width: '100%',
-    aspectRatio: '16 / 9',
-    display: 'block',
-    border: 0,
-    background: '#000'
-  }}
-/>
-) : (
+                  <iframe
+                    src={selected.videoUrl}
+                    title={selected.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    style={{ width: '100%', aspectRatio: '16 / 9', display: 'block', border: 0, background: '#000' }}
+                  />
+                ) : (
                   <div className="emptyState">
                     <h3>Film not available</h3>
                     <p>This film does not have a video file yet.</p>
@@ -1067,7 +765,6 @@ const playSelectedFilm = async () => {
             ) : (
               <img src={selected.poster} alt={selected.title} />
             )}
-
             <div className="modalContent">
               <button className="close" onClick={closeFilm} aria-label="Close film">
                 <X size={20} />
@@ -1076,54 +773,22 @@ const playSelectedFilm = async () => {
               <h2>{selected.title}</h2>
               <p className="meta">{selected.runtime} • {selected.genre}</p>
               <p>{selected.description}</p>
-              <p className="creator">
-                <Film size={16} /> Created by {selected.creator}
-              </p>
-
+              <p className="creator"><Film size={16} /> Created by {selected.creator}</p>
+              {accessError && <p className="authError">{accessError}</p>}
               <div className="actions">
-                
-{selected.title === 'The Night The Flag Changed' ? (
-  <button
-    className="primary"
-    onClick={playSelectedFilm}
-    disabled={checkingFilmAccess}
-  >
-    <Play size={18} fill="currentColor" />
-    {checkingFilmAccess ? 'Checking access...' : 'Play Film'}
-  </button>
-) : (
-  <button
-    className="primary"
-    onClick={playSelectedFilm}
-  >
-    <Play size={18} fill="currentColor" />
-    Play Film
-  </button>
-)}
-
-<button
-  className="secondary"
-  onClick={() => changePage('unlock')}
->
-  <LockKeyhole size={18} />
-  Request Access — $4.99
-</button>
-                <button
-                  className="secondary"
-                  onClick={() => toggleWatchlist(selected.id)}
-                >
-                  {watchlist.includes(String(selected.id))
-                    ? <Check size={18} />
-                    : <Plus size={18} />}
-                  {watchlist.includes(String(selected.id))
-                    ? 'In My List'
-                    : 'My List'}
+                <button className="primary" onClick={playSelectedFilm} disabled={checkingFilmAccess}>
+                  <Play size={18} fill="currentColor" />
+                  {checkingFilmAccess ? 'Checking access...' : 'Play Film'}
+                </button>
+                <button className="secondary" onClick={() => openAccessModal(selected.title)}>
+                  <LockKeyhole size={18} /> Request Access — $4.99
+                </button>
+                <button className="secondary" onClick={() => toggleWatchlist(selected.id)}>
+                  {watchlist.includes(String(selected.id)) ? <Check size={18} /> : <Plus size={18} />}
+                  {watchlist.includes(String(selected.id)) ? 'In My List' : 'My List'}
                 </button>
               </div>
-
-              <p className="notice">
-                Request access to receive payment instructions.
-              </p>
+              <p className="notice">Request access to receive payment instructions.</p>
             </div>
           </div>
         </div>
@@ -1131,63 +796,7 @@ const playSelectedFilm = async () => {
     </div>
   );
 }
-{showAccessModal && (
-  <div
-    style={{
-      position: 'fixed',
-      inset: 0,
-      zIndex: 99999,
-      background: 'rgba(0,0,0,0.85)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '20px'
-    }}
-  >
-    <div
-      style={{
-        background: '#151515',
-        color: 'white',
-        padding: '30px',
-        borderRadius: '16px',
-        width: '100%',
-        maxWidth: '450px'
-      }}
-    >
-      <button
-        onClick={() => setShowAccessModal(false)}
-        style={{ float: 'right' }}
-      >
-        ✕
-      </button>
-
-      <h2>Request Film Access</h2>
-      <p>The Night The Flag Changed</p>
-      <h3>$4.99 USD</h3>
-      <p>Request access to watch this film.</p>
-
-      <button
-        className="primary"
-        onClick={() => {
-          setShowAccessModal(false);
-          changePage('unlock');
-        }}
-      >
-        Continue to Request
-      </button>
-    </div>
-  </div>
-)}
-
-const fieldStyle = {
-  width: '100%',
-  boxSizing: 'border-box',
-  padding: '13px 14px',
-  borderRadius: '8px',
-  border: '1px solid #444',
-  background: '#1c1c1c',
-  color: '#fff',
-  fontSize: '15px'
-};
 
 createRoot(document.getElementById('root')).render(<App />);
+      
+    
