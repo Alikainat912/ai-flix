@@ -780,9 +780,17 @@ function App() {
                   <Play size={18} fill="currentColor" />
                   {checkingFilmAccess ? 'Checking access...' : 'Play Film'}
                 </button>
-                <button className="secondary" onClick={() => openAccessModal(selected.title)}>
-                  <LockKeyhole size={18} /> Request Access — $4.99
-                </button>
+                
+<button
+  type="button"
+  onClick={() => {
+    alert('Request Access button is working');
+    openAccessModal(selected.title);
+  }}
+>
+  Request Access — $4.99
+</button>
+
                 <button className="secondary" onClick={() => toggleWatchlist(selected.id)}>
                   {watchlist.includes(String(selected.id)) ? <Check size={18} /> : <Plus size={18} />}
                   {watchlist.includes(String(selected.id)) ? 'In My List' : 'My List'}
