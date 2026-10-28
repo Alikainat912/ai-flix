@@ -938,19 +938,18 @@ function App() {
               <div className="videoWrapper">
                 {selected.videoUrl ? (
   <iframe
-    src={selected.videoUrl}
-    title={selected.title}
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowFullScreen
-    referrerPolicy="strict-origin-when-cross-origin"
-    style={{
-      width: '100%',
-      aspectRatio: '16 / 9',
-      display: 'block',
-      border: 0,
-      background: '#000'
-    }}
-  />
+  src="https://www.youtube.com/embed/oh3EBozQ19M"
+  title="The Night The Flag Changed"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowFullScreen
+  style={{
+    width: '100%',
+    aspectRatio: '16 / 9',
+    display: 'block',
+    border: 0,
+    background: '#000'
+  }}
+/>
 ) : (
                   <div className="emptyState">
                     <h3>Film not available</h3>
