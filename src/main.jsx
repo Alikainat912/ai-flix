@@ -783,7 +783,10 @@ function App() {
 
 <button
   type="button"
-  onClick={() => setShowAccessModal(true)}
+  onClick={() => {
+    alert("Button clicked!");
+    setShowAccessModal(true);
+  }}
 >
   Request Access — $4.99
 </button>
