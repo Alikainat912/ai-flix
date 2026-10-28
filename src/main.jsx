@@ -61,7 +61,7 @@ function App() {
   const [accessFilm, setAccessFilm] = useState('The Night The Flag Changed');
   const [accessError, setAccessError] = useState('');
   const [submittingAccess, setSubmittingAccess] = useState(false);
-
+  const [showAccessModal, setShowAccessModal] = useState(false);
   useEffect(() => {
     let mounted = true;
 
@@ -781,12 +781,10 @@ function App() {
                   {checkingFilmAccess ? 'Checking access...' : 'Play Film'}
                 </button>
                 
+
 <button
   type="button"
-  onClick={() => {
-    alert('Request Access button is working');
-    openAccessModal(selected.title);
-  }}
+  onClick={() => setShowAccessModal(true)}
 >
   Request Access — $4.99
 </button>
