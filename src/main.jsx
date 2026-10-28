@@ -53,6 +53,8 @@ function App() {
   const [authMessage, setAuthMessage] = useState('');
   const [loadingFilms, setLoadingFilms] = useState(true);
   const [watchlistLoading, setWatchlistLoading] = useState(false);
+  const [hasFilmAccess, setHasFilmAccess] = useState(false);
+const [checkingFilmAccess, setCheckingFilmAccess] = useState(false);
 
   // ACCESS REQUEST FORM
   const [accessName, setAccessName] = useState('');
@@ -344,44 +346,61 @@ const requestAccess = async (event) => {
   };
 
   // FILM MODAL
-  
-const openFilm = async (film) => {
+
+const openFilm = (film) => {
   setSelected(film);
   setPlaying(false);
+  setHasFilmAccess(false);
+  setCheckingFilmAccess(false);
+};
 
-  if (film.title !== 'The Night The Flag Changed') {
+const playSelectedFilm = async () => {
+  if (!selected) return;
+
+  // Other films are not changed by this Night Flag check.
+  if (selected.title !== 'The Night The Flag Changed') {
+    setPlaying(true);
     return;
   }
 
   if (!user) {
-    setAuthError('Please sign in to request access to this film.');
-    setAuthMessage('');
+    setPlaying(false);
+    clearAuthMessages();
+    setAuthError('Please sign in and request access to watch this film.');
     setAuthMode('login');
     return;
   }
 
-  const { data, error } = await supabase
-    .from('film_access')
-    .select('film_slug')
-    .eq('user_id', user.id)
-    .eq('film_slug', 'night-flag')
-    .maybeSingle();
+  setCheckingFilmAccess(true);
+  setPlaying(false);
+  setHasFilmAccess(false);
 
-  if (error || !data) {
-    setSelected({
-      ...film,
-      requiresAccess: true
-    });
-    setPlaying(false);
-    return;
+  try {
+    const { data, error } = await supabase
+      .from('film_access')
+      .select('film_slug')
+      .eq('user_id', user.id)
+      .eq('film_slug', 'night-flag')
+      .maybeSingle();
+
+    if (error) {
+      console.error('Access check failed:', error.message);
+      setAccessError('Unable to verify access. Please try again.');
+      return;
+    }
+
+    if (!data) {
+      setAccessError('Access has not been approved for your account. Please request access for $4.99.');
+      return;
+    }
+
+    setHasFilmAccess(true);
+    setPlaying(true);
+    setAccessError('');
+  } finally {
+    setCheckingFilmAccess(false);
   }
-
-  setSelected({
-    ...film,
-    requiresAccess: false
-  });
 };
-
 
   const closeFilm = () => {
     setSelected(null);
