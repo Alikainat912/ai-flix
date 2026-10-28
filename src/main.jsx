@@ -113,28 +113,31 @@ function App() {
         }
 
         const databaseFilms = data.map((movie) => {
-          const existingFilm = FALLBACK_FILMS.find(
-            (film) => film.title === movie.title
-          );
+  const existingFilm = FALLBACK_FILMS.find(
+    (film) => film.title === movie.title
+  );
 
-          return {
-  id: movie.id,
-  title: movie.title || 'Untitled Film',
-  year: movie.year || 2026,
-  runtime: movie.duration || '',
-  genre: movie.genre || 'Original Cinema',
-  country: existingFilm?.country || 'International',
-  creator: movie.director || 'Kainat Ali',
-  description:
-    movie.description || 'An original film from AI Flix.',
-  poster:
-    movie.poster_url?.trim() || existingFilm?.poster || '',
-  videoUrl:
+  const videoUrl =
     movie.title?.trim() === 'The Night The Flag Changed'
       ? 'https://www.youtube.com/embed/oh3EBozQ19M'
-      : movie.video_url || existingFilm?.videoUrl || ''
-};
+      : movie.video_url || existingFilm?.videoUrl || '';
 
+  return {
+    id: movie.id,
+    title: movie.title || 'Untitled Film',
+    year: movie.year || 2026,
+    runtime: movie.duration || '',
+    genre: movie.genre || 'Original Cinema',
+    country: existingFilm?.country || 'International',
+    creator: movie.director || 'Kainat Ali',
+    description:
+      movie.description || 'An original film from AI Flix.',
+    poster:
+      movie.poster_url?.trim() || existingFilm?.poster || '',
+    videoUrl
+  };
+});
+    
         setFilms(databaseFilms);
       } catch (error) {
         console.error('Unexpected movie loading error:', error);
