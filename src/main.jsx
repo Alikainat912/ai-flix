@@ -1,8 +1,18 @@
+
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  Search, Play, Plus, Check, ChevronRight, Film, User, X,
-  LockKeyhole, Mail, ArrowRight
+  Search,
+  Play,
+  Plus,
+  Check,
+  ChevronRight,
+  Film,
+  User,
+  X,
+  LockKeyhole,
+  Mail,
+  ArrowRight
 } from 'lucide-react';
 import './styles.css';
 import { supabase } from './supabase';
@@ -18,8 +28,10 @@ const FALLBACK_FILMS = [
     genre: 'Historical Thriller',
     country: 'Pakistan',
     creator: 'Kainat Ali',
-    description: 'A historical thriller exploring a pivotal night through AI-assisted cinema.',
-    poster: 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/683501478_1786619703436515.jpg',
+    description:
+      'A historical thriller exploring a pivotal night through AI-assisted cinema.',
+    poster:
+      'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/683501478_1786619703436515.jpg',
     videoUrl: 'https://www.youtube.com/embed/oh3EBozQ19M'
   }
 ];
@@ -50,6 +62,7 @@ function App() {
   const [fullName, setFullName] = useState('');
   const [authError, setAuthError] = useState('');
   const [authMessage, setAuthMessage] = useState('');
+
   const [loadingFilms, setLoadingFilms] = useState(true);
   const [watchlistLoading, setWatchlistLoading] = useState(false);
   const [hasFilmAccess, setHasFilmAccess] = useState(false);
@@ -58,9 +71,13 @@ function App() {
   const [showAccessModal, setShowAccessModal] = useState(false);
   const [accessName, setAccessName] = useState('');
   const [accessEmail, setAccessEmail] = useState('');
-  const [accessFilm, setAccessFilm] = useState('The Night The Flag Changed');
+  const [accessFilm, setAccessFilm] = useState(
+    'The Night The Flag Changed'
+  );
   const [accessError, setAccessError] = useState('');
   const [submittingAccess, setSubmittingAccess] = useState(false);
+
+  // AUTHENTICATION
   useEffect(() => {
     let mounted = true;
 
@@ -70,7 +87,9 @@ function App() {
         error
       } = await supabase.auth.getUser();
 
-      if (mounted && !error) setUser(currentUser);
+      if (mounted && !error) {
+        setUser(currentUser);
+      }
     };
 
     getUser();
@@ -78,7 +97,9 @@ function App() {
     const {
       data: { subscription }
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (mounted) setUser(session?.user || null);
+      if (mounted) {
+        setUser(session?.user || null);
+      }
     });
 
     return () => {
@@ -87,6 +108,7 @@ function App() {
     };
   }, []);
 
+  // LOAD FILMS
   useEffect(() => {
     let mounted = true;
 
@@ -129,7 +151,8 @@ function App() {
             creator: movie.director || 'Kainat Ali',
             description:
               movie.description || 'An original film from AI Flix.',
-            poster: movie.poster_url?.trim() || existingFilm?.poster || '',
+            poster:
+              movie.poster_url?.trim() || existingFilm?.poster || '',
             videoUrl
           };
         });
@@ -149,6 +172,7 @@ function App() {
     };
   }, []);
 
+  // LOAD WATCHLIST
   useEffect(() => {
     let mounted = true;
 
@@ -172,7 +196,9 @@ function App() {
         }
 
         if (mounted) {
-          setWatchlist((data || []).map((item) => String(item.movie_id)));
+          setWatchlist(
+            (data || []).map((item) => String(item.movie_id))
+          );
         }
       } finally {
         if (mounted) setWatchlistLoading(false);
@@ -205,6 +231,7 @@ function App() {
     setAuthMessage('');
   };
 
+  // OPEN THE ACCESS FORM
   const openAccessModal = (
     filmTitle = 'The Night The Flag Changed'
   ) => {
@@ -213,12 +240,15 @@ function App() {
     setShowAccessModal(true);
   };
 
+  // SUBMIT ACCESS REQUEST
   const requestAccess = async (event) => {
     event.preventDefault();
     setAccessError('');
 
     if (!user) {
-      setAccessError(
+      setShowAccessModal(false);
+      clearAuthMessages();
+      setAuthError(
         'Please sign in or create an account before requesting access.'
       );
       setAuthMode('login');
@@ -238,12 +268,9 @@ function App() {
       setAccessError('Please enter a valid email address.');
       return;
     }
-        if (!validEmail) {
-      setAccessError('Please enter a valid email address.');
-      return;
-    }
 
     setSubmittingAccess(true);
+
     try {
       const { data: existing, error: lookupError } = await supabase
         .from('access_requests')
@@ -254,11 +281,16 @@ function App() {
         .limit(1);
 
       if (lookupError) {
-        setAccessError('Could not check your existing request. Please try again.');
+        setAccessError(
+          'Could not check your existing request. Please try again.'
+        );
         return;
       }
+
       if (existing && existing.length > 0) {
-        setAccessError('You already have a pending request for this film.');
+        setAccessError(
+          'You already have a pending request for this film.'
+        );
         return;
       }
 
@@ -276,32 +308,49 @@ function App() {
         .single();
 
       if (error) {
-        setAccessError('Your request could not be saved: ' + error.message);
+        setAccessError(
+          'Your request could not be saved: ' + error.message
+        );
         return;
       }
 
       const subject = `AI Flix payment request - ${request.id}`;
+
       const body = [
-        'Hello AI Flix Support,', '',
-        'A customer has requested access to a film.', '',
+        'Hello AI Flix Support,',
+        '',
+        'A customer has requested access to a film.',
+        '',
         `Request ID: ${request.id}`,
         `Customer: ${accessName.trim()}`,
         `Customer email: ${accessEmail.trim()}`,
         `Account user ID: ${user.id}`,
         `Film: ${accessFilm}`,
         'Price: $4.99 USD',
-        'Status: Pending payment', '',
-        'Please send the customer an individual Veem payment request.', '',
+        'Status: Pending payment',
+        '',
+        'Please send the customer an individual Veem payment request.',
+        '',
         'Thank you.'
       ].join('\n');
 
       setShowAccessModal(false);
-      window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+      window.location.href =
+        `mailto:${SUPPORT_EMAIL}` +
+        `?subject=${encodeURIComponent(subject)}` +
+        `&body=${encodeURIComponent(body)}`;
+    } catch (error) {
+      setAccessError(
+        'Something went wrong while submitting your request. Please try again.'
+      );
+      console.error('Access request error:', error);
     } finally {
       setSubmittingAccess(false);
     }
   };
 
+  // WATCHLIST
   const toggleWatchlist = async (id) => {
     if (!user) {
       clearAuthMessages();
@@ -309,25 +358,43 @@ function App() {
       setAuthMode('login');
       return;
     }
+
     const movieId = String(id);
     const alreadySaved = watchlist.includes(movieId);
+
     if (alreadySaved) {
-      const { error } = await supabase.from('watchlist').delete().eq('user_id', user.id).eq('movie_id', movieId);
+      const { error } = await supabase
+        .from('watchlist')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('movie_id', movieId);
+
       if (error) {
         alert('Could not remove film: ' + error.message);
         return;
       }
-      setWatchlist((current) => current.filter((item) => item !== movieId));
+
+      setWatchlist((current) =>
+        current.filter((item) => item !== movieId)
+      );
     } else {
-      const { error } = await supabase.from('watchlist').insert({ user_id: user.id, movie_id: movieId });
+      const { error } = await supabase
+        .from('watchlist')
+        .insert({
+          user_id: user.id,
+          movie_id: movieId
+        });
+
       if (error) {
         alert('Could not save film: ' + error.message);
         return;
       }
+
       setWatchlist((current) => [...current, movieId]);
     }
   };
 
+  // FILM DETAILS
   const openFilm = (film) => {
     setSelected(film);
     setPlaying(false);
@@ -336,22 +403,29 @@ function App() {
     setAccessError('');
   };
 
+  // PLAY FILM
   const playSelectedFilm = async () => {
     if (!selected) return;
+
     if (selected.title !== 'The Night The Flag Changed') {
       setPlaying(true);
       return;
     }
+
     if (!user) {
       setPlaying(false);
       clearAuthMessages();
-      setAuthError('Please sign in and request access to watch this film.');
+      setAuthError(
+        'Please sign in and request access to watch this film.'
+      );
       setAuthMode('login');
       return;
     }
+
     setCheckingFilmAccess(true);
     setPlaying(false);
     setHasFilmAccess(false);
+
     try {
       const { data, error } = await supabase
         .from('film_access')
@@ -359,15 +433,20 @@ function App() {
         .eq('user_id', user.id)
         .eq('film_slug', 'night-flag')
         .maybeSingle();
+
       if (error) {
         console.error('Access check failed:', error.message);
         setAccessError('Unable to verify access. Please try again.');
         return;
       }
+
       if (!data) {
-        setAccessError('Access has not been approved for your account. Please request access for $4.99.');
+        setAccessError(
+          'Access has not been approved for your account. Please request access for $4.99.'
+        );
         return;
       }
+
       setHasFilmAccess(true);
       setPlaying(true);
       setAccessError('');
@@ -382,57 +461,80 @@ function App() {
     setHasFilmAccess(false);
   };
 
+  // SIGN IN
   const signIn = async () => {
     clearAuthMessages();
+
     if (!email.trim() || !password) {
       setAuthError('Please enter your email and password.');
       return;
     }
-    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password
+    });
+
     if (error) {
       setAuthError(error.message);
       return;
     }
+
     setAuthMode(null);
     setEmail('');
     setPassword('');
   };
 
+  // SIGN UP
   const signUp = async () => {
     clearAuthMessages();
+
     if (!fullName.trim() || !email.trim() || !password) {
       setAuthError('Please complete all fields.');
       return;
     }
+
     if (password.length < 6) {
-      setAuthError('Your password must contain at least 6 characters.');
+      setAuthError(
+        'Your password must contain at least 6 characters.'
+      );
       return;
     }
+
     const { data, error } = await supabase.auth.signUp({
       email: email.trim(),
       password,
-      options: { data: { full_name: fullName.trim() } }
+      options: {
+        data: { full_name: fullName.trim() }
+      }
     });
+
     if (error) {
       setAuthError(error.message);
       return;
     }
+
     if (data.session) {
       setAuthMode(null);
       setEmail('');
       setPassword('');
       setFullName('');
     } else {
-      setAuthMessage('Account created. Please check your email to confirm your account before signing in.');
+      setAuthMessage(
+        'Account created. Please check your email to confirm your account before signing in.'
+      );
     }
   };
 
+  // SIGN OUT
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
+
     if (error) {
       setAuthError(error.message);
       return;
     }
+
     setAuthMode(null);
     setActivePage('home');
   };
@@ -450,17 +552,28 @@ function App() {
 
   return (
     <div className="app">
-            <header className="nav">
-        <div className="brand" onClick={() => changePage('home')} style={{ cursor: 'pointer' }}>
+      {/* NAVIGATION */}
+      <header className="nav">
+        <div
+          className="brand"
+          onClick={() => changePage('home')}
+          style={{ cursor: 'pointer' }}
+        >
           AI<span>FLIX</span>
         </div>
+
         <nav>
           <button onClick={() => changePage('home')}>Home</button>
           <button onClick={() => changePage('browse')}>Browse</button>
           <button onClick={() => changePage('mylist')}>My List</button>
-          <button onClick={() => changePage('categories')}>Categories</button>
-          <button onClick={() => openAccessModal()}>Unlock</button>
+          <button onClick={() => changePage('categories')}>
+            Categories
+          </button>
+          <button onClick={() => openAccessModal()}>
+            Unlock
+          </button>
         </nav>
+
         <div className="navRight">
           <div className="search">
             <Search size={18} />
@@ -474,67 +587,152 @@ function App() {
               aria-label="Search films"
             />
           </div>
-          <button className="iconBtn" onClick={openAccount} aria-label="Your account">
+
+          <button
+            className="iconBtn"
+            onClick={openAccount}
+            aria-label="Your account"
+          >
             <User size={19} />
           </button>
         </div>
       </header>
 
+      {/* MAIN CONTENT */}
       <main>
         {activePage === 'mylist' ? (
           <section className="section myListPage">
-            <div className="sectionHead"><h2>My List</h2></div>
+            <div className="sectionHead">
+              <h2>My List</h2>
+            </div>
+
             {!user ? (
               <div className="emptyState">
                 <h2>Sign in to view My List</h2>
                 <p>Sign in to save your favourite original films.</p>
-                <button className="primary" onClick={() => { clearAuthMessages(); setAuthMode('login'); }}>Sign In</button>
+                <button
+                  className="primary"
+                  onClick={() => {
+                    clearAuthMessages();
+                    setAuthMode('login');
+                  }}
+                >
+                  Sign In
+                </button>
               </div>
             ) : watchlistLoading ? (
-              <div className="emptyState"><p>Loading your list...</p></div>
-            ) : films.filter((film) => watchlist.includes(String(film.id))).length === 0 ? (
+              <div className="emptyState">
+                <p>Loading your list...</p>
+              </div>
+            ) : films.filter((film) =>
+                watchlist.includes(String(film.id))
+              ).length === 0 ? (
               <div className="emptyState">
                 <h2>Your list is empty</h2>
                 <p>Films you save will appear here.</p>
-                <button className="primary" onClick={() => changePage('browse')}>Browse Films</button>
+                <button
+                  className="primary"
+                  onClick={() => changePage('browse')}
+                >
+                  Browse Films
+                </button>
               </div>
             ) : (
               <div className="grid">
-                {films.filter((film) => watchlist.includes(String(film.id))).map((film) => (
-                  <article className="card" key={film.id} onClick={() => openFilm(film)}>
-                    <img src={film.poster} alt={film.title} />
-                    <div className="cardOverlay"><span>{film.runtime}</span><span>{film.genre}</span></div>
-                    <div className="cardBody"><h3>{film.title}</h3><p>{film.country} • {film.year}</p></div>
-                  </article>
-                ))}
+                {films
+                  .filter((film) =>
+                    watchlist.includes(String(film.id))
+                  )
+                  .map((film) => (
+                    <article
+                      className="card"
+                      key={film.id}
+                      onClick={() => openFilm(film)}
+                    >
+                      <img src={film.poster} alt={film.title} />
+                      <div className="cardOverlay">
+                        <span>{film.runtime}</span>
+                        <span>{film.genre}</span>
+                      </div>
+                      <div className="cardBody">
+                        <h3>{film.title}</h3>
+                        <p>{film.country} • {film.year}</p>
+                      </div>
+                    </article>
+                  ))}
               </div>
             )}
           </section>
         ) : activePage === 'categories' ? (
           <section className="section">
-            <div className="sectionHead"><h2>Explore Categories</h2></div>
+            <div className="sectionHead">
+              <h2>Explore Categories</h2>
+            </div>
+
             <div className="chips">
-              {[...new Set(films.map((film) => film.genre).filter(Boolean))].map((category) => (
-                <button key={category} onClick={() => { setQuery(category); setActivePage('browse'); }}>{category}</button>
+              {[...new Set(
+                films.map((film) => film.genre).filter(Boolean)
+              )].map((category) => (
+                <button
+                  key={category}
+                  onClick={() => {
+                    setQuery(category);
+                    setActivePage('browse');
+                  }}
+                >
+                  {category}
+                </button>
               ))}
             </div>
           </section>
         ) : (
           <>
             {activePage === 'home' && heroFilm && (
-              <section className="hero" style={{ backgroundImage: `linear-gradient(90deg, rgba(5,5,8,.82) 0%, rgba(5,5,8,.48) 48%, rgba(5,5,8,.12) 100%), url("${heroFilm.poster}")` }}>
+              <section
+                className="hero"
+                style={{
+                  backgroundImage:
+                    `linear-gradient(90deg, rgba(5,5,8,.82) 0%, rgba(5,5,8,.48) 48%, rgba(5,5,8,.12) 100%), url("${heroFilm.poster}")`
+                }}
+              >
                 <div className="heroCopy">
-                  <div className="eyebrow">AI FLIX ORIGINAL • {heroFilm.year}</div>
+                  <div className="eyebrow">
+                    AI FLIX ORIGINAL • {heroFilm.year}
+                  </div>
                   <h1>{heroFilm.title}</h1>
-                  <p className="meta">{heroFilm.year} • {heroFilm.runtime} • {heroFilm.genre}</p>
+                  <p className="meta">
+                    {heroFilm.year} • {heroFilm.runtime} • {heroFilm.genre}
+                  </p>
                   <p className="description">{heroFilm.description}</p>
+
                   <div className="actions">
-                    <button className="primary" onClick={() => openFilm(heroFilm)}><Play size={18} fill="currentColor" /> View Film</button>
-                    <button className="secondary" onClick={() => toggleWatchlist(heroFilm.id)}>
-                      {watchlist.includes(String(heroFilm.id)) ? <Check size={18} /> : <Plus size={18} />}
-                      {watchlist.includes(String(heroFilm.id)) ? 'In My List' : 'My List'}
+                    <button
+                      className="primary"
+                      onClick={() => openFilm(heroFilm)}
+                    >
+                      <Play size={18} fill="currentColor" />
+                      View Film
                     </button>
-                    <button className="primary" onClick={() => openAccessModal(heroFilm.title)}><LockKeyhole size={17} /> Unlock for $4.99</button>
+
+                    <button
+                      className="secondary"
+                      onClick={() => toggleWatchlist(heroFilm.id)}
+                    >
+                      {watchlist.includes(String(heroFilm.id))
+                        ? <Check size={18} />
+                        : <Plus size={18} />}
+                      {watchlist.includes(String(heroFilm.id))
+                        ? 'In My List'
+                        : 'My List'}
+                    </button>
+
+                    <button
+                      className="primary"
+                      onClick={() => openAccessModal(heroFilm.title)}
+                    >
+                      <LockKeyhole size={17} />
+                      Unlock for $4.99
+                    </button>
                   </div>
                 </div>
               </section>
@@ -542,24 +740,54 @@ function App() {
 
             <section className="section">
               <div className="sectionHead">
-                <h2>{query ? 'Search Results' : activePage === 'browse' ? 'Browse Our Films' : films.length === 1 ? 'Now Streaming' : 'AI Flix Originals'}</h2>
+                <h2>
+                  {query
+                    ? 'Search Results'
+                    : activePage === 'browse'
+                      ? 'Browse Our Films'
+                      : films.length === 1
+                        ? 'Now Streaming'
+                        : 'AI Flix Originals'}
+                </h2>
                 <ChevronRight size={20} />
               </div>
+
               {loadingFilms ? (
-                <div className="emptyState"><p>Loading films...</p></div>
+                <div className="emptyState">
+                  <p>Loading films...</p>
+                </div>
               ) : filtered.length === 0 ? (
                 <div className="emptyState">
                   <h2>No films found</h2>
-                  <p>Try another search or check back for future releases.</p>
-                  {query && <button className="secondary" onClick={() => setQuery('')}>Clear Search</button>}
+                  <p>
+                    Try another search or check back for future releases.
+                  </p>
+                  {query && (
+                    <button
+                      className="secondary"
+                      onClick={() => setQuery('')}
+                    >
+                      Clear Search
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="grid">
                   {filtered.map((film) => (
-                    <article className="card" key={film.id} onClick={() => openFilm(film)}>
+                    <article
+                      className="card"
+                      key={film.id}
+                      onClick={() => openFilm(film)}
+                    >
                       <img src={film.poster} alt={film.title} />
-                      <div className="cardOverlay"><span>{film.runtime}</span><span>{film.genre}</span></div>
-                      <div className="cardBody"><h3>{film.title}</h3><p>{film.country} • {film.year}</p></div>
+                      <div className="cardOverlay">
+                        <span>{film.runtime}</span>
+                        <span>{film.genre}</span>
+                      </div>
+                      <div className="cardBody">
+                        <h3>{film.title}</h3>
+                        <p>{film.country} • {film.year}</p>
+                      </div>
                     </article>
                   ))}
                 </div>
@@ -569,24 +797,66 @@ function App() {
             {!query && activePage === 'home' && (
               <>
                 <section className="section">
-                  <div className="sectionHead"><h2>More Original Films Coming Soon</h2></div>
-                  <p style={{ color: '#aaa', maxWidth: '650px', fontSize: '14px', lineHeight: '1.9' }}>
-                    Discover original stories and independent cinema created by Kainat Ali. New films will join the AI Flix catalogue as they are released.
+                  <div className="sectionHead">
+                    <h2>More Original Films Coming Soon</h2>
+                  </div>
+                  <p
+                    style={{
+                      color: '#aaa',
+                      maxWidth: '650px',
+                      fontSize: '14px',
+                      lineHeight: '1.9'
+                    }}
+                  >
+                    Discover original stories and independent cinema
+                    created by Kainat Ali. New films will join the AI Flix
+                    catalogue as they are released.
                   </p>
                 </section>
+
                 <section className="section">
-                  <div className="sectionHead"><h2>Explore AI Cinema</h2></div>
+                  <div className="sectionHead">
+                    <h2>Explore AI Cinema</h2>
+                  </div>
                   <div className="chips">
-                    {[...new Set(films.map((film) => film.genre).filter(Boolean))].map((category) => (
-                      <button key={category} onClick={() => { setQuery(category); setActivePage('browse'); }}>{category}</button>
+                    {[...new Set(
+                      films.map((film) => film.genre).filter(Boolean)
+                    )].map((category) => (
+                      <button
+                        key={category}
+                        onClick={() => {
+                          setQuery(category);
+                          setActivePage('browse');
+                        }}
+                      >
+                        {category}
+                      </button>
                     ))}
                   </div>
                 </section>
+
                 <section className="section">
-                  <div style={{ padding: '28px 22px', border: '1px solid #333', borderRadius: '14px', background: '#111', textAlign: 'center' }}>
+                  <div
+                    style={{
+                      padding: '28px 22px',
+                      border: '1px solid #333',
+                      borderRadius: '14px',
+                      background: '#111',
+                      textAlign: 'center'
+                    }}
+                  >
                     <h2>Discover Independent Cinema</h2>
-                    <p style={{ color: '#aaa', lineHeight: 1.8 }}>Get access to original films from AI Flix for $4.99 USD.</p>
-                    <button className="primary" onClick={() => openAccessModal()}><LockKeyhole size={17} /> Unlock AI Flix <ArrowRight size={18} /></button>
+                    <p style={{ color: '#aaa', lineHeight: 1.8 }}>
+                      Get access to original films from AI Flix for $4.99 USD.
+                    </p>
+                    <button
+                      className="primary"
+                      onClick={() => openAccessModal()}
+                    >
+                      <LockKeyhole size={17} />
+                      Unlock AI Flix
+                      <ArrowRight size={18} />
+                    </button>
                   </div>
                 </section>
               </>
@@ -595,30 +865,98 @@ function App() {
         )}
       </main>
 
+      {/* FOOTER */}
       <footer>
-        <div className="brand" onClick={() => changePage('home')} style={{ cursor: 'pointer' }}>AI<span>FLIX</span></div>
+        <div
+          className="brand"
+          onClick={() => changePage('home')}
+          style={{ cursor: 'pointer' }}
+        >
+          AI<span>FLIX</span>
+        </div>
         <p>© 2026 AI Flix. Original films. Independent cinema.</p>
-        <p>Support: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
-        <button className="secondary" onClick={() => openAccessModal()}>Unlock AI Flix — $4.99</button>
+        <p>
+          Support: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+        </p>
+        <button
+          className="secondary"
+          onClick={() => openAccessModal()}
+        >
+          Unlock AI Flix — $4.99
+        </button>
       </footer>
 
-      {/* REQUEST ACCESS POPUP: the complete form is inside this modal. */}
+      {/* REQUEST ACCESS MODAL */}
       {showAccessModal && (
-        <div className="modal accessRequestModal" onClick={() => setShowAccessModal(false)}>
-          <div className="modalCard accessRequestCard" onClick={(event) => event.stopPropagation()}>
-            <button className="close" type="button" onClick={() => setShowAccessModal(false)} aria-label="Close request access">
+        <div
+          className="modal accessRequestModal"
+          onClick={() => setShowAccessModal(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflowY: 'auto',
+            padding: '20px',
+            background: 'rgba(0,0,0,0.85)'
+          }}
+        >
+          <div
+            className="modalCard accessRequestCard"
+            onClick={(event) => event.stopPropagation()}
+            style={{
+              position: 'relative',
+              zIndex: 100000,
+              width: '100%',
+              maxWidth: '480px',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              boxSizing: 'border-box',
+              background: '#15171e',
+              color: '#fff',
+              border: '1px solid #343640',
+              borderRadius: '16px'
+            }}
+          >
+            <button
+              className="close"
+              type="button"
+              onClick={() => setShowAccessModal(false)}
+              aria-label="Close request access"
+            >
               <X size={20} />
             </button>
-                        <div className="modalContent">
+
+            <div className="modalContent">
               <div className="eyebrow">INDEPENDENT CINEMA</div>
               <h2>Request Film Access</h2>
-              <div style={{ fontSize: '32px', fontWeight: 800, margin: '18px 0 8px' }}>
+
+              <div
+                style={{
+                  fontSize: '32px',
+                  fontWeight: 800,
+                  margin: '18px 0 8px'
+                }}
+              >
                 $4.99 <span style={{ fontSize: '16px' }}>USD</span>
               </div>
+
               <p style={{ color: '#aaa', fontSize: '14px' }}>
-                Request access to a film. We will send you payment instructions individually.
+                Request access to a film. We will send you payment
+                instructions individually.
               </p>
-              <form onSubmit={requestAccess} style={{ display: 'grid', gap: '14px', textAlign: 'left', marginTop: '24px' }}>
+
+              <form
+                onSubmit={requestAccess}
+                style={{
+                  display: 'grid',
+                  gap: '14px',
+                  textAlign: 'left',
+                  marginTop: '24px'
+                }}
+              >
                 <label htmlFor="modal-access-name">Full name</label>
                 <input
                   id="modal-access-name"
@@ -630,6 +968,7 @@ function App() {
                   required
                   style={fieldStyle}
                 />
+
                 <label htmlFor="modal-access-email">Email address</label>
                 <input
                   id="modal-access-email"
@@ -641,6 +980,7 @@ function App() {
                   required
                   style={fieldStyle}
                 />
+
                 <label htmlFor="modal-access-film">Choose a film</label>
                 <select
                   id="modal-access-film"
@@ -654,23 +994,51 @@ function App() {
                     </option>
                   ))}
                 </select>
-                {accessError && <p className="authError">{accessError}</p>}
+
+                {accessError && (
+                  <p className="authError">{accessError}</p>
+                )}
+
                 <button
                   type="submit"
                   className="primary"
                   disabled={submittingAccess}
-                  style={{ width: '100%', justifyContent: 'center', marginTop: '8px' }}
+                  style={{
+                    width: '100%',
+                    justifyContent: 'center',
+                    marginTop: '8px'
+                  }}
                 >
                   <Mail size={18} />
-                  {submittingAccess ? 'Submitting...' : 'Request Payment Instructions'}
+                  {submittingAccess
+                    ? 'Submitting...'
+                    : 'Request Payment Instructions'}
                   <ArrowRight size={18} />
                 </button>
               </form>
-              <p style={{ color: '#888', fontSize: '12px', lineHeight: 1.7, marginTop: '20px' }}>
-                Submitting saves your request and opens your email app with a prepared message. Please send the email. We will send an individual payment request and confirm payment before granting access.
+
+              <p
+                style={{
+                  color: '#888',
+                  fontSize: '12px',
+                  lineHeight: 1.7,
+                  marginTop: '20px'
+                }}
+              >
+                Submitting saves your request and opens your email app with
+                a prepared message. Please send the email. We will send an
+                individual payment request and confirm payment before
+                granting access.
               </p>
+
               {!user && (
-                <p style={{ color: '#ddd', fontSize: '13px', marginTop: '12px' }}>
+                <p
+                  style={{
+                    color: '#ddd',
+                    fontSize: '13px',
+                    marginTop: '12px'
+                  }}
+                >
                   You must sign in before requesting access.{' '}
                   <button
                     type="button"
@@ -690,11 +1058,22 @@ function App() {
         </div>
       )}
 
-      {/* AUTH MODAL */}
+      {/* AUTHENTICATION MODAL */}
       {authMode && (
-        <div className="modal" onClick={() => setAuthMode(null)}>
-          <div className="modalCard authCard" onClick={(event) => event.stopPropagation()}>
-            <button className="close" onClick={() => setAuthMode(null)} aria-label="Close">
+        <div
+          className="modal"
+          onClick={() => setAuthMode(null)}
+          style={{ zIndex: 100001 }}
+        >
+          <div
+            className="modalCard authCard"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="close"
+              onClick={() => setAuthMode(null)}
+              aria-label="Close"
+            >
               <X size={20} />
             </button>
 
@@ -703,12 +1082,42 @@ function App() {
                 <div className="eyebrow">WELCOME BACK</div>
                 <h2>Sign in to AI Flix</h2>
                 <p>Continue exploring original cinema.</p>
+
                 {authError && <p className="authError">{authError}</p>}
-                {authMessage && <p className="authMessage">{authMessage}</p>}
-                <input type="email" placeholder="Email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-                <input type="password" placeholder="Password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') signIn(); }} />
-                <button className="primary" onClick={signIn}>Sign In</button>
-                <button className="secondary" onClick={() => { clearAuthMessages(); setAuthMode('signup'); }}>Create an Account</button>
+                {authMessage && (
+                  <p className="authMessage">{authMessage}</p>
+                )}
+
+                <input
+                  type="email"
+                  placeholder="Email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') signIn();
+                  }}
+                />
+
+                <button className="primary" onClick={signIn}>
+                  Sign In
+                </button>
+                <button
+                  className="secondary"
+                  onClick={() => {
+                    clearAuthMessages();
+                    setAuthMode('signup');
+                  }}
+                >
+                  Create an Account
+                </button>
               </div>
             )}
 
@@ -717,13 +1126,46 @@ function App() {
                 <div className="eyebrow">JOIN AI FLIX</div>
                 <h2>Create Your Account</h2>
                 <p>Join us for original cinematic storytelling.</p>
+
                 {authError && <p className="authError">{authError}</p>}
-                {authMessage && <p className="authMessage">{authMessage}</p>}
-                <input type="text" placeholder="Full name" autoComplete="name" value={fullName} onChange={(event) => setFullName(event.target.value)} />
-                <input type="email" placeholder="Email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-                <input type="password" placeholder="Password (at least 6 characters)" autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} />
-                <button className="primary" onClick={signUp}>Create Account</button>
-                <button className="secondary" onClick={() => { clearAuthMessages(); setAuthMode('login'); }}>Already have an account? Sign In</button>
+                {authMessage && (
+                  <p className="authMessage">{authMessage}</p>
+                )}
+
+                <input
+                  type="text"
+                  placeholder="Full name"
+                  autoComplete="name"
+                  value={fullName}
+                  onChange={(event) => setFullName(event.target.value)}
+                />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+                <input
+                  type="password"
+                  placeholder="Password (at least 6 characters)"
+                  autoComplete="new-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+
+                <button className="primary" onClick={signUp}>
+                  Create Account
+                </button>
+                <button
+                  className="secondary"
+                  onClick={() => {
+                    clearAuthMessages();
+                    setAuthMode('login');
+                  }}
+                >
+                  Already have an account? Sign In
+                </button>
               </div>
             )}
 
@@ -732,19 +1174,28 @@ function App() {
                 <div className="eyebrow">YOUR ACCOUNT</div>
                 <h2>{user.user_metadata?.full_name || 'AI Flix Member'}</h2>
                 <p>{user.email}</p>
+
                 {authError && <p className="authError">{authError}</p>}
-                <button className="primary" onClick={signOut}>Sign Out</button>
+
+                <button className="primary" onClick={signOut}>
+                  Sign Out
+                </button>
               </div>
             )}
           </div>
         </div>
       )}
 
-      {/* FILM DETAILS AND PLAYER */}
+      {/* FILM DETAILS AND PLAYER MODAL */}
       {selected && (
         <div className="modal" onClick={closeFilm}>
-          <div className={`modalCard ${playing ? 'playingCard' : ''}`} onClick={(event) => event.stopPropagation()}>
-            {playing && (selected.title !== 'The Night The Flag Changed' || hasFilmAccess) ? (
+          <div
+            className={`modalCard ${playing ? 'playingCard' : ''}`}
+            onClick={(event) => event.stopPropagation()}
+          >
+            {playing &&
+            (selected.title !== 'The Night The Flag Changed' ||
+              hasFilmAccess) ? (
               <div className="videoWrapper">
                 {selected.videoUrl ? (
                   <iframe
@@ -752,7 +1203,13 @@ function App() {
                     title={selected.title}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
-                    style={{ width: '100%', aspectRatio: '16 / 9', display: 'block', border: 0, background: '#000' }}
+                    style={{
+                      width: '100%',
+                      aspectRatio: '16 / 9',
+                      display: 'block',
+                      border: 0,
+                      background: '#000'
+                    }}
                   />
                 ) : (
                   <div className="emptyState">
@@ -764,104 +1221,70 @@ function App() {
             ) : (
               <img src={selected.poster} alt={selected.title} />
             )}
+
             <div className="modalContent">
-              <button className="close" onClick={closeFilm} aria-label="Close film">
+              <button
+                className="close"
+                onClick={closeFilm}
+                aria-label="Close film"
+              >
                 <X size={20} />
               </button>
-              <div className="eyebrow">{selected.country} • {selected.year}</div>
+
+              <div className="eyebrow">
+                {selected.country} • {selected.year}
+              </div>
               <h2>{selected.title}</h2>
-              <p className="meta">{selected.runtime} • {selected.genre}</p>
+              <p className="meta">
+                {selected.runtime} • {selected.genre}
+              </p>
               <p>{selected.description}</p>
-              <p className="creator"><Film size={16} /> Created by {selected.creator}</p>
-              {accessError && <p className="authError">{accessError}</p>}
+              <p className="creator">
+                <Film size={16} /> Created by {selected.creator}
+              </p>
+
+              {accessError && (
+                <p className="authError">{accessError}</p>
+              )}
+
               <div className="actions">
-                <button className="primary" onClick={playSelectedFilm} disabled={checkingFilmAccess}>
+                <button
+                  className="primary"
+                  onClick={playSelectedFilm}
+                  disabled={checkingFilmAccess}
+                >
                   <Play size={18} fill="currentColor" />
-                  {checkingFilmAccess ? 'Checking access...' : 'Play Film'}
+                  {checkingFilmAccess
+                    ? 'Checking access...'
+                    : 'Play Film'}
                 </button>
-                
 
-<button
-  type="button"
-  onClick={() => {
-    alert("Button clicked!");
-    setShowAccessModal(true);
-  }}
->
-  Request Access — $4.99
-</button>
+                <button
+                  type="button"
+                  className="primary"
+                  onClick={() => openAccessModal(selected.title)}
+                >
+                  <LockKeyhole size={17} />
+                  Request Access — $4.99
+                </button>
 
-                <button className="secondary" onClick={() => toggleWatchlist(selected.id)}>
-                  {watchlist.includes(String(selected.id)) ? <Check size={18} /> : <Plus size={18} />}
-                  {watchlist.includes(String(selected.id)) ? 'In My List' : 'My List'}
+                <button
+                  className="secondary"
+                  onClick={() => toggleWatchlist(selected.id)}
+                >
+                  {watchlist.includes(String(selected.id))
+                    ? <Check size={18} />
+                    : <Plus size={18} />}
+                  {watchlist.includes(String(selected.id))
+                    ? 'In My List'
+                    : 'My List'}
                 </button>
               </div>
-              <p className="notice">Request access to receive payment instructions.</p>
+
+              <p className="notice">
+                Request access to receive payment instructions.
+              </p>
             </div>
-          </div>
-        </div>
-            )}
-
-      {showAccessModal && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 999999,
-            backgroundColor: 'rgba(0, 0, 0, 0.85)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px'
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: '#17191f',
-              color: '#ffffff',
-              padding: '28px',
-              borderRadius: '16px',
-              width: '100%',
-              maxWidth: '420px',
-              boxSizing: 'border-box',
-              border: '1px solid #393b45'
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setShowAccessModal(false)}
-              style={{
-                float: 'right',
-                background: 'transparent',
-                color: 'white',
-                border: 'none',
-                fontSize: '24px'
-              }}
-            >
-              ×
-            </button>
-
-            <h2>Request Film Access</h2>
-            <p>The Night The Flag Changed</p>
-            <h3>$4.99 USD</h3>
-            <p>
-              Request access to receive payment instructions.
-            </p>
-
-            <button
-              type="button"
-              onClick={() => setShowAccessModal(false)}
-              style={{
-                backgroundColor: '#e50925',
-                color: 'white',
-                border: 'none',
-                padding: '12px 22px',
-                borderRadius: '8px',
-                marginTop: '12px'
-              }}
-            >
-              Close
-            </button>
           </div>
         </div>
       )}
