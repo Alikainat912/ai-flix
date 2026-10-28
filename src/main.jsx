@@ -1131,6 +1131,53 @@ const playSelectedFilm = async () => {
     </div>
   );
 }
+{showAccessModal && (
+  <div
+    style={{
+      position: 'fixed',
+      inset: 0,
+      zIndex: 99999,
+      background: 'rgba(0,0,0,0.85)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px'
+    }}
+  >
+    <div
+      style={{
+        background: '#151515',
+        color: 'white',
+        padding: '30px',
+        borderRadius: '16px',
+        width: '100%',
+        maxWidth: '450px'
+      }}
+    >
+      <button
+        onClick={() => setShowAccessModal(false)}
+        style={{ float: 'right' }}
+      >
+        ✕
+      </button>
+
+      <h2>Request Film Access</h2>
+      <p>The Night The Flag Changed</p>
+      <h3>$4.99 USD</h3>
+      <p>Request access to watch this film.</p>
+
+      <button
+        className="primary"
+        onClick={() => {
+          setShowAccessModal(false);
+          changePage('unlock');
+        }}
+      >
+        Continue to Request
+      </button>
+    </div>
+  </div>
+)}
 
 const fieldStyle = {
   width: '100%',
