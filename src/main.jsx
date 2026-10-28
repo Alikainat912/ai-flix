@@ -799,6 +799,41 @@ function App() {
           </div>
         </div>
       )}
+      {showAccessModal && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 999999,
+      background: "rgba(0,0,0,0.85)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "20px"
+    }}
+  >
+    <div
+      style={{
+        background: "#151515",
+        color: "white",
+        padding: "28px",
+        borderRadius: "14px",
+        width: "100%",
+        maxWidth: "420px"
+      }}
+    >
+      <h2>Request Film Access</h2>
+      <p>Unlock your film for $4.99 USD.</p>
+
+      <button
+        type="button"
+        onClick={() => setShowAccessModal(false)}
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
     </div>
   );
 }
