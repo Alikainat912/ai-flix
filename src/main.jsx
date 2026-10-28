@@ -344,10 +344,44 @@ const requestAccess = async (event) => {
   };
 
   // FILM MODAL
-  const openFilm = (film) => {
-    setSelected(film);
+  
+const openFilm = async (film) => {
+  setSelected(film);
+  setPlaying(false);
+
+  if (film.title !== 'The Night The Flag Changed') {
+    return;
+  }
+
+  if (!user) {
+    setAuthError('Please sign in to request access to this film.');
+    setAuthMessage('');
+    setAuthMode('login');
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from('film_access')
+    .select('film_slug')
+    .eq('user_id', user.id)
+    .eq('film_slug', 'night-flag')
+    .maybeSingle();
+
+  if (error || !data) {
+    setSelected({
+      ...film,
+      requiresAccess: true
+    });
     setPlaying(false);
-  };
+    return;
+  }
+
+  setSelected({
+    ...film,
+    requiresAccess: false
+  });
+};
+
 
   const closeFilm = () => {
     setSelected(null);
@@ -984,7 +1018,7 @@ const requestAccess = async (event) => {
             className={`modalCard ${playing ? 'playingCard' : ''}`}
             onClick={(event) => event.stopPropagation()}
           >
-            {playing ? (
+            {playing && !selected.requiresAccess ? (
               <div className="videoWrapper">
                 {selected.videoUrl ? (
   <iframe
@@ -1024,13 +1058,15 @@ const requestAccess = async (event) => {
               </p>
 
               <div className="actions">
-                <button
-  className="primary"
-  onClick={() => setPlaying(true)}
->
-  <Play size={18} fill="currentColor" />
-  Play Film
-</button>
+                {!selected.requiresAccess && (
+  <button
+    className="primary"
+    onClick={() => setPlaying(true)}
+  >
+    <Play size={18} fill="currentColor" />
+    Play Film
+  </button>
+)}
 
 <button
   className="secondary"
