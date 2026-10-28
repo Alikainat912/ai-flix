@@ -1077,10 +1077,20 @@ const playSelectedFilm = async () => {
               </p>
 
               <div className="actions">
-                {!selected.requiresAccess && (
+                
+{selected.title === 'The Night The Flag Changed' ? (
   <button
     className="primary"
-    onClick={() => setPlaying(true)}
+    onClick={playSelectedFilm}
+    disabled={checkingFilmAccess}
+  >
+    <Play size={18} fill="currentColor" />
+    {checkingFilmAccess ? 'Checking access...' : 'Play Film'}
+  </button>
+) : (
+  <button
+    className="primary"
+    onClick={playSelectedFilm}
   >
     <Play size={18} fill="currentColor" />
     Play Film
