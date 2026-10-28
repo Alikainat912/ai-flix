@@ -118,20 +118,22 @@ function App() {
           );
 
           return {
-            id: movie.id,
-            title: movie.title || 'Untitled Film',
-            year: movie.year || 2026,
-            runtime: movie.duration || '',
-            genre: movie.genre || 'Original Cinema',
-            country: existingFilm?.country || 'International',
-            creator: movie.director || 'Kainat Ali',
-            description:
-              movie.description || 'An original film from AI Flix.',
-            poster:
-              movie.poster_url?.trim() || existingFilm?.poster || '',
-            videoUrl: movie.video_url || existingFilm?.videoUrl || ''
-          };
-        });
+  id: movie.id,
+  title: movie.title || 'Untitled Film',
+  year: movie.year || 2026,
+  runtime: movie.duration || '',
+  genre: movie.genre || 'Original Cinema',
+  country: existingFilm?.country || 'International',
+  creator: movie.director || 'Kainat Ali',
+  description:
+    movie.description || 'An original film from AI Flix.',
+  poster:
+    movie.poster_url?.trim() || existingFilm?.poster || '',
+  videoUrl:
+    movie.title?.trim() === 'The Night The Flag Changed'
+      ? 'https://www.youtube.com/embed/oh3EBozQ19M'
+      : movie.video_url || existingFilm?.videoUrl || ''
+};
 
         setFilms(databaseFilms);
       } catch (error) {
