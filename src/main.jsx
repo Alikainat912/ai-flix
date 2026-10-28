@@ -9,10 +9,15 @@ import {
   ChevronRight,
   Film,
   User,
-  X
+  X,
+  LockKeyhole,
+  Mail,
+  ArrowRight
 } from 'lucide-react';
 import './styles.css';
 import { supabase } from './supabase';
+
+const SUPPORT_EMAIL = 'support@aiflixmovies.com';
 
 const FALLBACK_FILMS = [
   {
@@ -50,6 +55,14 @@ function App() {
   const [loadingFilms, setLoadingFilms] = useState(true);
   const [watchlistLoading, setWatchlistLoading] = useState(false);
 
+  // ACCESS REQUEST FORM
+  const [accessName, setAccessName] = useState('');
+  const [accessEmail, setAccessEmail] = useState('');
+  const [accessFilm, setAccessFilm] = useState(
+    'The Night The Flag Changed'
+  );
+  const [accessError, setAccessError] = useState('');
+
   // AUTHENTICATION
   useEffect(() => {
     let mounted = true;
@@ -60,9 +73,7 @@ function App() {
         error
       } = await supabase.auth.getUser();
 
-      if (mounted && !error) {
-        setUser(currentUser);
-      }
+      if (mounted && !error) setUser(currentUser);
     };
 
     getUser();
@@ -70,9 +81,7 @@ function App() {
     const {
       data: { subscription }
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (mounted) {
-        setUser(session?.user || null);
-      }
+      if (mounted) setUser(session?.user || null);
     });
 
     return () => {
@@ -81,7 +90,7 @@ function App() {
     };
   }, []);
 
-  // LOAD ONLY THE FILMS IN YOUR OWN CATALOGUE
+  // LOAD FILMS
   useEffect(() => {
     let mounted = true;
 
@@ -118,16 +127,10 @@ function App() {
             country: existingFilm?.country || 'International',
             creator: movie.director || 'Kainat Ali',
             description:
-              movie.description ||
-              'An original film from AI Flix.',
+              movie.description || 'An original film from AI Flix.',
             poster:
-              movie.poster_url?.trim() ||
-              existingFilm?.poster ||
-              '',
-            videoUrl:
-              movie.video_url ||
-              existingFilm?.videoUrl ||
-              ''
+              movie.poster_url?.trim() || existingFilm?.poster || '',
+            videoUrl: movie.video_url || existingFilm?.videoUrl || ''
           };
         });
 
@@ -146,7 +149,7 @@ function App() {
     };
   }, []);
 
-  // LOAD MEMBER'S WATCHLIST
+  // LOAD WATCHLIST
   useEffect(() => {
     let mounted = true;
 
@@ -188,17 +191,11 @@ function App() {
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
-
     if (!q) return films;
 
     return films.filter((film) =>
-      [
-        film.title,
-        film.genre,
-        film.country,
-        film.creator
-      ].some((value) =>
-        value && value.toLowerCase().includes(q)
+      [film.title, film.genre, film.country, film.creator].some(
+        (value) => value && value.toLowerCase().includes(q)
       )
     );
   }, [query, films]);
@@ -208,6 +205,49 @@ function App() {
   const clearAuthMessages = () => {
     setAuthError('');
     setAuthMessage('');
+  };
+
+  // REQUEST ACCESS: OPENS THE CUSTOMER'S EMAIL APP
+  const requestAccess = (event) => {
+    event.preventDefault();
+    setAccessError('');
+
+    if (!accessName.trim() || !accessEmail.trim()) {
+      setAccessError('Please enter your name and email address.');
+      return;
+    }
+
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+      accessEmail.trim()
+    );
+
+    if (!validEmail) {
+      setAccessError('Please enter a valid email address.');
+      return;
+    }
+
+    const subject = `AI Flix access request - ${accessFilm}`;
+    const body = [
+      'Hello AI Flix Support,',
+      '',
+      'I would like to purchase access to an AI Flix film.',
+      '',
+      `Name: ${accessName.trim()}`,
+      `Email: ${accessEmail.trim()}`,
+      `Film: ${accessFilm}`,
+      'Price: $4.99 USD',
+      '',
+      'Please send me payment instructions.',
+      '',
+      'Thank you.'
+    ].join('\n');
+
+    const mailto =
+      `mailto:${SUPPORT_EMAIL}` +
+      `?subject=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailto;
   };
 
   // WATCHLIST
@@ -238,12 +278,10 @@ function App() {
         current.filter((item) => item !== movieId)
       );
     } else {
-      const { error } = await supabase
-        .from('watchlist')
-        .insert({
-          user_id: user.id,
-          movie_id: movieId
-        });
+      const { error } = await supabase.from('watchlist').insert({
+        user_id: user.id,
+        movie_id: movieId
+      });
 
       if (error) {
         alert('Could not save film: ' + error.message);
@@ -307,9 +345,7 @@ function App() {
       email: email.trim(),
       password,
       options: {
-        data: {
-          full_name: fullName.trim()
-        }
+        data: { full_name: fullName.trim() }
       }
     });
 
@@ -355,7 +391,6 @@ function App() {
 
   return (
     <div className="app">
-
       {/* NAVIGATION */}
       <header className="nav">
         <div
@@ -367,27 +402,20 @@ function App() {
         </div>
 
         <nav>
-          <button onClick={() => changePage('home')}>
-            Home
-          </button>
-
-          <button onClick={() => changePage('browse')}>
-            Browse
-          </button>
-
-          <button onClick={() => changePage('mylist')}>
-            My List
-          </button>
-
+          <button onClick={() => changePage('home')}>Home</button>
+          <button onClick={() => changePage('browse')}>Browse</button>
+          <button onClick={() => changePage('mylist')}>My List</button>
           <button onClick={() => changePage('categories')}>
             Categories
+          </button>
+          <button onClick={() => changePage('unlock')}>
+            Unlock
           </button>
         </nav>
 
         <div className="navRight">
           <div className="search">
             <Search size={18} />
-
             <input
               value={query}
               onChange={(event) => {
@@ -410,21 +438,142 @@ function App() {
       </header>
 
       <main>
+        {/* UNLOCK AI FLIX */}
+        {activePage === 'unlock' && (
+          <section className="section">
+            <div
+              style={{
+                maxWidth: '720px',
+                margin: '25px auto',
+                padding: '32px 22px',
+                border: '1px solid #333',
+                borderRadius: '16px',
+                background: '#111',
+                textAlign: 'center'
+              }}
+            >
+              <LockKeyhole
+                size={38}
+                style={{ margin: '0 auto 16px', color: '#e50914' }}
+              />
+
+              <div className="eyebrow">INDEPENDENT CINEMA</div>
+              <h1 style={{ fontSize: 'clamp(28px, 5vw, 42px)' }}>
+                Unlock AI Flix
+              </h1>
+
+              <p style={{ color: '#bbb', lineHeight: 1.8 }}>
+                Experience original films by independent filmmaker
+                Kainat Ali.
+              </p>
+
+              <div
+                style={{
+                  fontSize: '42px',
+                  fontWeight: 800,
+                  margin: '22px 0 8px'
+                }}
+              >
+                $4.99 <span style={{ fontSize: '16px' }}>USD</span>
+              </div>
+
+              <p style={{ color: '#aaa', fontSize: '14px' }}>
+                Request access to a film. We will send you payment
+                instructions individually.
+              </p>
+
+              <form
+                onSubmit={requestAccess}
+                style={{
+                  display: 'grid',
+                  gap: '14px',
+                  textAlign: 'left',
+                  marginTop: '26px'
+                }}
+              >
+                <label htmlFor="access-name">Full name</label>
+                <input
+                  id="access-name"
+                  type="text"
+                  autoComplete="name"
+                  placeholder="Your full name"
+                  value={accessName}
+                  onChange={(event) => setAccessName(event.target.value)}
+                  required
+                  style={fieldStyle}
+                />
+
+                <label htmlFor="access-email">Email address</label>
+                <input
+                  id="access-email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  value={accessEmail}
+                  onChange={(event) => setAccessEmail(event.target.value)}
+                  required
+                  style={fieldStyle}
+                />
+
+                <label htmlFor="access-film">Choose a film</label>
+                <select
+                  id="access-film"
+                  value={accessFilm}
+                  onChange={(event) => setAccessFilm(event.target.value)}
+                  style={fieldStyle}
+                >
+                  {films.map((film) => (
+                    <option key={film.id} value={film.title}>
+                      {film.title}
+                    </option>
+                  ))}
+                </select>
+
+                {accessError && (
+                  <p className="authError">{accessError}</p>
+                )}
+
+                <button
+                  type="submit"
+                  className="primary"
+                  style={{
+                    width: '100%',
+                    justifyContent: 'center',
+                    marginTop: '8px'
+                  }}
+                >
+                  <Mail size={18} />
+                  Request Payment Instructions
+                  <ArrowRight size={18} />
+                </button>
+              </form>
+
+              <p
+                style={{
+                  color: '#888',
+                  fontSize: '12px',
+                  lineHeight: 1.7,
+                  marginTop: '20px'
+                }}
+              >
+                This opens your email app with a prepared request.
+                Your request is not submitted until you send that email.
+                We will send an individual payment request and confirm
+                payment before granting access.
+              </p>
+            </div>
+          </section>
+        )}
 
         {/* MY LIST */}
         {activePage === 'mylist' ? (
           <section className="section myListPage">
-            <div className="sectionHead">
-              <h2>My List</h2>
-            </div>
+            <div className="sectionHead"><h2>My List</h2></div>
 
             {!user ? (
               <div className="emptyState">
                 <h2>Sign in to view My List</h2>
-                <p>
-                  Sign in to save your favourite original films.
-                </p>
-
+                <p>Sign in to save your favourite original films.</p>
                 <button
                   className="primary"
                   onClick={() => {
@@ -436,18 +585,13 @@ function App() {
                 </button>
               </div>
             ) : watchlistLoading ? (
-              <div className="emptyState">
-                <p>Loading your list...</p>
-              </div>
+              <div className="emptyState"><p>Loading your list...</p></div>
             ) : films.filter((film) =>
                 watchlist.includes(String(film.id))
               ).length === 0 ? (
               <div className="emptyState">
                 <h2>Your list is empty</h2>
-                <p>
-                  Films you save will appear here.
-                </p>
-
+                <p>Films you save will appear here.</p>
                 <button
                   className="primary"
                   onClick={() => changePage('browse')}
@@ -457,61 +601,47 @@ function App() {
               </div>
             ) : (
               <div className="grid">
-                {films
-                  .filter((film) =>
-                    watchlist.includes(String(film.id))
-                  )
-                  .map((film) => (
-                    <article
-                      className="card"
-                      key={film.id}
-                      onClick={() => openFilm(film)}
-                    >
-                      <img src={film.poster} alt={film.title} />
-
-                      <div className="cardOverlay">
-                        <span>{film.runtime}</span>
-                        <span>{film.genre}</span>
-                      </div>
-
-                      <div className="cardBody">
-                        <h3>{film.title}</h3>
-                        <p>{film.country} • {film.year}</p>
-                      </div>
-                    </article>
-                  ))}
+                {films.filter((film) =>
+                  watchlist.includes(String(film.id))
+                ).map((film) => (
+                  <article
+                    className="card"
+                    key={film.id}
+                    onClick={() => openFilm(film)}
+                  >
+                    <img src={film.poster} alt={film.title} />
+                    <div className="cardOverlay">
+                      <span>{film.runtime}</span>
+                      <span>{film.genre}</span>
+                    </div>
+                    <div className="cardBody">
+                      <h3>{film.title}</h3>
+                      <p>{film.country} • {film.year}</p>
+                    </div>
+                  </article>
+                ))}
               </div>
             )}
           </section>
-
         ) : activePage === 'categories' ? (
           <section className="section">
-            <div className="sectionHead">
-              <h2>Explore Categories</h2>
-            </div>
-
+            <div className="sectionHead"><h2>Explore Categories</h2></div>
             <div className="chips">
-              {[...new Set(
-                films.map((film) => film.genre).filter(Boolean)
-              )].map((category) => (
-                <button
-                  key={category}
-                  onClick={() => {
-                    setQuery(category);
-                    setActivePage('browse');
-                  }}
-                >
-                  {category}
-                </button>
-              ))}
-
-              {films.length === 0 && (
-                <p>No categories available yet.</p>
-              )}
+              {[...new Set(films.map((film) => film.genre).filter(Boolean))]
+                .map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => {
+                      setQuery(category);
+                      setActivePage('browse');
+                    }}
+                  >
+                    {category}
+                  </button>
+                ))}
             </div>
           </section>
-
-        ) : (
+        ) : activePage !== 'unlock' ? (
           <>
             {/* HOME HERO */}
             {activePage === 'home' && heroFilm && (
@@ -530,39 +660,33 @@ function App() {
                   <div className="eyebrow">
                     AI FLIX ORIGINAL • {heroFilm.year}
                   </div>
-
                   <h1>{heroFilm.title}</h1>
-
                   <p className="meta">
                     {heroFilm.year} • {heroFilm.runtime} • {heroFilm.genre}
                   </p>
-
-                  <p className="description">
-                    {heroFilm.description}
-                  </p>
-
+                  <p className="description">{heroFilm.description}</p>
                   <div className="actions">
-                    <button
-                      className="primary"
-                      onClick={() => openFilm(heroFilm)}
-                    >
+                    <button className="primary" onClick={() => openFilm(heroFilm)}>
                       <Play size={18} fill="currentColor" />
                       View Film
                     </button>
-
                     <button
                       className="secondary"
                       onClick={() => toggleWatchlist(heroFilm.id)}
                     >
-                      {watchlist.includes(String(heroFilm.id)) ? (
-                        <Check size={18} />
-                      ) : (
-                        <Plus size={18} />
-                      )}
-
+                      {watchlist.includes(String(heroFilm.id))
+                        ? <Check size={18} />
+                        : <Plus size={18} />}
                       {watchlist.includes(String(heroFilm.id))
                         ? 'In My List'
                         : 'My List'}
+                    </button>
+                    <button
+                      className="primary"
+                      onClick={() => changePage('unlock')}
+                    >
+                      <LockKeyhole size={17} />
+                      Unlock for $4.99
                     </button>
                   </div>
                 </div>
@@ -581,26 +705,17 @@ function App() {
                         ? 'Now Streaming'
                         : 'AI Flix Originals'}
                 </h2>
-
                 <ChevronRight size={20} />
               </div>
 
               {loadingFilms ? (
-                <div className="emptyState">
-                  <p>Loading films...</p>
-                </div>
+                <div className="emptyState"><p>Loading films...</p></div>
               ) : filtered.length === 0 ? (
                 <div className="emptyState">
                   <h2>No films found</h2>
-                  <p>
-                    Try another search or check back for future releases.
-                  </p>
-
+                  <p>Try another search or check back for future releases.</p>
                   {query && (
-                    <button
-                      className="secondary"
-                      onClick={() => setQuery('')}
-                    >
+                    <button className="secondary" onClick={() => setQuery('')}>
                       Clear Search
                     </button>
                   )}
@@ -614,12 +729,10 @@ function App() {
                       onClick={() => openFilm(film)}
                     >
                       <img src={film.poster} alt={film.title} />
-
                       <div className="cardOverlay">
                         <span>{film.runtime}</span>
                         <span>{film.genre}</span>
                       </div>
-
                       <div className="cardBody">
                         <h3>{film.title}</h3>
                         <p>{film.country} • {film.year}</p>
@@ -630,55 +743,63 @@ function App() {
               )}
             </section>
 
-            {/* UPCOMING ORIGINALS */}
             {!query && activePage === 'home' && (
-              <section className="section">
-                <div className="sectionHead">
-                  <h2>More Original Films Coming Soon</h2>
-                </div>
+              <>
+                <section className="section">
+                  <div className="sectionHead">
+                    <h2>More Original Films Coming Soon</h2>
+                  </div>
+                  <p style={{ color: '#aaa', maxWidth: '650px', fontSize: '14px', lineHeight: '1.9' }}>
+                    Discover original stories and independent cinema
+                    created by Kainat Ali. New films will join the AI Flix
+                    catalogue as they are released.
+                  </p>
+                </section>
 
-                <p
-                  style={{
-                    color: '#aaa',
-                    maxWidth: '650px',
-                    fontSize: '14px',
-                    lineHeight: '1.9'
-                  }}
-                >
-                  Discover original stories and independent cinema
-                  created by Kainat Ali. New films will join the
-                  AI Flix catalogue as they are released.
-                </p>
-              </section>
-            )}
+                <section className="section">
+                  <div className="sectionHead"><h2>Explore AI Cinema</h2></div>
+                  <div className="chips">
+                    {[...new Set(films.map((film) => film.genre).filter(Boolean))]
+                      .map((category) => (
+                        <button
+                          key={category}
+                          onClick={() => {
+                            setQuery(category);
+                            setActivePage('browse');
+                          }}
+                        >
+                          {category}
+                        </button>
+                      ))}
+                  </div>
+                </section>
 
-            {/* GENRES */}
-            {activePage === 'home' && (
-              <section className="section">
-                <div className="sectionHead">
-                  <h2>Explore AI Cinema</h2>
-                </div>
-
-                <div className="chips">
-                  {[...new Set(
-                    films.map((film) => film.genre).filter(Boolean)
-                  )].map((category) => (
+                <section className="section">
+                  <div
+                    style={{
+                      padding: '28px 22px',
+                      border: '1px solid #333',
+                      borderRadius: '14px',
+                      background: '#111',
+                      textAlign: 'center'
+                    }}
+                  >
+                    <h2>Discover Independent Cinema</h2>
+                    <p style={{ color: '#aaa', lineHeight: 1.8 }}>
+                      Get access to original films from AI Flix for $4.99 USD.
+                    </p>
                     <button
-                      key={category}
-                      onClick={() => {
-                        setQuery(category);
-                        setActivePage('browse');
-                      }}
+                      className="primary"
+                      onClick={() => changePage('unlock')}
                     >
-                      {category}
+                      Unlock AI Flix <ArrowRight size={18} />
                     </button>
-                  ))}
-                </div>
-              </section>
+                  </div>
+                </section>
+              </>
             )}
           </>
-        )}
-
+        ) : null}
       </main>
 
       {/* FOOTER */}
@@ -690,25 +811,18 @@ function App() {
         >
           AI<span>FLIX</span>
         </div>
-
+        <p>© 2026 AI Flix. Original films. Independent cinema.</p>
         <p>
-          © 2026 AI Flix. Original films. Independent cinema.
+          Support: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
         </p>
-
-        <p>
-          Support:{' '}
-          <a href="mailto:support@aiflixmovies.com">
-            support@aiflixmovies.com
-          </a>
-        </p>
+        <button className="secondary" onClick={() => changePage('unlock')}>
+          Unlock AI Flix — $4.99
+        </button>
       </footer>
 
       {/* AUTH MODAL */}
       {authMode && (
-        <div
-          className="modal"
-          onClick={() => setAuthMode(null)}
-        >
+        <div className="modal" onClick={() => setAuthMode(null)}>
           <div
             className="modalCard authCard"
             onClick={(event) => event.stopPropagation()}
@@ -721,27 +835,13 @@ function App() {
               <X size={20} />
             </button>
 
-            {/* LOGIN */}
             {authMode === 'login' && (
               <div className="modalContent">
-                <div className="eyebrow">
-                  WELCOME BACK
-                </div>
-
+                <div className="eyebrow">WELCOME BACK</div>
                 <h2>Sign in to AI Flix</h2>
-
-                <p>
-                  Continue exploring original cinema.
-                </p>
-
-                {authError && (
-                  <p className="authError">{authError}</p>
-                )}
-
-                {authMessage && (
-                  <p className="authMessage">{authMessage}</p>
-                )}
-
+                <p>Continue exploring original cinema.</p>
+                {authError && <p className="authError">{authError}</p>}
+                {authMessage && <p className="authMessage">{authMessage}</p>}
                 <input
                   type="email"
                   placeholder="Email"
@@ -749,7 +849,6 @@ function App() {
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                 />
-
                 <input
                   type="password"
                   placeholder="Password"
@@ -760,14 +859,7 @@ function App() {
                     if (event.key === 'Enter') signIn();
                   }}
                 />
-
-                <button
-                  className="primary"
-                  onClick={signIn}
-                >
-                  Sign In
-                </button>
-
+                <button className="primary" onClick={signIn}>Sign In</button>
                 <button
                   className="secondary"
                   onClick={() => {
@@ -780,27 +872,13 @@ function App() {
               </div>
             )}
 
-            {/* SIGNUP */}
             {authMode === 'signup' && (
               <div className="modalContent">
-                <div className="eyebrow">
-                  JOIN AI FLIX
-                </div>
-
+                <div className="eyebrow">JOIN AI FLIX</div>
                 <h2>Create Your Account</h2>
-
-                <p>
-                  Join us for original cinematic storytelling.
-                </p>
-
-                {authError && (
-                  <p className="authError">{authError}</p>
-                )}
-
-                {authMessage && (
-                  <p className="authMessage">{authMessage}</p>
-                )}
-
+                <p>Join us for original cinematic storytelling.</p>
+                {authError && <p className="authError">{authError}</p>}
+                {authMessage && <p className="authMessage">{authMessage}</p>}
                 <input
                   type="text"
                   placeholder="Full name"
@@ -808,7 +886,6 @@ function App() {
                   value={fullName}
                   onChange={(event) => setFullName(event.target.value)}
                 />
-
                 <input
                   type="email"
                   placeholder="Email"
@@ -816,7 +893,6 @@ function App() {
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                 />
-
                 <input
                   type="password"
                   placeholder="Password (at least 6 characters)"
@@ -824,14 +900,7 @@ function App() {
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                 />
-
-                <button
-                  className="primary"
-                  onClick={signUp}
-                >
-                  Create Account
-                </button>
-
+                <button className="primary" onClick={signUp}>Create Account</button>
                 <button
                   className="secondary"
                   onClick={() => {
@@ -844,29 +913,13 @@ function App() {
               </div>
             )}
 
-            {/* ACCOUNT */}
             {authMode === 'account' && user && (
               <div className="modalContent">
-                <div className="eyebrow">
-                  YOUR ACCOUNT
-                </div>
-
-                <h2>
-                  {user.user_metadata?.full_name || 'AI Flix Member'}
-                </h2>
-
+                <div className="eyebrow">YOUR ACCOUNT</div>
+                <h2>{user.user_metadata?.full_name || 'AI Flix Member'}</h2>
                 <p>{user.email}</p>
-
-                {authError && (
-                  <p className="authError">{authError}</p>
-                )}
-
-                <button
-                  className="primary"
-                  onClick={signOut}
-                >
-                  Sign Out
-                </button>
+                {authError && <p className="authError">{authError}</p>}
+                <button className="primary" onClick={signOut}>Sign Out</button>
               </div>
             )}
           </div>
@@ -900,9 +953,7 @@ function App() {
                 ) : (
                   <div className="emptyState">
                     <h3>Film not available</h3>
-                    <p>
-                      This film does not have a video file yet.
-                    </p>
+                    <p>This film does not have a video file yet.</p>
                   </div>
                 )}
               </div>
@@ -911,75 +962,58 @@ function App() {
             )}
 
             <div className="modalContent">
-              <button
-                className="close"
-                onClick={closeFilm}
-                aria-label="Close film"
-              >
+              <button className="close" onClick={closeFilm} aria-label="Close film">
                 <X size={20} />
               </button>
-
-              <div className="eyebrow">
-                {selected.country} • {selected.year}
-              </div>
-
+              <div className="eyebrow">{selected.country} • {selected.year}</div>
               <h2>{selected.title}</h2>
-
-              <p className="meta">
-                {selected.runtime} • {selected.genre}
-              </p>
-
+              <p className="meta">{selected.runtime} • {selected.genre}</p>
               <p>{selected.description}</p>
-
               <p className="creator">
-                <Film size={16} />
-                Created by {selected.creator}
+                <Film size={16} /> Created by {selected.creator}
               </p>
 
               <div className="actions">
                 <button
                   className="primary"
-                  onClick={() => {
-                    if (!selected.videoUrl) {
-                      alert('The film video is not available yet.');
-                      return;
-                    }
-
-                    setPlaying(true);
-                  }}
+                  onClick={() => changePage('unlock')}
                 >
-                  <Play size={18} fill="currentColor" />
-                  Watch Film
+                  <LockKeyhole size={18} />
+                  Request Access — $4.99
                 </button>
-
                 <button
                   className="secondary"
                   onClick={() => toggleWatchlist(selected.id)}
                 >
-                  {watchlist.includes(String(selected.id)) ? (
-                    <Check size={18} />
-                  ) : (
-                    <Plus size={18} />
-                  )}
-
+                  {watchlist.includes(String(selected.id))
+                    ? <Check size={18} />
+                    : <Plus size={18} />}
                   {watchlist.includes(String(selected.id))
                     ? 'In My List'
                     : 'My List'}
                 </button>
               </div>
 
-              {playing && (
-                <p className="notice">
-                  You are watching on AI Flix.
-                </p>
-              )}
+              <p className="notice">
+                Request access to receive payment instructions.
+              </p>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 }
+
+const fieldStyle = {
+  width: '100%',
+  boxSizing: 'border-box',
+  padding: '13px 14px',
+  borderRadius: '8px',
+  border: '1px solid #444',
+  background: '#1c1c1c',
+  color: '#fff',
+  fontSize: '15px'
+};
 
 createRoot(document.getElementById('root')).render(<App />);
