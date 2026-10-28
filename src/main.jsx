@@ -32,8 +32,7 @@ const FALLBACK_FILMS = [
       'A historical thriller exploring a pivotal night through AI-assisted cinema.',
     poster:
       'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/683501478_1786619703436515.jpg',
-    videoUrl:
-      'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/videos/749822946_1781407777086011.mp4'
+    videoUrl: 'https://www.youtube.com/embed/oh3EBozQ19M'
   }
 ];
 
@@ -936,21 +935,21 @@ function App() {
             {playing ? (
               <div className="videoWrapper">
                 {selected.videoUrl ? (
-                  <video
-                    controls
-                    autoPlay
-                    playsInline
-                    src={selected.videoUrl}
-                    style={{
-                      width: '100%',
-                      height: 'auto',
-                      display: 'block',
-                      background: '#000'
-                    }}
-                  >
-                    Your browser does not support video playback.
-                  </video>
-                ) : (
+  <iframe
+    src={selected.videoUrl}
+    title={selected.title}
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+    referrerPolicy="strict-origin-when-cross-origin"
+    style={{
+      width: '100%',
+      aspectRatio: '16 / 9',
+      display: 'block',
+      border: 0,
+      background: '#000'
+    }}
+  />
+) : (
                   <div className="emptyState">
                     <h3>Film not available</h3>
                     <p>This film does not have a video file yet.</p>
