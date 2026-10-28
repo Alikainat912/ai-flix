@@ -55,6 +55,7 @@ function App() {
   const [watchlistLoading, setWatchlistLoading] = useState(false);
   const [hasFilmAccess, setHasFilmAccess] = useState(false);
 const [checkingFilmAccess, setCheckingFilmAccess] = useState(false);
+  const [showAccessModal, setShowAccessModal] = useState(false);
 
   // ACCESS REQUEST FORM
   const [accessName, setAccessName] = useState('');
@@ -786,12 +787,15 @@ const playSelectedFilm = async () => {
                         : 'My List'}
                     </button>
                     <button
-                      className="primary"
-                      onClick={() => changePage('unlock')}
-                    >
-                      <LockKeyhole size={17} />
-                      Unlock for $4.99
-                    </button>
+  className="primary"
+  onClick={() => {
+    setAccessFilm('The Night The Flag Changed');
+    setShowAccessModal(true);
+  }}
+>
+  <LockKeyhole size={17} />
+  Unlock for $4.99
+</button>
                   </div>
                 </div>
               </section>
