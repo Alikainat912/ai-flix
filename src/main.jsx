@@ -974,12 +974,20 @@ function App() {
 
               <div className="actions">
                 <button
-                  className="primary"
-                  onClick={() => changePage('unlock')}
-                >
-                  <LockKeyhole size={18} />
-                  Request Access — $4.99
-                </button>
+  className="primary"
+  onClick={() => setPlaying(true)}
+>
+  <Play size={18} fill="currentColor" />
+  Play Film
+</button>
+
+<button
+  className="secondary"
+  onClick={() => changePage('unlock')}
+>
+  <LockKeyhole size={18} />
+  Request Access — $4.99
+</button>
                 <button
                   className="secondary"
                   onClick={() => toggleWatchlist(selected.id)}
