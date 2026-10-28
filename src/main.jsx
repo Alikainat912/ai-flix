@@ -212,47 +212,94 @@ function App() {
   };
 
   // REQUEST ACCESS: OPENS THE CUSTOMER'S EMAIL APP
-  const requestAccess = (event) => {
-    event.preventDefault();
-    setAccessError('');
+  
 
-    if (!accessName.trim() || !accessEmail.trim()) {
-      setAccessError('Please enter your name and email address.');
-      return;
-    }
+const requestAccess = async (event) => {
+  event.preventDefault();
+  setAccessError('');
 
-    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-      accessEmail.trim()
-    );
+  if (!user) {
+    setAccessError('Please sign in or create an account before requesting access.');
+    setAuthMode('login');
+    return;
+  }
 
-    if (!validEmail) {
-      setAccessError('Please enter a valid email address.');
-      return;
-    }
+  if (!accessName.trim() || !accessEmail.trim()) {
+    setAccessError('Please enter your name and email address.');
+    return;
+  }
 
-    const subject = `AI Flix access request - ${accessFilm}`;
-    const body = [
-      'Hello AI Flix Support,',
-      '',
-      'I would like to purchase access to an AI Flix film.',
-      '',
-      `Name: ${accessName.trim()}`,
-      `Email: ${accessEmail.trim()}`,
-      `Film: ${accessFilm}`,
-      'Price: $4.99 USD',
-      '',
-      'Please send me payment instructions.',
-      '',
-      'Thank you.'
-    ].join('\n');
+  const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+    accessEmail.trim()
+  );
 
-    const mailto =
-      `mailto:${SUPPORT_EMAIL}` +
-      `?subject=${encodeURIComponent(subject)}` +
-      `&body=${encodeURIComponent(body)}`;
+  if (!validEmail) {
+    setAccessError('Please enter a valid email address.');
+    return;
+  }
 
-    window.location.href = mailto;
-  };
+  const { data: existing, error: lookupError } = await supabase
+    .from('access_requests')
+    .select('id, status')
+    .eq('user_id', user.id)
+    .eq('film_slug', 'night-flag')
+    .eq('status', 'pending')
+    .limit(1);
+
+  if (lookupError) {
+    setAccessError('Could not check your existing request. Please try again.');
+    return;
+  }
+
+  if (existing && existing.length > 0) {
+    setAccessError('You already have a pending request for this film.');
+    return;
+  }
+
+  const { data: request, error } = await supabase
+    .from('access_requests')
+    .insert({
+      user_id: user.id,
+      film_slug: 'night-flag',
+      customer_name: accessName.trim(),
+      customer_email: accessEmail.trim(),
+      amount: 4.99,
+      currency: 'USD'
+    })
+    .select('id')
+    .single();
+
+  if (error) {
+    setAccessError('Your request could not be saved: ' + error.message);
+    return;
+  }
+
+  const subject = `AI Flix payment request - ${request.id}`;
+  const body = [
+    'Hello AI Flix Support,',
+    '',
+    'A customer has requested access to a film.',
+    '',
+    `Request ID: ${request.id}`,
+    `Customer: ${accessName.trim()}`,
+    `Customer email: ${accessEmail.trim()}`,
+    `Account user ID: ${user.id}`,
+    `Film: ${accessFilm}`,
+    'Price: $4.99 USD',
+    'Status: Pending payment',
+    '',
+    'Please send the customer an individual Veem payment request.',
+    '',
+    'Thank you.'
+  ].join('\n');
+
+  const mailto =
+    `mailto:${SUPPORT_EMAIL}` +
+    `?subject=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(body)}`;
+
+  window.location.href = mailto;
+};
 
   // WATCHLIST
   const toggleWatchlist = async (id) => {
