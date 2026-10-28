@@ -800,46 +800,73 @@ function App() {
             </div>
           </div>
         </div>
-      )}
-      {showAccessModal && (
-  <div
-    style={{
-      position: "fixed",
-      inset: 0,
-      zIndex: 999999,
-      background: "rgba(0,0,0,0.85)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "20px"
-    }}
-  >
-    <div
-      style={{
-        background: "#151515",
-        color: "white",
-        padding: "28px",
-        borderRadius: "14px",
-        width: "100%",
-        maxWidth: "420px"
-      }}
-    >
-      <h2>Request Film Access</h2>
-      <p>Unlock your film for $4.99 USD.</p>
+            )}
 
-      <button
-        type="button"
-        onClick={() => setShowAccessModal(false)}
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
+      {showAccessModal && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 999999,
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#17191f',
+              color: '#ffffff',
+              padding: '28px',
+              borderRadius: '16px',
+              width: '100%',
+              maxWidth: '420px',
+              boxSizing: 'border-box',
+              border: '1px solid #393b45'
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setShowAccessModal(false)}
+              style={{
+                float: 'right',
+                background: 'transparent',
+                color: 'white',
+                border: 'none',
+                fontSize: '24px'
+              }}
+            >
+              ×
+            </button>
+
+            <h2>Request Film Access</h2>
+            <p>The Night The Flag Changed</p>
+            <h3>$4.99 USD</h3>
+            <p>
+              Request access to receive payment instructions.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setShowAccessModal(false)}
+              style={{
+                backgroundColor: '#e50925',
+                color: 'white',
+                border: 'none',
+                padding: '12px 22px',
+                borderRadius: '8px',
+                marginTop: '12px'
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 createRoot(document.getElementById('root')).render(<App />);
-      
-    
