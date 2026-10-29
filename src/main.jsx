@@ -405,13 +405,10 @@ function App() {
 
   // PLAY FILM
   const playSelectedFilm = async () => {
-    if (!selected) return;
-
-    if (selected.title !== 'The Night The Flag Changed') {
-      setPlaying(true);
-      return;
-    }
-
+  setHasFilmAccess(true);
+  setCheckingFilmAccess(false);
+  setPlaying(true);
+};
     if (!user) {
       setPlaying(false);
       clearAuthMessages();
