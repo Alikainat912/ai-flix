@@ -394,69 +394,32 @@ function App() {
     }
   };
 
+  
   // FILM DETAILS
   const openFilm = (film) => {
     setSelected(film);
     setPlaying(false);
-    setHasFilmAccess(false);
+    setHasFilmAccess(true);
     setCheckingFilmAccess(false);
     setAccessError('');
   };
 
-  // PLAY FILM
-  const playSelectedFilm = async () => {
-  setHasFilmAccess(true);
-  setCheckingFilmAccess(false);
-  setPlaying(true);
-};
-    if (!user) {
-      setPlaying(false);
-      clearAuthMessages();
-      setAuthError(
-        'Please sign in and request access to watch this film.'
-      );
-      setAuthMode('login');
-      return;
-    }
-
-    setCheckingFilmAccess(true);
-    setPlaying(false);
-    setHasFilmAccess(false);
-
-    try {
-      const { data, error } = await supabase
-        .from('film_access')
-        .select('film_slug')
-        .eq('user_id', user.id)
-        .eq('film_slug', 'night-flag')
-        .maybeSingle();
-
-      if (error) {
-        console.error('Access check failed:', error.message);
-        setAccessError('Unable to verify access. Please try again.');
-        return;
-      }
-
-      if (!data) {
-        setAccessError(
-          'Access has not been approved for your account. Please request access for $4.99.'
-        );
-        return;
-      }
-
-      setHasFilmAccess(true);
-      setPlaying(true);
-      setAccessError('');
-    } finally {
-      setCheckingFilmAccess(false);
-    }
+  // PLAY FILM — FREE ACCESS
+  const playSelectedFilm = () => {
+    setHasFilmAccess(true);
+    setCheckingFilmAccess(false);
+    setAccessError('');
+    setPlaying(true);
   };
 
   const closeFilm = () => {
     setSelected(null);
     setPlaying(false);
     setHasFilmAccess(false);
+    setCheckingFilmAccess(false);
+    setAccessError('');
   };
+
 
   // SIGN IN
   const signIn = async () => {
