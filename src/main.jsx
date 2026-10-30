@@ -123,6 +123,8 @@ function App() {
     };
   }, []);
 
+  
+
   // LOAD FILMS
   useEffect(() => {
     let mounted = true;
@@ -136,64 +138,73 @@ function App() {
 
         if (error) {
           console.error('Could not load movies:', error.message);
+          if (mounted) setFilms(FALLBACK_FILMS);
           return;
         }
 
         if (!mounted) return;
 
-        if (!data || data.length === 0) {
-          setFilms(FALLBACK_FILMS);
-          return;
-        }
-
-        const databaseFilms = data.map((movie) => {
+        const databaseFilms = (data || []).map((movie) => {
           const existingFilm = FALLBACK_FILMS.find(
-            (film) => film.title === movie.title
+            (film) =>
+              film.title.trim().toLowerCase() ===
+              movie.title?.trim().toLowerCase()
           );
 
-          const videoUrl =
-            movie.title?.trim() === 'The Night The Flag Changed'
-              ? 'https://www.youtube.com/embed/oh3EBozQ19M'
-              : movie.video_url || existingFilm?.videoUrl || '';
-
           return {
-            id: movie.id,
+            id: existingFilm?.id || movie.id,
             title: movie.title || 'Untitled Film',
             year: movie.year || 2026,
-            runtime: movie.duration || '',
-            genre: movie.genre || 'Original Cinema',
+            runtime: movie.duration || existingFilm?.runtime || '',
+            genre: movie.genre || existingFilm?.genre || 'Original Cinema',
             country: existingFilm?.country || 'International',
-            creator: movie.director || 'Kainat Ali',
+            creator: movie.director || existingFilm?.creator || 'Kainat Ali',
             description:
-              movie.description || 'An original film from AI Flix.',
+              movie.description ||
+              existingFilm?.description ||
+              'An original film from AI Flix.',
             poster:
-              movie.poster_url?.trim() || existingFilm?.poster || '',
-            videoUrl
+              movie.poster_url?.trim() ||
+              existingFilm?.poster ||
+              '',
+            videoUrl:
+              existingFilm?.videoUrl ||
+              movie.video_url ||
+              ''
           };
         });
 
         const mergedFilms = [...databaseFilms];
 
-FALLBACK_FILMS.forEach((fallbackFilm) => {
-  const alreadyExists = mergedFilms.some(
-    (film) =>
-      film.id === fallbackFilm.id ||
-      film.title?.trim().toLowerCase() ===
-        fallbackFilm.title.trim().toLowerCase()
-  );
+        FALLBACK_FILMS.forEach((fallbackFilm) => {
+          const exists = mergedFilms.some(
+            (film) =>
+              film.title.trim().toLowerCase() ===
+              fallbackFilm.title.trim().toLowerCase()
+          );
 
-  if (!alreadyExists) {
-    mergedFilms.push(fallbackFilm);
-  }
-});
+          if (!exists) {
+            mergedFilms.push(fallbackFilm);
+          }
+        });
 
-setFilms(mergedFilms);
+        setFilms(mergedFilms);
+      } catch (error) {
+        console.error('Unexpected movie loading error:', error);
+        if (mounted) setFilms(FALLBACK_FILMS);
+      } finally {
+        if (mounted) setLoadingFilms(false);
+      }
+    };
+
     loadMovies();
 
     return () => {
       mounted = false;
     };
   }, []);
+
+
 
   // LOAD WATCHLIST
   useEffect(() => {
