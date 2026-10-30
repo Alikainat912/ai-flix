@@ -20,7 +20,7 @@ import { supabase } from './supabase';
 const SUPPORT_EMAIL = 'support@aiflixmovies.com';
 
 
-const films = [
+const FALLBACK_FILMS = [
   {
     id: 'night-flag',
     title: 'The Night The Flag Changed',
