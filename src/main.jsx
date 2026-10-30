@@ -19,7 +19,8 @@ import { supabase } from './supabase';
 
 const SUPPORT_EMAIL = 'support@aiflixmovies.com';
 
-const FALLBACK_FILMS = [
+
+const films = [
   {
     id: 'night-flag',
     title: 'The Night The Flag Changed',
@@ -33,8 +34,22 @@ const FALLBACK_FILMS = [
     poster:
       'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/683501478_1786619703436515.jpg',
     videoUrl: 'https://www.youtube.com/embed/oh3EBozQ19M'
+  },
+  {
+    id: 'nothing-left-to-lose',
+    title: 'Nothing Left to Lose',
+    year: 2026,
+    runtime: '5 min 46 sec',
+    genre: 'Drama',
+    country: 'Pakistan',
+    creator: 'Kainat Ali',
+    description:
+      'Nothing Left to Lose — an AI-assisted short film by independent filmmaker Kainat Ali.',
+    poster: 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/867052322_1788628477263587.jpg',
+    videoUrl: 'https://www.youtube.com/embed/zG9y4fBlcLw'
   }
 ];
+
 
 const fieldStyle = {
   width: '100%',
