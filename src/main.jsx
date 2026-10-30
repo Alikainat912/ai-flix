@@ -58,7 +58,7 @@ const FALLBACK_FILMS = [
     creator: 'Kainat Ali',
     description:
       'A science-fiction meditation on language, mystery, human connection and the boundaries of understanding.',
-    poster: '',
+    poster: 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/21257650_1788675699651661.jpg',
     videoUrl: 'https://www.youtube.com/embed/95PDubDKBhI'
   }
 ];
