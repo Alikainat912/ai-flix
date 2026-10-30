@@ -19,7 +19,6 @@ import { supabase } from './supabase';
 
 const SUPPORT_EMAIL = 'support@aiflixmovies.com';
 
-
 const FALLBACK_FILMS = [
   {
     id: 'night-flag',
@@ -45,24 +44,23 @@ const FALLBACK_FILMS = [
     creator: 'Kainat Ali',
     description:
       'Nothing Left to Lose — an AI-assisted short film by independent filmmaker Kainat Ali.',
-    poster: 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/867052322_1788628477263587.jpg',
+    poster:
+      'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/867052322_1788628477263587.jpg',
     videoUrl: 'https://www.youtube.com/embed/zG9y4fBlcLw'
+  },
+  {
+    id: 'unspoken-terminus',
+    title: 'The Unspoken Terminus',
+    year: 2026,
+    runtime: '4 min 10 sec',
+    genre: 'Experimental Sci-Fi',
+    country: 'Pakistan',
+    creator: 'Kainat Ali',
+    description:
+      'A science-fiction meditation on language, mystery, human connection and the boundaries of understanding.',
+    poster: '',
+    videoUrl: 'https://www.youtube.com/embed/95PDubDKBhI'
   }
-  
-{
-  id: 'unspoken-terminus',
-  title: 'The Unspoken Terminus',
-  year: 2026,
-  runtime: '4 min 10 sec',
-  genre: 'Experimental Sci-Fi',
-  country: 'Pakistan',
-  creator: 'Kainat Ali',
-  description:
-    'A science-fiction meditation on language, mystery, human connection and the boundaries of understanding.',
-  poster: 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/21257650_1788675699651661.jpg',
-  videoUrl: 'https://www.youtube.com/embed/95PDubDKBhI'
-}
-
 ];
 
 
