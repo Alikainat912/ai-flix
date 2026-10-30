@@ -172,14 +172,22 @@ function App() {
           };
         });
 
-        setFilms(databaseFilms);
-      } catch (error) {
-        console.error('Unexpected movie loading error:', error);
-      } finally {
-        if (mounted) setLoadingFilms(false);
-      }
-    };
+        const mergedFilms = [...databaseFilms];
 
+FALLBACK_FILMS.forEach((fallbackFilm) => {
+  const alreadyExists = mergedFilms.some(
+    (film) =>
+      film.id === fallbackFilm.id ||
+      film.title?.trim().toLowerCase() ===
+        fallbackFilm.title.trim().toLowerCase()
+  );
+
+  if (!alreadyExists) {
+    mergedFilms.push(fallbackFilm);
+  }
+});
+
+setFilms(mergedFilms);
     loadMovies();
 
     return () => {
