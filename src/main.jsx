@@ -76,13 +76,13 @@ const FALLBACK_SERIES = [
     poster: '',
     episodes: [
       {
-        id: 'tow-ep1',
-        number: 1,
-        title: 'The First Message',
-        runtime: '5 min',
-        videoUrl: '',
-        status: 'available'
-      },
+  id: 'tow-ep1',
+  number: 1,
+  title: 'The First Message',
+  runtime: '5 min',
+  videoUrl: 'https://www.youtube.com/embed/gnG1yl_y6wk',
+  status: 'available'
+},
       {
         id: 'tow-ep2',
         number: 2,
