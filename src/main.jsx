@@ -919,57 +919,62 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
           </section>
         ) : (
           <>
-            {activePage === 'home' && heroFilm && (
-              <section
-                className="hero"
-                style={{
-                  backgroundImage:
-                    `linear-gradient(90deg, rgba(5,5,8,.82) 0%, rgba(5,5,8,.48) 48%, rgba(5,5,8,.12) 100%), url("${heroFilm.poster}")`
-                }}
-              >
-                <div className="heroCopy">
-                  <div className="eyebrow">
-                    AI FLIX ORIGINAL • {heroFilm.year}
-                  </div>
-                  <h1>{heroFilm.title}</h1>
-                  <p className="meta">
-                    {heroFilm.year} • {heroFilm.runtime} • {heroFilm.genre}
-                  </p>
-                  <p className="description">{heroFilm.description}</p>
+                        )}
 
-                  <div className="actions">
-                    <button
-                      className="primary"
-                      onClick={() => openFilm(heroFilm)}
-                    >
-                      <Play size={18} fill="currentColor" />
-                      View Film
-                    </button>
+            {activePage === 'home' && (
+              <section className="section">
+                <div className="sectionHead">
+                  <h2>AI Flix Original Series</h2>
+                  <ChevronRight size={20} />
+                </div>
 
-                    <button
-                      className="secondary"
-                      onClick={() => toggleWatchlist(heroFilm.id)}
+                <div className="grid">
+                  {FALLBACK_SERIES.map((series) => (
+                    <article
+                      className="card"
+                      key={series.id}
+                      onClick={() => {
+                        setSelectedSeries(series);
+                        changePage('series-detail');
+                      }}
+                      style={{ cursor: 'pointer' }}
                     >
-                      {watchlist.includes(String(heroFilm.id))
-                        ? <Check size={18} />
-                        : <Plus size={18} />}
-                      {watchlist.includes(String(heroFilm.id))
-                        ? 'In My List'
-                        : 'My List'}
-                    </button>
+                      {series.poster ? (
+                        <img src={series.poster} alt={series.title} />
+                      ) : (
+                        <div style={{
+                          aspectRatio: '2 / 3',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          textAlign: 'center',
+                          padding: '20px',
+                          boxSizing: 'border-box',
+                          background: 'linear-gradient(145deg, #29202b, #09090d)'
+                        }}>
+                          <div>
+                            <div className="eyebrow">AI FLIX ORIGINAL</div>
+                            <h2 style={{ fontFamily: 'Georgia, serif' }}>
+                              THE OTHER WOMAN
+                            </h2>
+                            <p style={{ color: '#aaa' }}>
+                              A psychological thriller
+                            </p>
+                          </div>
+                        </div>
+                      )}
 
-                    <button
-                      className="primary"
-                      onClick={() => openAccessModal(heroFilm.title)}
-                    >
-                      <LockKeyhole size={17} />
-                      Unlock for $4.99
-                    </button>
-                  </div>
+                      <div className="cardBody">
+                        <h3>{series.title}</h3>
+                        <p>{series.genre} • {series.episodes.length} Episodes</p>
+                      </div>
+                    </article>
+                  ))}
                 </div>
               </section>
             )}
 
+          
             <section className="section">
               <div className="sectionHead">
                 <h2>
