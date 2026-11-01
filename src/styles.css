@@ -1152,4 +1152,82 @@ footer a:hover {
   opacity: 0.6;
   cursor: wait;
 }
+.seriesFeatureCard {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 16px;
+  background: #111116;
+  border: 1px solid #25232b;
+  border-radius: 12px;
+  cursor: pointer;
+}
 
+.seriesFeaturePoster {
+  width: 38%;
+  flex-shrink: 0;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: 7px;
+}
+
+.seriesFeaturePoster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.seriesPosterPlaceholder {
+  height: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(145deg, #29202b, #09090d);
+}
+
+.seriesPosterPlaceholder span {
+  color: #d45b75;
+  font-size: 9px;
+  letter-spacing: 3px;
+}
+
+.seriesPosterPlaceholder h2 {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  color: white;
+}
+
+.seriesPosterPlaceholder p {
+  color: #aaa;
+  font-size: 11px;
+}
+
+.seriesFeatureInfo h2 {
+  font-family: Georgia, serif;
+  font-size: 23px;
+  color: white;
+}
+
+.seriesFeatureInfo p {
+  color: #aaa;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  .seriesFeatureCard {
+    gap: 14px;
+    padding: 12px;
+  }
+
+  .seriesFeaturePoster {
+    width: 40%;
+  }
+
+  .seriesFeatureInfo h2 {
+    font-size: 19px;
+  }
+}
