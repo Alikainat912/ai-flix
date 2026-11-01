@@ -1734,7 +1734,6 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
           </div>
         </div>
       )}
-
       {/* EPISODE PLAYER */}
       {selectedEpisode && (
         <div
@@ -1779,8 +1778,10 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
           </div>
         </div>
       )}
+
     </div>
   );
 }
 
 createRoot(document.getElementById('root')).render(<App />);
+      
