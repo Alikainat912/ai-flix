@@ -62,6 +62,62 @@ const FALLBACK_FILMS = [
     videoUrl: 'https://www.youtube.com/embed/95PDubDKBhI'
   }
 ];
+const FALLBACK_SERIES = [
+  {
+    id: 'the-other-woman',
+    title: 'The Other Woman',
+    year: 2026,
+    genre: 'Psychological Thriller',
+    language: 'English',
+    creator: 'Kainat Ali',
+    description:
+      'A perfect marriage. An impossible message. A secret that refuses to stay buried.',
+    runtime: '24 min',
+    poster: '',
+    episodes: [
+      {
+        id: 'tow-ep1',
+        number: 1,
+        title: 'The First Message',
+        runtime: '5 min',
+        videoUrl: '',
+        status: 'available'
+      },
+      {
+        id: 'tow-ep2',
+        number: 2,
+        title: 'Someone Knows',
+        runtime: '5 min',
+        videoUrl: '',
+        status: 'upcoming'
+      },
+      {
+        id: 'tow-ep3',
+        number: 3,
+        title: 'The Photograph',
+        runtime: '5 min',
+        videoUrl: '',
+        status: 'upcoming'
+      },
+      {
+        id: 'tow-ep4',
+        number: 4,
+        title: "Don't Trust Him",
+        runtime: '5 min',
+        videoUrl: '',
+        status: 'upcoming'
+      },
+      {
+        id: 'tow-ep5',
+        number: 5,
+        title: 'The Other Woman',
+        runtime: '4 min',
+        videoUrl: '',
+        status: 'upcoming'
+      }
+    ]
+  }
+];
 
 
 const fieldStyle = {
@@ -82,6 +138,8 @@ function App() {
   const [query, setQuery] = useState('');
   const [watchlist, setWatchlist] = useState([]);
   const [activePage, setActivePage] = useState('home');
+  const [selectedSeries, setSelectedSeries] = useState(null);
+const [selectedEpisode, setSelectedEpisode] = useState(null);
 
   const [user, setUser] = useState(null);
   const [authMode, setAuthMode] = useState(null);
@@ -571,14 +629,13 @@ function App() {
 
         <nav>
           <button onClick={() => changePage('home')}>Home</button>
-          <button onClick={() => changePage('browse')}>Browse</button>
-          <button onClick={() => changePage('mylist')}>My List</button>
+<button onClick={() => changePage('browse')}>Movies</button>
+<button onClick={() => changePage('series')}>Series</button>
+<button onClick={() => changePage('mylist')}>My List</button>
           <button onClick={() => changePage('categories')}>
             Categories
           </button>
-          <button onClick={() => openAccessModal()}>
-            Unlock
-          </button>
+    
         </nav>
 
         <div className="navRight">
@@ -607,6 +664,174 @@ function App() {
 
       {/* MAIN CONTENT */}
       <main>
+        {activePage === 'series-detail' && selectedSeries ? (
+  <section className="section">
+    <button
+      className="secondary"
+      onClick={() => changePage('series')}
+    >
+      ← Back to Series
+    </button>
+
+    <div style={{
+      padding: '30px 0',
+      maxWidth: '750px'
+    }}>
+      <div className="eyebrow">
+        AI FLIX ORIGINAL SERIES • {selectedSeries.year}
+      </div>
+
+      <h1 style={{ fontSize: 'clamp(30px, 5vw, 48px)' }}>
+        {selectedSeries.title}
+      </h1>
+
+      <p className="meta">
+        {selectedSeries.genre} • {selectedSeries.language} •
+        {` ${selectedSeries.episodes.length} Episodes`}
+      </p>
+
+      <p className="description">
+        {selectedSeries.description}
+      </p>
+
+      <p className="creator">
+        Created by {selectedSeries.creator}
+      </p>
+    </div>
+
+    <div className="sectionHead">
+      <h2>Episodes</h2>
+    </div>
+
+    <div style={{
+      display: 'grid',
+      gap: '12px'
+    }}>
+      {selectedSeries.episodes.map((episode) => (
+        <article
+          key={episode.id}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '15px',
+            padding: '16px',
+            background: '#15171e',
+            border: '1px solid #292b33',
+            borderRadius: '12px'
+          }}
+        >
+          <div style={{
+            minWidth: '45px',
+            height: '45px',
+            display: 'grid',
+            placeItems: 'center',
+            background: '#292b33',
+            borderRadius: '8px',
+            fontWeight: 800
+          }}>
+            {String(episode.number).padStart(2, '0')}
+          </div>
+
+          <div style={{ flex: 1 }}>
+            <h3 style={{ margin: '0 0 6px' }}>
+              {episode.title}
+            </h3>
+            <p style={{
+              margin: 0,
+              color: '#999',
+              fontSize: '13px'
+            }}>
+              Episode {episode.number} • {episode.runtime}
+            </p>
+          </div>
+
+          {episode.status === 'available' &&
+          episode.videoUrl ? (
+            <button
+              className="primary"
+              onClick={() => setSelectedEpisode(episode)}
+            >
+              <Play size={16} fill="currentColor" />
+              Watch
+            </button>
+          ) : episode.status === 'available' ? (
+            <span style={{
+              color: '#aaa',
+              fontSize: '12px'
+            }}>
+              Upload pending
+            </span>
+          ) : (
+            <span style={{
+              color: '#aaa',
+              fontSize: '12px'
+            }}>
+              Coming Soon
+            </span>
+          )}
+        </article>
+      ))}
+    </div>
+  </section>
+
+) : activePage === 'series' ? (
+  <section className="section">
+    <div className="sectionHead">
+      <h2>AI Flix Original Series</h2>
+    </div>
+
+    <div className="grid">
+      {FALLBACK_SERIES.map((series) => (
+        <article
+          className="card"
+          key={series.id}
+          onClick={() => {
+            setSelectedSeries(series);
+            changePage('series-detail');
+          }}
+          style={{ cursor: 'pointer' }}
+        >
+          {series.poster ? (
+            <img src={series.poster} alt={series.title} />
+          ) : (
+            <div style={{
+              aspectRatio: '2 / 3',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              padding: '20px',
+              boxSizing: 'border-box',
+              background:
+                'linear-gradient(145deg, #29202b, #09090d)'
+            }}>
+              <div>
+                <div className="eyebrow">
+                  AI FLIX ORIGINAL
+                </div>
+                <h2 style={{
+                  fontFamily: 'Georgia, serif',
+                  fontSize: '28px'
+                }}>
+                  THE OTHER WOMAN
+                </h2>
+                <p style={{ color: '#aaa' }}>
+                  A psychological thriller
+                </p>
+              </div>
+            </div>
+          )}
+
+          <div className="cardBody">
+            <h3>{series.title}</h3>
+            <p>
+              {series.genre} • {series.episodes.length} Episodes
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
         {activePage === 'mylist' ? (
           <section className="section myListPage">
             <div className="sectionHead">
@@ -1193,16 +1418,14 @@ function App() {
         </div>
       )}
 
-      {/* FILM DETAILS AND PLAYER MODAL */}
+            {/* FILM DETAILS AND PLAYER MODAL */}
       {selected && (
         <div className="modal" onClick={closeFilm}>
           <div
             className={`modalCard ${playing ? 'playingCard' : ''}`}
             onClick={(event) => event.stopPropagation()}
           >
-            {playing &&
-            (selected.title !== 'The Night The Flag Changed' ||
-              hasFilmAccess) ? (
+            {playing ? (
               <div className="videoWrapper">
                 {selected.videoUrl ? (
                   <iframe
@@ -1241,38 +1464,26 @@ function App() {
               <div className="eyebrow">
                 {selected.country} • {selected.year}
               </div>
+
               <h2>{selected.title}</h2>
+
               <p className="meta">
                 {selected.runtime} • {selected.genre}
               </p>
+
               <p>{selected.description}</p>
+
               <p className="creator">
                 <Film size={16} /> Created by {selected.creator}
               </p>
-
-              {accessError && (
-                <p className="authError">{accessError}</p>
-              )}
 
               <div className="actions">
                 <button
                   className="primary"
                   onClick={playSelectedFilm}
-                  disabled={checkingFilmAccess}
                 >
                   <Play size={18} fill="currentColor" />
-                  {checkingFilmAccess
-                    ? 'Checking access...'
-                    : 'Play Film'}
-                </button>
-
-                <button
-                  type="button"
-                  className="primary"
-                  onClick={() => openAccessModal(selected.title)}
-                >
-                  <LockKeyhole size={17} />
-                  Request Access — $4.99
+                  {playing ? 'Playing' : 'Play Film'}
                 </button>
 
                 <button
@@ -1287,10 +1498,51 @@ function App() {
                     : 'My List'}
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-              <p className="notice">
-                Request access to receive payment instructions.
-              </p>
+      {/* EPISODE PLAYER */}
+      {selectedEpisode && (
+        <div
+          className="modal"
+          onClick={() => setSelectedEpisode(null)}
+        >
+          <div
+            className="modalCard playingCard"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="close"
+              onClick={() => setSelectedEpisode(null)}
+              aria-label="Close episode"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="videoWrapper">
+              <iframe
+                src={selectedEpisode.videoUrl}
+                title={selectedEpisode.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                style={{
+                  width: '100%',
+                  aspectRatio: '16 / 9',
+                  display: 'block',
+                  border: 0,
+                  background: '#000'
+                }}
+              />
+            </div>
+
+            <div className="modalContent">
+              <div className="eyebrow">
+                THE OTHER WOMAN • EPISODE {selectedEpisode.number}
+              </div>
+              <h2>{selectedEpisode.title}</h2>
+              <p>AI FLIX ORIGINAL SERIES</p>
             </div>
           </div>
         </div>
