@@ -937,120 +937,397 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                 <ChevronRight size={20} />
               </div>
 
-              {loadingFilms ? (
-                <div className="emptyState">
-                  <p>Loading films...</p>
-                </div>
-              ) : filtered.length === 0 ? (
-                <div className="emptyState">
-                  <h2>No films found</h2>
-                  <p>
-                    Try another search or check back for future releases.
-                  </p>
-                  {query && (
-                    <button
-                      className="secondary"
-                      onClick={() => setQuery('')}
-                    >
-                      Clear Search
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <div className="grid">
-                  {filtered.map((film) => (
-                    <article
-                      className="card"
-                      key={film.id}
-                      onClick={() => openFilm(film)}
-                    >
-                      <img src={film.poster} alt={film.title} />
-                      <div className="cardOverlay">
-                        <span>{film.runtime}</span>
-                        <span>{film.genre}</span>
-                      </div>
-                      <div className="cardBody">
-                        <h3>{film.title}</h3>
-                        <p>{film.country} • {film.year}</p>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              )}
-            </section>
+<main>
+  {activePage === 'series-detail' && selectedSeries ? (
+    <section className="section">
+      <button className="secondary" onClick={() => changePage('series')}>
+        ← Back to Series
+      </button>
 
-            
+      <div style={{ padding: '30px 0', maxWidth: '750px' }}>
+        <div className="eyebrow">
+          AI FLIX ORIGINAL SERIES • {selectedSeries.year}
+        </div>
 
-            {!query && activePage === 'home' && (
-              <>
-                <section className="section">
-                  <div className="sectionHead">
-                    <h2>More Original Films Coming Soon</h2>
-                  </div>
-                  <p
-                    style={{
-                      color: '#aaa',
-                      maxWidth: '650px',
-                      fontSize: '14px',
-                      lineHeight: '1.9'
-                    }}
-                  >
-                    Discover original stories and independent cinema
-                    created by Kainat Ali. New films will join the AI Flix
-                    catalogue as they are released.
-                  </p>
-                </section>
+        <h1 style={{ fontSize: 'clamp(30px, 5vw, 48px)' }}>
+          {selectedSeries.title}
+        </h1>
 
-                <section className="section">
-                  <div className="sectionHead">
-                    <h2>Explore AI Cinema</h2>
-                  </div>
-                  <div className="chips">
-                    {[...new Set(
-                      films.map((film) => film.genre).filter(Boolean)
-                    )].map((category) => (
-                      <button
-                        key={category}
-                        onClick={() => {
-                          setQuery(category);
-                          setActivePage('browse');
-                        }}
-                      >
-                        {category}
-                      </button>
-                    ))}
-                  </div>
-                </section>
+        <p className="meta">
+          {selectedSeries.genre} • {selectedSeries.language} • {selectedSeries.episodes.length} Episodes
+        </p>
 
-                <section className="section">
-                  <div
-                    style={{
-                      padding: '28px 22px',
-                      border: '1px solid #333',
-                      borderRadius: '14px',
-                      background: '#111',
-                      textAlign: 'center'
-                    }}
-                  >
-                    <h2>Discover Independent Cinema</h2>
-                    <p style={{ color: '#aaa', lineHeight: 1.8 }}>
-                      Get access to original films from AI Flix for $4.99 USD.
-                    </p>
-                    <button
-                      className="primary"
-                      onClick={() => openAccessModal()}
-                    >
-                      <LockKeyhole size={17} />
-                      Unlock AI Flix
-                      <ArrowRight size={18} />
-                    </button>
-                  </div>
-                </section>
-              </>
+        <p className="description">{selectedSeries.description}</p>
+        <p className="creator">Created by {selectedSeries.creator}</p>
+      </div>
+
+      <div className="sectionHead">
+        <h2>Episodes</h2>
+      </div>
+
+      <div style={{ display: 'grid', gap: '12px' }}>
+        {selectedSeries.episodes.map((episode) => (
+          <article
+            key={episode.id}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '15px',
+              padding: '16px',
+              background: '#15171e',
+              border: '1px solid #292b33',
+              borderRadius: '12px'
+            }}
+          >
+            <div style={{
+              minWidth: '45px',
+              height: '45px',
+              display: 'grid',
+              placeItems: 'center',
+              background: '#292b33',
+              borderRadius: '8px',
+              fontWeight: 800
+            }}>
+              {String(episode.number).padStart(2, '0')}
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <h3 style={{ margin: '0 0 6px' }}>{episode.title}</h3>
+              <p style={{ margin: 0, color: '#999', fontSize: '13px' }}>
+                Episode {episode.number} • {episode.runtime}
+              </p>
+            </div>
+
+            {episode.status === 'available' && episode.videoUrl ? (
+              <button
+                className="primary"
+                onClick={() => setSelectedEpisode(episode)}
+              >
+                <Play size={16} fill="currentColor" />
+                Watch
+              </button>
+            ) : (
+              <span style={{ color: '#aaa', fontSize: '12px' }}>
+                Coming Soon
+              </span>
             )}
-          </>
+          </article>
+        ))}
+      </div>
+    </section>
+
+  ) : activePage === 'series' ? (
+    <section className="section">
+      <div className="sectionHead">
+        <h2>AI Flix Original Series</h2>
+      </div>
+
+      <div className="grid">
+        {FALLBACK_SERIES.map((series) => (
+          <article
+            className="card"
+            key={series.id}
+            onClick={() => {
+              setSelectedSeries(series);
+              changePage('series-detail');
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            {series.poster ? (
+              <img src={series.poster} alt={series.title} />
+            ) : (
+              <div style={{
+                aspectRatio: '2 / 3',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                padding: '20px',
+                boxSizing: 'border-box',
+                background: 'linear-gradient(145deg, #29202b, #09090d)'
+              }}>
+                <div>
+                  <div className="eyebrow">AI FLIX ORIGINAL</div>
+                  <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '28px' }}>
+                    THE OTHER WOMAN
+                  </h2>
+                  <p style={{ color: '#aaa' }}>A psychological thriller</p>
+                </div>
+              </div>
+            )}
+
+            <div className="cardBody">
+              <h3>{series.title}</h3>
+              <p>{series.genre} • {series.episodes.length} Episodes</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+  ) : activePage === 'mylist' ? (
+    <section className="section myListPage">
+      <div className="sectionHead">
+        <h2>My List</h2>
+      </div>
+
+      {!user ? (
+        <div className="emptyState">
+          <h2>Sign in to view My List</h2>
+          <p>Sign in to save your favourite original films.</p>
+          <button
+            className="primary"
+            onClick={() => {
+              clearAuthMessages();
+              setAuthMode('login');
+            }}
+          >
+            Sign In
+          </button>
+        </div>
+      ) : watchlistLoading ? (
+        <div className="emptyState">
+          <p>Loading your list...</p>
+        </div>
+      ) : films.filter((film) => watchlist.includes(String(film.id))).length === 0 ? (
+        <div className="emptyState">
+          <h2>Your list is empty</h2>
+          <p>Films you save will appear here.</p>
+          <button className="primary" onClick={() => changePage('browse')}>
+            Browse Films
+          </button>
+        </div>
+      ) : (
+        <div className="grid">
+          {films
+            .filter((film) => watchlist.includes(String(film.id)))
+            .map((film) => (
+              <article
+                className="card"
+                key={film.id}
+                onClick={() => openFilm(film)}
+              >
+                <img src={film.poster} alt={film.title} />
+                <div className="cardOverlay">
+                  <span>{film.runtime}</span>
+                  <span>{film.genre}</span>
+                </div>
+                <div className="cardBody">
+                  <h3>{film.title}</h3>
+                  <p>{film.country} • {film.year}</p>
+                </div>
+              </article>
+            ))}
+        </div>
+      )}
+    </section>
+
+  ) : activePage === 'categories' ? (
+    <section className="section">
+      <div className="sectionHead">
+        <h2>Explore Categories</h2>
+      </div>
+
+      <div className="chips">
+        {[...new Set(films.map((film) => film.genre).filter(Boolean))].map((category) => (
+          <button
+            key={category}
+            onClick={() => {
+              setQuery(category);
+              setActivePage('browse');
+            }}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+    </section>
+
+  ) : (
+    <>
+      {/* HOMEPAGE HERO */}
+      {activePage === 'home' && heroFilm && (
+        <section
+          className="hero"
+          style={{
+            backgroundImage:
+              `linear-gradient(90deg, rgba(5,5,8,.82) 0%, rgba(5,5,8,.48) 48%, rgba(5,5,8,.12) 100%), url("${heroFilm.poster}")`
+          }}
+        >
+          <div className="heroCopy">
+            <div className="eyebrow">
+              AI FLIX ORIGINAL • {heroFilm.year}
+            </div>
+            <h1>{heroFilm.title}</h1>
+            <p className="meta">
+              {heroFilm.year} • {heroFilm.runtime} • {heroFilm.genre}
+            </p>
+            <p className="description">{heroFilm.description}</p>
+
+            <div className="actions">
+              <button className="primary" onClick={() => openFilm(heroFilm)}>
+                <Play size={18} fill="currentColor" />
+                View Film
+              </button>
+
+              <button
+                className="secondary"
+                onClick={() => toggleWatchlist(heroFilm.id)}
+              >
+                {watchlist.includes(String(heroFilm.id))
+                  ? <Check size={18} />
+                  : <Plus size={18} />}
+                {watchlist.includes(String(heroFilm.id)) ? 'In My List' : 'My List'}
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* FILM CATALOGUE */}
+      <section className="section">
+        <div className="sectionHead">
+          <h2>
+            {query
+              ? 'Search Results'
+              : activePage === 'browse'
+                ? 'Browse Our Films'
+                : 'AI Flix Originals'}
+          </h2>
+          <ChevronRight size={20} />
+        </div>
+
+        {loadingFilms ? (
+          <div className="emptyState">
+            <p>Loading films...</p>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="emptyState">
+            <h2>No films found</h2>
+            <p>Try another search or check back for future releases.</p>
+            {query && (
+              <button className="secondary" onClick={() => setQuery('')}>
+                Clear Search
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="grid">
+            {filtered.map((film) => (
+              <article
+                className="card"
+                key={film.id}
+                onClick={() => openFilm(film)}
+              >
+                <img src={film.poster} alt={film.title} />
+                <div className="cardOverlay">
+                  <span>{film.runtime}</span>
+                  <span>{film.genre}</span>
+                </div>
+                <div className="cardBody">
+                  <h3>{film.title}</h3>
+                  <p>{film.country} • {film.year}</p>
+                </div>
+              </article>
+            ))}
+          </div>
         )}
-      </main>
+      </section>
+
+      {/* SERIES ON HOMEPAGE — BELOW FILMS */}
+      {!query && activePage === 'home' && (
+        <section className="section seriesFeatured">
+          <div className="sectionHead">
+            <h2>AI Flix Original Series</h2>
+            <ChevronRight size={20} />
+          </div>
+
+          {FALLBACK_SERIES.map((series) => (
+            <article
+              className="seriesFeatureCard"
+              key={series.id}
+              onClick={() => {
+                setSelectedSeries(series);
+                changePage('series-detail');
+              }}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="seriesFeaturePoster">
+                {series.poster ? (
+                  <img src={series.poster} alt={series.title} />
+                ) : (
+                  <div className="seriesPosterPlaceholder">
+                    <span>AI FLIX ORIGINAL</span>
+                    <h2>THE OTHER WOMAN</h2>
+                    <p>A psychological thriller</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="seriesFeatureInfo">
+                <span className="eyebrow">AI FLIX ORIGINAL SERIES</span>
+                <h2>{series.title}</h2>
+                <p>{series.genre}</p>
+                <p>{series.episodes.length} Episodes · {series.language}</p>
+                <button
+                  className="primary"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setSelectedSeries(series);
+                    changePage('series-detail');
+                  }}
+                >
+                  View Series
+                </button>
+              </div>
+            </article>
+          ))}
+        </section>
+      )}
+
+      {/* HOMEPAGE LOWER SECTIONS */}
+      {!query && activePage === 'home' && (
+        <>
+          <section className="section">
+            <div className="sectionHead">
+              <h2>More Original Films Coming Soon</h2>
+            </div>
+            <p style={{
+              color: '#aaa',
+              maxWidth: '650px',
+              fontSize: '14px',
+              lineHeight: '1.9'
+            }}>
+              Discover original stories and independent cinema created by
+              Kainat Ali. New films will join the AI Flix catalogue as they
+              are released.
+            </p>
+          </section>
+
+          <section className="section">
+            <div className="sectionHead">
+              <h2>Explore AI Cinema</h2>
+            </div>
+            <div className="chips">
+              {[...new Set(films.map((film) => film.genre).filter(Boolean))].map((category) => (
+                <button
+                  key={category}
+                  onClick={() => {
+                    setQuery(category);
+                    setActivePage('browse');
+                  }}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </section>
+        </>
+      )}
+    </>
+  )}
+</main>
+
 
       {/* FOOTER */}
       <footer>
