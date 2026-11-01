@@ -9,15 +9,14 @@ import {
   ChevronRight,
   Film,
   User,
-  X,
-  LockKeyhole,
-  Mail,
-  ArrowRight
+  X
 } from 'lucide-react';
 import './styles.css';
 import { supabase } from './supabase';
 
-const SUPPORT_EMAIL = 'support@aiflixmovies.com';
+// --------------------------------------------------
+// FILMS
+// --------------------------------------------------
 
 const FALLBACK_FILMS = [
   {
@@ -58,10 +57,16 @@ const FALLBACK_FILMS = [
     creator: 'Kainat Ali',
     description:
       'A science-fiction meditation on language, mystery, human connection and the boundaries of understanding.',
-    poster: 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/21257650_1788675699651661.jpg',
+    poster:
+      'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/21257650_1788675699651661.jpg',
     videoUrl: 'https://www.youtube.com/embed/95PDubDKBhI'
   }
 ];
+
+// --------------------------------------------------
+// SERIES
+// --------------------------------------------------
+
 const FALLBACK_SERIES = [
   {
     id: 'the-other-woman',
@@ -76,13 +81,13 @@ const FALLBACK_SERIES = [
     poster: '',
     episodes: [
       {
-  id: 'tow-ep1',
-  number: 1,
-  title: 'The First Message',
-  runtime: '5 min',
-  videoUrl: 'https://www.youtube.com/embed/gnG1yl_y6wk',
-  status: 'available'
-},
+        id: 'tow-ep1',
+        number: 1,
+        title: 'The First Message',
+        runtime: '5 min',
+        videoUrl: 'https://www.youtube.com/embed/gnG1yl_y6wk',
+        status: 'available'
+      },
       {
         id: 'tow-ep2',
         number: 2,
@@ -119,27 +124,21 @@ const FALLBACK_SERIES = [
   }
 ];
 
-
-const fieldStyle = {
-  width: '100%',
-  boxSizing: 'border-box',
-  padding: '13px 14px',
-  borderRadius: '8px',
-  border: '1px solid #444',
-  background: '#1c1c1c',
-  color: '#fff',
-  fontSize: '15px'
-};
+// --------------------------------------------------
+// APP
+// --------------------------------------------------
 
 function App() {
   const [films, setFilms] = useState(FALLBACK_FILMS);
   const [selected, setSelected] = useState(null);
   const [playing, setPlaying] = useState(false);
+
   const [query, setQuery] = useState('');
   const [watchlist, setWatchlist] = useState([]);
   const [activePage, setActivePage] = useState('home');
+
   const [selectedSeries, setSelectedSeries] = useState(null);
-const [selectedEpisode, setSelectedEpisode] = useState(null);
+  const [selectedEpisode, setSelectedEpisode] = useState(null);
 
   const [user, setUser] = useState(null);
   const [authMode, setAuthMode] = useState(null);
@@ -151,19 +150,11 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
 
   const [loadingFilms, setLoadingFilms] = useState(true);
   const [watchlistLoading, setWatchlistLoading] = useState(false);
-  const [hasFilmAccess, setHasFilmAccess] = useState(false);
-  const [checkingFilmAccess, setCheckingFilmAccess] = useState(false);
 
-  const [showAccessModal, setShowAccessModal] = useState(false);
-  const [accessName, setAccessName] = useState('');
-  const [accessEmail, setAccessEmail] = useState('');
-  const [accessFilm, setAccessFilm] = useState(
-    'The Night The Flag Changed'
-  );
-  const [accessError, setAccessError] = useState('');
-  const [submittingAccess, setSubmittingAccess] = useState(false);
-
+  // ------------------------------------------------
   // AUTHENTICATION
+  // ------------------------------------------------
+
   useEffect(() => {
     let mounted = true;
 
@@ -194,9 +185,10 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
     };
   }, []);
 
-  
+  // ------------------------------------------------
+  // LOAD FILMS FROM SUPABASE
+  // ------------------------------------------------
 
-  // LOAD FILMS
   useEffect(() => {
     let mounted = true;
 
@@ -275,9 +267,10 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
     };
   }, []);
 
-
-
+  // ------------------------------------------------
   // LOAD WATCHLIST
+  // ------------------------------------------------
+
   useEffect(() => {
     let mounted = true;
 
@@ -306,7 +299,9 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
           );
         }
       } finally {
-        if (mounted) setWatchlistLoading(false);
+        if (mounted) {
+          setWatchlistLoading(false);
+        }
       }
     };
 
@@ -316,6 +311,10 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
       mounted = false;
     };
   }, [user]);
+
+  // ------------------------------------------------
+  // SEARCH
+  // ------------------------------------------------
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -331,131 +330,30 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
 
   const heroFilm = films[0] || null;
 
+  // ------------------------------------------------
+  // HELPERS
+  // ------------------------------------------------
+
   const clearAuthMessages = () => {
     setAuthError('');
     setAuthMessage('');
   };
 
-  // OPEN THE ACCESS FORM
-  const openAccessModal = (
-    filmTitle = 'The Night The Flag Changed'
-  ) => {
-    setAccessFilm(filmTitle);
-    setAccessError('');
-    setShowAccessModal(true);
+  const changePage = (page) => {
+    setActivePage(page);
+    setQuery('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // SUBMIT ACCESS REQUEST
-  const requestAccess = async (event) => {
-    event.preventDefault();
-    setAccessError('');
-
-    if (!user) {
-      setShowAccessModal(false);
-      clearAuthMessages();
-      setAuthError(
-        'Please sign in or create an account before requesting access.'
-      );
-      setAuthMode('login');
-      return;
-    }
-
-    if (!accessName.trim() || !accessEmail.trim()) {
-      setAccessError('Please enter your name and email address.');
-      return;
-    }
-
-    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-      accessEmail.trim()
-    );
-
-    if (!validEmail) {
-      setAccessError('Please enter a valid email address.');
-      return;
-    }
-
-    setSubmittingAccess(true);
-
-    try {
-      const { data: existing, error: lookupError } = await supabase
-        .from('access_requests')
-        .select('id, status')
-        .eq('user_id', user.id)
-        .eq('film_slug', 'night-flag')
-        .eq('status', 'pending')
-        .limit(1);
-
-      if (lookupError) {
-        setAccessError(
-          'Could not check your existing request. Please try again.'
-        );
-        return;
-      }
-
-      if (existing && existing.length > 0) {
-        setAccessError(
-          'You already have a pending request for this film.'
-        );
-        return;
-      }
-
-      const { data: request, error } = await supabase
-        .from('access_requests')
-        .insert({
-          user_id: user.id,
-          film_slug: 'night-flag',
-          customer_name: accessName.trim(),
-          customer_email: accessEmail.trim(),
-          amount: 4.99,
-          currency: 'USD'
-        })
-        .select('id')
-        .single();
-
-      if (error) {
-        setAccessError(
-          'Your request could not be saved: ' + error.message
-        );
-        return;
-      }
-
-      const subject = `AI Flix payment request - ${request.id}`;
-
-      const body = [
-        'Hello AI Flix Support,',
-        '',
-        'A customer has requested access to a film.',
-        '',
-        `Request ID: ${request.id}`,
-        `Customer: ${accessName.trim()}`,
-        `Customer email: ${accessEmail.trim()}`,
-        `Account user ID: ${user.id}`,
-        `Film: ${accessFilm}`,
-        'Price: $4.99 USD',
-        'Status: Pending payment',
-        '',
-        'Please send the customer an individual Veem payment request.',
-        '',
-        'Thank you.'
-      ].join('\n');
-
-      setShowAccessModal(false);
-
-      window.location.href =
-        `mailto:${SUPPORT_EMAIL}` +
-        `?subject=${encodeURIComponent(subject)}` +
-        `&body=${encodeURIComponent(body)}`;
-    } catch (error) {
-      setAccessError(
-        'Something went wrong while submitting your request. Please try again.'
-      );
-      console.error('Access request error:', error);
-    } finally {
-      setSubmittingAccess(false);
-    }
+  const openAccount = () => {
+    clearAuthMessages();
+    setAuthMode(user ? 'account' : 'login');
   };
 
+  // ------------------------------------------------
   // WATCHLIST
+  // ------------------------------------------------
+
   const toggleWatchlist = async (id) => {
     if (!user) {
       clearAuthMessages();
@@ -499,34 +397,28 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
     }
   };
 
-  
-  // FILM DETAILS
+  // ------------------------------------------------
+  // FILM PLAYER
+  // ------------------------------------------------
+
   const openFilm = (film) => {
     setSelected(film);
     setPlaying(false);
-    setHasFilmAccess(true);
-    setCheckingFilmAccess(false);
-    setAccessError('');
-  };
-
-  // PLAY FILM — FREE ACCESS
-  const playSelectedFilm = () => {
-    setHasFilmAccess(true);
-    setCheckingFilmAccess(false);
-    setAccessError('');
-    setPlaying(true);
   };
 
   const closeFilm = () => {
     setSelected(null);
     setPlaying(false);
-    setHasFilmAccess(false);
-    setCheckingFilmAccess(false);
-    setAccessError('');
   };
 
+  const playSelectedFilm = () => {
+    setPlaying(true);
+  };
 
+  // ------------------------------------------------
   // SIGN IN
+  // ------------------------------------------------
+
   const signIn = async () => {
     clearAuthMessages();
 
@@ -550,7 +442,10 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
     setPassword('');
   };
 
+  // ------------------------------------------------
   // SIGN UP
+  // ------------------------------------------------
+
   const signUp = async () => {
     clearAuthMessages();
 
@@ -560,9 +455,7 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
     }
 
     if (password.length < 6) {
-      setAuthError(
-        'Your password must contain at least 6 characters.'
-      );
+      setAuthError('Your password must contain at least 6 characters.');
       return;
     }
 
@@ -591,7 +484,10 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
     }
   };
 
+  // ------------------------------------------------
   // SIGN OUT
+  // ------------------------------------------------
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
 
@@ -604,20 +500,15 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
     setActivePage('home');
   };
 
-  const openAccount = () => {
-    clearAuthMessages();
-    setAuthMode(user ? 'account' : 'login');
-  };
-
-  const changePage = (page) => {
-    setActivePage(page);
-    setQuery('');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  // ------------------------------------------------
+  // RENDER
+  // ------------------------------------------------
 
   return (
     <div className="app">
+
       {/* NAVIGATION */}
+
       <header className="nav">
         <div
           className="brand"
@@ -629,13 +520,12 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
 
         <nav>
           <button onClick={() => changePage('home')}>Home</button>
-<button onClick={() => changePage('browse')}>Movies</button>
-<button onClick={() => changePage('series')}>Series</button>
-<button onClick={() => changePage('mylist')}>My List</button>
+          <button onClick={() => changePage('browse')}>Movies</button>
+          <button onClick={() => changePage('series')}>Series</button>
+          <button onClick={() => changePage('mylist')}>My List</button>
           <button onClick={() => changePage('categories')}>
             Categories
           </button>
-    
         </nav>
 
         <div className="navRight">
@@ -663,591 +553,11 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
       </header>
 
       {/* MAIN CONTENT */}
+
       <main>
-        {activePage === 'series-detail' && selectedSeries ? (
-  <section className="section">
-    <button
-      className="secondary"
-      onClick={() => changePage('series')}
-    >
-      ← Back to Series
-    </button>
 
-    <div style={{
-      padding: '30px 0',
-      maxWidth: '750px'
-    }}>
-      <div className="eyebrow">
-        AI FLIX ORIGINAL SERIES • {selectedSeries.year}
-      </div>
+        {/* SERIES DETAIL PAGE */}
 
-      <h1 style={{ fontSize: 'clamp(30px, 5vw, 48px)' }}>
-        {selectedSeries.title}
-      </h1>
-
-      <p className="meta">
-        {selectedSeries.genre} • {selectedSeries.language} •
-        {` ${selectedSeries.episodes.length} Episodes`}
-      </p>
-
-      <p className="description">
-        {selectedSeries.description}
-      </p>
-
-      <p className="creator">
-        Created by {selectedSeries.creator}
-      </p>
-    </div>
-
-    <div className="sectionHead">
-      <h2>Episodes</h2>
-    </div>
-
-    <div style={{
-      display: 'grid',
-      gap: '12px'
-    }}>
-      {selectedSeries.episodes.map((episode) => (
-        <article
-          key={episode.id}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '15px',
-            padding: '16px',
-            background: '#15171e',
-            border: '1px solid #292b33',
-            borderRadius: '12px'
-          }}
-        >
-          <div style={{
-            minWidth: '45px',
-            height: '45px',
-            display: 'grid',
-            placeItems: 'center',
-            background: '#292b33',
-            borderRadius: '8px',
-            fontWeight: 800
-          }}>
-            {String(episode.number).padStart(2, '0')}
-          </div>
-
-          <div style={{ flex: 1 }}>
-            <h3 style={{ margin: '0 0 6px' }}>
-              {episode.title}
-            </h3>
-            <p style={{
-              margin: 0,
-              color: '#999',
-              fontSize: '13px'
-            }}>
-              Episode {episode.number} • {episode.runtime}
-            </p>
-          </div>
-
-          {episode.status === 'available' &&
-          episode.videoUrl ? (
-            <button
-              className="primary"
-              onClick={() => setSelectedEpisode(episode)}
-            >
-              <Play size={16} fill="currentColor" />
-              Watch
-            </button>
-          ) : episode.status === 'available' ? (
-            <span style={{
-              color: '#aaa',
-              fontSize: '12px'
-            }}>
-              Upload pending
-            </span>
-          ) : (
-            <span style={{
-              color: '#aaa',
-              fontSize: '12px'
-            }}>
-              Coming Soon
-            </span>
-          )}
-        </article>
-      ))}
-    </div>
-  </section>
-
-) : activePage === 'series' ? (
-  <section className="section">
-    <div className="sectionHead">
-      <h2>AI Flix Original Series</h2>
-    </div>
-
-    <div className="grid">
-      {FALLBACK_SERIES.map((series) => (
-        <article
-          className="card"
-          key={series.id}
-          onClick={() => {
-            setSelectedSeries(series);
-            changePage('series-detail');
-          }}
-          style={{ cursor: 'pointer' }}
-        >
-          {series.poster ? (
-            <img src={series.poster} alt={series.title} />
-          ) : (
-            <div style={{
-              aspectRatio: '2 / 3',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              padding: '20px',
-              boxSizing: 'border-box',
-              background:
-                'linear-gradient(145deg, #29202b, #09090d)'
-            }}>
-              <div>
-                <div className="eyebrow">
-                  AI FLIX ORIGINAL
-                </div>
-                <h2 style={{
-                  fontFamily: 'Georgia, serif',
-                  fontSize: '28px'
-                }}>
-                  THE OTHER WOMAN
-                </h2>
-                <p style={{ color: '#aaa' }}>
-                  A psychological thriller
-                </p>
-              </div>
-            </div>
-          )}
-
-          <div className="cardBody">
-            <h3>{series.title}</h3>
-            <p>
-              {series.genre} • {series.episodes.length} Episodes
-            </p>
-          </div>
-        </article>
-      ))}
-    </div>
-  </section>
-    ) : activePage === 'mylist' ? (
-          <section className="section myListPage">
-            <div className="sectionHead">
-              <h2>My List</h2>
-            </div>
-
-            {!user ? (
-              <div className="emptyState">
-                <h2>Sign in to view My List</h2>
-                <p>Sign in to save your favourite original films.</p>
-                <button
-                  className="primary"
-                  onClick={() => {
-                    clearAuthMessages();
-                    setAuthMode('login');
-                  }}
-                >
-                  Sign In
-                </button>
-              </div>
-            ) : watchlistLoading ? (
-              <div className="emptyState">
-                <p>Loading your list...</p>
-              </div>
-            ) : films.filter((film) =>
-                watchlist.includes(String(film.id))
-              ).length === 0 ? (
-              <div className="emptyState">
-                <h2>Your list is empty</h2>
-                <p>Films you save will appear here.</p>
-                <button
-                  className="primary"
-                  onClick={() => changePage('browse')}
-                >
-                  Browse Films
-                </button>
-              </div>
-            ) : (
-              <div className="grid">
-                {films
-                  .filter((film) =>
-                    watchlist.includes(String(film.id))
-                  )
-                  .map((film) => (
-                    <article
-                      className="card"
-                      key={film.id}
-                      onClick={() => openFilm(film)}
-                    >
-                      <img src={film.poster} alt={film.title} />
-                      <div className="cardOverlay">
-                        <span>{film.runtime}</span>
-                        <span>{film.genre}</span>
-                      </div>
-                      <div className="cardBody">
-                        <h3>{film.title}</h3>
-                        <p>{film.country} • {film.year}</p>
-                      </div>
-                    </article>
-                  ))}
-              </div>
-            )}
-          </section>
-        ) : activePage === 'categories' ? (
-          <section className="section">
-            <div className="sectionHead">
-              <h2>Explore Categories</h2>
-            </div>
-
-            <div className="chips">
-              {[...new Set(
-                films.map((film) => film.genre).filter(Boolean)
-              )].map((category) => (
-                <button
-                  key={category}
-                  onClick={() => {
-                    setQuery(category);
-                    setActivePage('browse');
-                  }}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-          </section>
-        ) : (
-          <>
-                        )}
-
-
-          
-            <section className="section">
-              <div className="sectionHead">
-                <h2>
-                  {query
-                    ? 'Search Results'
-                    : activePage === 'browse'
-                      ? 'Browse Our Films'
-                      : films.length === 1
-                        ? 'Now Streaming'
-                        : 'AI Flix Originals'}
-                </h2>
-                <ChevronRight size={20} />
-              </div>
-
-<main>
-  {activePage === 'series-detail' && selectedSeries ? (
-    <section className="section">
-      <button className="secondary" onClick={() => changePage('series')}>
-        ← Back to Series
-      </button>
-
-      <div style={{ padding: '30px 0', maxWidth: '750px' }}>
-        <div className="eyebrow">
-          AI FLIX ORIGINAL SERIES • {selectedSeries.year}
-        </div>
-
-        <h1 style={{ fontSize: 'clamp(30px, 5vw, 48px)' }}>
-          {selectedSeries.title}
-        </h1>
-
-        <p className="meta">
-          {selectedSeries.genre} • {selectedSeries.language} • {selectedSeries.episodes.length} Episodes
-        </p>
-
-        <p className="description">{selectedSeries.description}</p>
-        <p className="creator">Created by {selectedSeries.creator}</p>
-      </div>
-
-      <div className="sectionHead">
-        <h2>Episodes</h2>
-      </div>
-
-      <div style={{ display: 'grid', gap: '12px' }}>
-        {selectedSeries.episodes.map((episode) => (
-          <article
-            key={episode.id}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '15px',
-              padding: '16px',
-              background: '#15171e',
-              border: '1px solid #292b33',
-              borderRadius: '12px'
-            }}
-          >
-            <div style={{
-              minWidth: '45px',
-              height: '45px',
-              display: 'grid',
-              placeItems: 'center',
-              background: '#292b33',
-              borderRadius: '8px',
-              fontWeight: 800
-            }}>
-              {String(episode.number).padStart(2, '0')}
-            </div>
-
-            <div style={{ flex: 1 }}>
-              <h3 style={{ margin: '0 0 6px' }}>{episode.title}</h3>
-              <p style={{ margin: 0, color: '#999', fontSize: '13px' }}>
-                Episode {episode.number} • {episode.runtime}
-              </p>
-            </div>
-
-            {episode.status === 'available' && episode.videoUrl ? (
-              <button
-                className="primary"
-                onClick={() => setSelectedEpisode(episode)}
-              >
-                <Play size={16} fill="currentColor" />
-                Watch
-              </button>
-            ) : (
-              <span style={{ color: '#aaa', fontSize: '12px' }}>
-                Coming Soon
-              </span>
-            )}
-          </article>
-        ))}
-      </div>
-    </section>
-
-  ) : activePage === 'series' ? (
-    <section className="section">
-      <div className="sectionHead">
-        <h2>AI Flix Original Series</h2>
-      </div>
-
-      <div className="grid">
-        {FALLBACK_SERIES.map((series) => (
-          <article
-            className="card"
-            key={series.id}
-            onClick={() => {
-              setSelectedSeries(series);
-              changePage('series-detail');
-            }}
-            style={{ cursor: 'pointer' }}
-          >
-            {series.poster ? (
-              <img src={series.poster} alt={series.title} />
-            ) : (
-              <div style={{
-                aspectRatio: '2 / 3',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
-                padding: '20px',
-                boxSizing: 'border-box',
-                background: 'linear-gradient(145deg, #29202b, #09090d)'
-              }}>
-                <div>
-                  <div className="eyebrow">AI FLIX ORIGINAL</div>
-                  <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '28px' }}>
-                    THE OTHER WOMAN
-                  </h2>
-                  <p style={{ color: '#aaa' }}>A psychological thriller</p>
-                </div>
-              </div>
-            )}
-
-            <div className="cardBody">
-              <h3>{series.title}</h3>
-              <p>{series.genre} • {series.episodes.length} Episodes</p>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-
-  ) : activePage === 'mylist' ? (
-    <section className="section myListPage">
-      <div className="sectionHead">
-        <h2>My List</h2>
-      </div>
-
-      {!user ? (
-        <div className="emptyState">
-          <h2>Sign in to view My List</h2>
-          <p>Sign in to save your favourite original films.</p>
-          <button
-            className="primary"
-            onClick={() => {
-              clearAuthMessages();
-              setAuthMode('login');
-            }}
-          >
-            Sign In
-          </button>
-        </div>
-      ) : watchlistLoading ? (
-        <div className="emptyState">
-          <p>Loading your list...</p>
-        </div>
-      ) : films.filter((film) => watchlist.includes(String(film.id))).length === 0 ? (
-        <div className="emptyState">
-          <h2>Your list is empty</h2>
-          <p>Films you save will appear here.</p>
-          <button className="primary" onClick={() => changePage('browse')}>
-            Browse Films
-          </button>
-        </div>
-      ) : (
-        <div className="grid">
-          {films
-            .filter((film) => watchlist.includes(String(film.id)))
-            .map((film) => (
-              <article
-                className="card"
-                key={film.id}
-                onClick={() => openFilm(film)}
-              >
-                <img src={film.poster} alt={film.title} />
-                <div className="cardOverlay">
-                  <span>{film.runtime}</span>
-                  <span>{film.genre}</span>
-                </div>
-                <div className="cardBody">
-                  <h3>{film.title}</h3>
-                  <p>{film.country} • {film.year}</p>
-                </div>
-              </article>
-            ))}
-        </div>
-      )}
-    </section>
-
-  ) : activePage === 'categories' ? (
-    <section className="section">
-      <div className="sectionHead">
-        <h2>Explore Categories</h2>
-      </div>
-
-      <div className="chips">
-        {[...new Set(films.map((film) => film.genre).filter(Boolean))].map((category) => (
-          <button
-            key={category}
-            onClick={() => {
-              setQuery(category);
-              setActivePage('browse');
-            }}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-    </section>
-
-  ) : (
-    <>
-      {/* HOMEPAGE HERO */}
-      {activePage === 'home' && heroFilm && (
-        <section
-          className="hero"
-          style={{
-            backgroundImage:
-              `linear-gradient(90deg, rgba(5,5,8,.82) 0%, rgba(5,5,8,.48) 48%, rgba(5,5,8,.12) 100%), url("${heroFilm.poster}")`
-          }}
-        >
-          <div className="heroCopy">
-            <div className="eyebrow">
-              AI FLIX ORIGINAL • {heroFilm.year}
-            </div>
-            <h1>{heroFilm.title}</h1>
-            <p className="meta">
-              {heroFilm.year} • {heroFilm.runtime} • {heroFilm.genre}
-            </p>
-            <p className="description">{heroFilm.description}</p>
-
-            <div className="actions">
-              <button className="primary" onClick={() => openFilm(heroFilm)}>
-                <Play size={18} fill="currentColor" />
-                View Film
-              </button>
-
-              <button
-                className="secondary"
-                onClick={() => toggleWatchlist(heroFilm.id)}
-              >
-                {watchlist.includes(String(heroFilm.id))
-                  ? <Check size={18} />
-                  : <Plus size={18} />}
-                {watchlist.includes(String(heroFilm.id)) ? 'In My List' : 'My List'}
-              </button>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* FILM CATALOGUE */}
-      <section className="section">
-        <div className="sectionHead">
-          <h2>
-            {query
-              ? 'Search Results'
-              : activePage === 'browse'
-                ? 'Browse Our Films'
-                : 'AI Flix Originals'}
-          </h2>
-          <ChevronRight size={20} />
-        </div>
-
-        {loadingFilms ? (
-          <div className="emptyState">
-            <p>Loading films...</p>
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="emptyState">
-            <h2>No films found</h2>
-            <p>Try another search or check back for future releases.</p>
-            {query && (
-              <button className="secondary" onClick={() => setQuery('')}>
-                Clear Search
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="grid">
-            {filtered.map((film) => (
-              <article
-                className="card"
-                key={film.id}
-                onClick={() => openFilm(film)}
-              >
-                <img src={film.poster} alt={film.title} />
-                <div className="cardOverlay">
-                  <span>{film.runtime}</span>
-                  <span>{film.genre}</span>
-                </div>
-                <div className="cardBody">
-                  <h3>{film.title}</h3>
-                  <p>{film.country} • {film.year}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* SERIES ON HOMEPAGE — BELOW FILMS */}
-      {!query && activePage === 'home' && (
-        <section className="section seriesFeatured">
-          <div className="sectionHead">
-            <h2>AI Flix Original Series</h2>
-            <ChevronRight size={20} />
-          </div>
-
-          {FALLBACK_SERIES.map((series) => (
-            <article
-              className="seriesFeatureCard"
-
-      {/* MAIN CONTENT */}
-      <main>
         {activePage === 'series-detail' && selectedSeries ? (
           <section className="section">
             <button
@@ -1267,7 +577,8 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
               </h1>
 
               <p className="meta">
-                {selectedSeries.genre} • {selectedSeries.language} • {selectedSeries.episodes.length} Episodes
+                {selectedSeries.genre} • {selectedSeries.language} •{' '}
+                {selectedSeries.episodes.length} Episodes
               </p>
 
               <p className="description">
@@ -1297,15 +608,17 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                     borderRadius: '12px'
                   }}
                 >
-                  <div style={{
-                    minWidth: '45px',
-                    height: '45px',
-                    display: 'grid',
-                    placeItems: 'center',
-                    background: '#292b33',
-                    borderRadius: '8px',
-                    fontWeight: 800
-                  }}>
+                  <div
+                    style={{
+                      minWidth: '45px',
+                      height: '45px',
+                      display: 'grid',
+                      placeItems: 'center',
+                      background: '#292b33',
+                      borderRadius: '8px',
+                      fontWeight: 800
+                    }}
+                  >
                     {String(episode.number).padStart(2, '0')}
                   </div>
 
@@ -1313,11 +626,14 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                     <h3 style={{ margin: '0 0 6px' }}>
                       {episode.title}
                     </h3>
-                    <p style={{
-                      margin: 0,
-                      color: '#999',
-                      fontSize: '13px'
-                    }}>
+
+                    <p
+                      style={{
+                        margin: 0,
+                        color: '#999',
+                        fontSize: '13px'
+                      }}
+                    >
                       Episode {episode.number} • {episode.runtime}
                     </p>
                   </div>
@@ -1341,6 +657,9 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
           </section>
 
         ) : activePage === 'series' ? (
+
+          /* SERIES CATALOGUE */
+
           <section className="section">
             <div className="sectionHead">
               <h2>AI Flix Original Series</h2>
@@ -1360,22 +679,27 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                   {series.poster ? (
                     <img src={series.poster} alt={series.title} />
                   ) : (
-                    <div style={{
-                      aspectRatio: '2 / 3',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      textAlign: 'center',
-                      padding: '20px',
-                      boxSizing: 'border-box',
-                      background: 'linear-gradient(145deg, #29202b, #09090d)'
-                    }}>
+                    <div
+                      style={{
+                        aspectRatio: '2 / 3',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                        padding: '20px',
+                        boxSizing: 'border-box',
+                        background:
+                          'linear-gradient(145deg, #29202b, #09090d)'
+                      }}
+                    >
                       <div>
                         <div className="eyebrow">AI FLIX ORIGINAL</div>
-                        <h2 style={{
-                          fontFamily: 'Georgia, serif',
-                          fontSize: '28px'
-                        }}>
+                        <h2
+                          style={{
+                            fontFamily: 'Georgia, serif',
+                            fontSize: '28px'
+                          }}
+                        >
                           THE OTHER WOMAN
                         </h2>
                         <p style={{ color: '#aaa' }}>
@@ -1387,7 +711,9 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
 
                   <div className="cardBody">
                     <h3>{series.title}</h3>
-                    <p>{series.genre} • {series.episodes.length} Episodes</p>
+                    <p>
+                      {series.genre} • {series.episodes.length} Episodes
+                    </p>
                   </div>
                 </article>
               ))}
@@ -1395,6 +721,9 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
           </section>
 
         ) : activePage === 'mylist' ? (
+
+          /* MY LIST PAGE */
+
           <section className="section myListPage">
             <div className="sectionHead">
               <h2>My List</h2>
@@ -1444,10 +773,12 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                       onClick={() => openFilm(film)}
                     >
                       <img src={film.poster} alt={film.title} />
+
                       <div className="cardOverlay">
                         <span>{film.runtime}</span>
                         <span>{film.genre}</span>
                       </div>
+
                       <div className="cardBody">
                         <h3>{film.title}</h3>
                         <p>{film.country} • {film.year}</p>
@@ -1459,6 +790,9 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
           </section>
 
         ) : activePage === 'categories' ? (
+
+          /* CATEGORIES PAGE */
+
           <section className="section">
             <div className="sectionHead">
               <h2>Explore Categories</h2>
@@ -1482,8 +816,12 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
           </section>
 
         ) : (
+
+          /* HOME AND MOVIE BROWSE PAGES */
+
           <>
             {/* HOMEPAGE HERO */}
+
             {activePage === 'home' && heroFilm && (
               <section
                 className="hero"
@@ -1496,11 +834,16 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                   <div className="eyebrow">
                     AI FLIX ORIGINAL • {heroFilm.year}
                   </div>
+
                   <h1>{heroFilm.title}</h1>
+
                   <p className="meta">
                     {heroFilm.year} • {heroFilm.runtime} • {heroFilm.genre}
                   </p>
-                  <p className="description">{heroFilm.description}</p>
+
+                  <p className="description">
+                    {heroFilm.description}
+                  </p>
 
                   <div className="actions">
                     <button
@@ -1515,9 +858,12 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                       className="secondary"
                       onClick={() => toggleWatchlist(heroFilm.id)}
                     >
-                      {watchlist.includes(String(heroFilm.id))
-                        ? <Check size={18} />
-                        : <Plus size={18} />}
+                      {watchlist.includes(String(heroFilm.id)) ? (
+                        <Check size={18} />
+                      ) : (
+                        <Plus size={18} />
+                      )}
+
                       {watchlist.includes(String(heroFilm.id))
                         ? 'In My List'
                         : 'My List'}
@@ -1528,6 +874,7 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
             )}
 
             {/* FILM CATALOGUE */}
+
             <section className="section">
               <div className="sectionHead">
                 <h2>
@@ -1537,6 +884,7 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                       ? 'Browse Our Films'
                       : 'AI Flix Originals'}
                 </h2>
+
                 <ChevronRight size={20} />
               </div>
 
@@ -1547,7 +895,10 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
               ) : filtered.length === 0 ? (
                 <div className="emptyState">
                   <h2>No films found</h2>
-                  <p>Try another search or check back for future releases.</p>
+                  <p>
+                    Try another search or check back for future releases.
+                  </p>
+
                   {query && (
                     <button
                       className="secondary"
@@ -1566,10 +917,12 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                       onClick={() => openFilm(film)}
                     >
                       <img src={film.poster} alt={film.title} />
+
                       <div className="cardOverlay">
                         <span>{film.runtime}</span>
                         <span>{film.genre}</span>
                       </div>
+
                       <div className="cardBody">
                         <h3>{film.title}</h3>
                         <p>{film.country} • {film.year}</p>
@@ -1580,7 +933,8 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
               )}
             </section>
 
-            {/* SERIES ON HOMEPAGE — BELOW FILMS */}
+            {/* SERIES BELOW FILMS ON HOMEPAGE */}
+
             {!query && activePage === 'home' && (
               <section className="section seriesFeatured">
                 <div className="sectionHead">
@@ -1614,9 +968,14 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                       <span className="eyebrow">
                         AI FLIX ORIGINAL SERIES
                       </span>
+
                       <h2>{series.title}</h2>
                       <p>{series.genre}</p>
-                      <p>{series.episodes.length} Episodes · {series.language}</p>
+
+                      <p>
+                        {series.episodes.length} Episodes · {series.language}
+                      </p>
+
                       <button
                         className="primary"
                         onClick={(event) => {
@@ -1634,21 +993,25 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
             )}
 
             {/* HOMEPAGE LOWER SECTIONS */}
+
             {!query && activePage === 'home' && (
               <>
                 <section className="section">
                   <div className="sectionHead">
                     <h2>More Original Films Coming Soon</h2>
                   </div>
-                  <p style={{
-                    color: '#aaa',
-                    maxWidth: '650px',
-                    fontSize: '14px',
-                    lineHeight: '1.9'
-                  }}>
-                    Discover original stories and independent cinema created by
-                    Kainat Ali. New films will join the AI Flix catalogue as they
-                    are released.
+
+                  <p
+                    style={{
+                      color: '#aaa',
+                      maxWidth: '650px',
+                      fontSize: '14px',
+                      lineHeight: '1.9'
+                    }}
+                  >
+                    Discover original stories and independent cinema created
+                    by Kainat Ali. New films will join the AI Flix catalogue
+                    as they are released.
                   </p>
                 </section>
 
@@ -1656,6 +1019,7 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                   <div className="sectionHead">
                     <h2>Explore AI Cinema</h2>
                   </div>
+
                   <div className="chips">
                     {[...new Set(
                       films.map((film) => film.genre).filter(Boolean)
@@ -1679,6 +1043,7 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
       </main>
 
       {/* FOOTER */}
+
       <footer>
         <div
           className="brand"
@@ -1687,191 +1052,19 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
         >
           AI<span>FLIX</span>
         </div>
+
         <p>© 2026 AI Flix. Original films. Independent cinema.</p>
+
         <p>
-          Support: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+          Support:{' '}
+          <a href="mailto:support@aiflixmovies.com">
+            support@aiflixmovies.com
+          </a>
         </p>
-        <button
-          className="secondary"
-          onClick={() => openAccessModal()}
-        >
-          Unlock AI Flix — $4.99
-        </button>
       </footer>
 
-      {/* REQUEST ACCESS MODAL */}
-      {showAccessModal && (
-        <div
-          className="modal accessRequestModal"
-          onClick={() => setShowAccessModal(false)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 99999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflowY: 'auto',
-            padding: '20px',
-            background: 'rgba(0,0,0,0.85)'
-          }}
-        >
-          <div
-            className="modalCard accessRequestCard"
-            onClick={(event) => event.stopPropagation()}
-            style={{
-              position: 'relative',
-              zIndex: 100000,
-              width: '100%',
-              maxWidth: '480px',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              boxSizing: 'border-box',
-              background: '#15171e',
-              color: '#fff',
-              border: '1px solid #343640',
-              borderRadius: '16px'
-            }}
-          >
-            <button
-              className="close"
-              type="button"
-              onClick={() => setShowAccessModal(false)}
-              aria-label="Close request access"
-            >
-              <X size={20} />
-            </button>
-
-            <div className="modalContent">
-              <div className="eyebrow">INDEPENDENT CINEMA</div>
-              <h2>Request Film Access</h2>
-
-              <div
-                style={{
-                  fontSize: '32px',
-                  fontWeight: 800,
-                  margin: '18px 0 8px'
-                }}
-              >
-                $4.99 <span style={{ fontSize: '16px' }}>USD</span>
-              </div>
-
-              <p style={{ color: '#aaa', fontSize: '14px' }}>
-                Request access to a film. We will send you payment
-                instructions individually.
-              </p>
-
-              <form
-                onSubmit={requestAccess}
-                style={{
-                  display: 'grid',
-                  gap: '14px',
-                  textAlign: 'left',
-                  marginTop: '24px'
-                }}
-              >
-                <label htmlFor="modal-access-name">Full name</label>
-                <input
-                  id="modal-access-name"
-                  type="text"
-                  autoComplete="name"
-                  placeholder="Your full name"
-                  value={accessName}
-                  onChange={(event) => setAccessName(event.target.value)}
-                  required
-                  style={fieldStyle}
-                />
-
-                <label htmlFor="modal-access-email">Email address</label>
-                <input
-                  id="modal-access-email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                  value={accessEmail}
-                  onChange={(event) => setAccessEmail(event.target.value)}
-                  required
-                  style={fieldStyle}
-                />
-
-                <label htmlFor="modal-access-film">Choose a film</label>
-                <select
-                  id="modal-access-film"
-                  value={accessFilm}
-                  onChange={(event) => setAccessFilm(event.target.value)}
-                  style={fieldStyle}
-                >
-                  {films.map((film) => (
-                    <option key={film.id} value={film.title}>
-                      {film.title}
-                    </option>
-                  ))}
-                </select>
-
-                {accessError && (
-                  <p className="authError">{accessError}</p>
-                )}
-
-                <button
-                  type="submit"
-                  className="primary"
-                  disabled={submittingAccess}
-                  style={{
-                    width: '100%',
-                    justifyContent: 'center',
-                    marginTop: '8px'
-                  }}
-                >
-                  <Mail size={18} />
-                  {submittingAccess
-                    ? 'Submitting...'
-                    : 'Request Payment Instructions'}
-                  <ArrowRight size={18} />
-                </button>
-              </form>
-
-              <p
-                style={{
-                  color: '#888',
-                  fontSize: '12px',
-                  lineHeight: 1.7,
-                  marginTop: '20px'
-                }}
-              >
-                Submitting saves your request and opens your email app with
-                a prepared message. Please send the email. We will send an
-                individual payment request and confirm payment before
-                granting access.
-              </p>
-
-              {!user && (
-                <p
-                  style={{
-                    color: '#ddd',
-                    fontSize: '13px',
-                    marginTop: '12px'
-                  }}
-                >
-                  You must sign in before requesting access.{' '}
-                  <button
-                    type="button"
-                    className="secondary"
-                    onClick={() => {
-                      setShowAccessModal(false);
-                      clearAuthMessages();
-                      setAuthMode('login');
-                    }}
-                  >
-                    Sign in
-                  </button>
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* AUTHENTICATION MODAL */}
+
       {authMode && (
         <div
           className="modal"
@@ -1896,7 +1089,10 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                 <h2>Sign in to AI Flix</h2>
                 <p>Continue exploring original cinema.</p>
 
-                {authError && <p className="authError">{authError}</p>}
+                {authError && (
+                  <p className="authError">{authError}</p>
+                )}
+
                 {authMessage && (
                   <p className="authMessage">{authMessage}</p>
                 )}
@@ -1908,6 +1104,7 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                 />
+
                 <input
                   type="password"
                   placeholder="Password"
@@ -1922,6 +1119,7 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                 <button className="primary" onClick={signIn}>
                   Sign In
                 </button>
+
                 <button
                   className="secondary"
                   onClick={() => {
@@ -1940,7 +1138,10 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                 <h2>Create Your Account</h2>
                 <p>Join us for original cinematic storytelling.</p>
 
-                {authError && <p className="authError">{authError}</p>}
+                {authError && (
+                  <p className="authError">{authError}</p>
+                )}
+
                 {authMessage && (
                   <p className="authMessage">{authMessage}</p>
                 )}
@@ -1952,6 +1153,7 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                   value={fullName}
                   onChange={(event) => setFullName(event.target.value)}
                 />
+
                 <input
                   type="email"
                   placeholder="Email"
@@ -1959,6 +1161,7 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                 />
+
                 <input
                   type="password"
                   placeholder="Password (at least 6 characters)"
@@ -1970,6 +1173,7 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                 <button className="primary" onClick={signUp}>
                   Create Account
                 </button>
+
                 <button
                   className="secondary"
                   onClick={() => {
@@ -1985,10 +1189,16 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
             {authMode === 'account' && user && (
               <div className="modalContent">
                 <div className="eyebrow">YOUR ACCOUNT</div>
-                <h2>{user.user_metadata?.full_name || 'AI Flix Member'}</h2>
+
+                <h2>
+                  {user.user_metadata?.full_name || 'AI Flix Member'}
+                </h2>
+
                 <p>{user.email}</p>
 
-                {authError && <p className="authError">{authError}</p>}
+                {authError && (
+                  <p className="authError">{authError}</p>
+                )}
 
                 <button className="primary" onClick={signOut}>
                   Sign Out
@@ -1999,7 +1209,8 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
         </div>
       )}
 
-            {/* FILM DETAILS AND PLAYER MODAL */}
+      {/* FILM DETAILS AND PLAYER */}
+
       {selected && (
         <div className="modal" onClick={closeFilm}>
           <div
@@ -2071,9 +1282,12 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                   className="secondary"
                   onClick={() => toggleWatchlist(selected.id)}
                 >
-                  {watchlist.includes(String(selected.id))
-                    ? <Check size={18} />
-                    : <Plus size={18} />}
+                  {watchlist.includes(String(selected.id)) ? (
+                    <Check size={18} />
+                  ) : (
+                    <Plus size={18} />
+                  )}
+
                   {watchlist.includes(String(selected.id))
                     ? 'In My List'
                     : 'My List'}
@@ -2083,7 +1297,9 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
           </div>
         </div>
       )}
+
       {/* EPISODE PLAYER */}
+
       {selectedEpisode && (
         <div
           className="modal"
@@ -2121,6 +1337,7 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
               <div className="eyebrow">
                 THE OTHER WOMAN • EPISODE {selectedEpisode.number}
               </div>
+
               <h2>{selectedEpisode.title}</h2>
               <p>AI FLIX ORIGINAL SERIES</p>
             </div>
@@ -2133,4 +1350,3 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
 }
 
 createRoot(document.getElementById('root')).render(<App />);
-      
