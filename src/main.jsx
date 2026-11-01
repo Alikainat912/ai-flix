@@ -832,7 +832,7 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
       ))}
     </div>
   </section>
-        {activePage === 'mylist' ? (
+        : activePage === 'mylist' ? (
           <section className="section myListPage">
             <div className="sectionHead">
               <h2>My List</h2>
