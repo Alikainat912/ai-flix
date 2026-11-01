@@ -922,57 +922,44 @@ const [selectedEpisode, setSelectedEpisode] = useState(null);
                         )}
 
             {activePage === 'home' && (
-              <section className="section">
-                <div className="sectionHead">
-                  <h2>AI Flix Original Series</h2>
-                  <ChevronRight size={20} />
-                </div>
+  <section className="section seriesFeatured">
+    <div className="sectionHead">
+      <h2>AI Flix Original Series</h2>
+      <ChevronRight size={20} />
+    </div>
 
-                <div className="grid">
-                  {FALLBACK_SERIES.map((series) => (
-                    <article
-                      className="card"
-                      key={series.id}
-                      onClick={() => {
-                        setSelectedSeries(series);
-                        changePage('series-detail');
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      {series.poster ? (
-                        <img src={series.poster} alt={series.title} />
-                      ) : (
-                        <div style={{
-                          aspectRatio: '2 / 3',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          textAlign: 'center',
-                          padding: '20px',
-                          boxSizing: 'border-box',
-                          background: 'linear-gradient(145deg, #29202b, #09090d)'
-                        }}>
-                          <div>
-                            <div className="eyebrow">AI FLIX ORIGINAL</div>
-                            <h2 style={{ fontFamily: 'Georgia, serif' }}>
-                              THE OTHER WOMAN
-                            </h2>
-                            <p style={{ color: '#aaa' }}>
-                              A psychological thriller
-                            </p>
-                          </div>
-                        </div>
-                      )}
+    {FALLBACK_SERIES.map((series) => (
+      <article
+        className="seriesFeatureCard"
+        key={series.id}
+        onClick={() => {
+          setSelectedSeries(series);
+          changePage('series-detail');
+        }}
+      >
+        <div className="seriesFeaturePoster">
+          {series.poster ? (
+            <img src={series.poster} alt={series.title} />
+          ) : (
+            <div className="seriesPosterPlaceholder">
+              <span>AI FLIX ORIGINAL</span>
+              <h2>THE OTHER WOMAN</h2>
+              <p>A psychological thriller</p>
+            </div>
+          )}
+        </div>
 
-                      <div className="cardBody">
-                        <h3>{series.title}</h3>
-                        <p>{series.genre} • {series.episodes.length} Episodes</p>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            )}
+        <div className="seriesFeatureInfo">
+          <span className="eyebrow">AI FLIX ORIGINAL SERIES</span>
+          <h2>{series.title}</h2>
+          <p>{series.genre}</p>
+          <p>{series.episodes.length} Episodes · English</p>
+          <button className="primary">View Series</button>
+        </div>
+      </article>
+    ))}
+  </section>
+)}
 
           
             <section className="section">
