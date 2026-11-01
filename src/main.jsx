@@ -78,7 +78,7 @@ const FALLBACK_SERIES = [
     description:
       'A perfect marriage. An impossible message. A secret that refuses to stay buried.',
     runtime: '24 min',
-    poster: '',
+    poster: 'https://wugdmnouiomxtltxmuen.supabase.co/storage/v1/object/public/posters/Screenshot_20261101_112024_Flow.jpg',
     episodes: [
       {
         id: 'tow-ep1',
