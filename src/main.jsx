@@ -89,13 +89,13 @@ const FALLBACK_SERIES = [
         status: 'available'
       },
       {
-        id: 'tow-ep2',
-        number: 2,
-        title: 'Someone Knows',
-        runtime: '5 min',
-        videoUrl: '',
-        status: 'upcoming'
-      },
+  id: 'tow-ep2',
+  number: 2,
+  title: 'Someone Knows',
+  runtime: '5 min',
+  video_url: 'https://www.youtube.com/embed/_jK9XKsgwWw',
+  status: 'available'
+},
       {
         id: 'tow-ep3',
         number: 3,
