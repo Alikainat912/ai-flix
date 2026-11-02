@@ -96,7 +96,6 @@ const FALLBACK_SERIES = [
   videoUrl: 'https://www.youtube.com/embed/_jK9XKsgwWw',
   status: 'available'
 },
-},
       {
         id: 'tow-ep3',
         number: 3,
